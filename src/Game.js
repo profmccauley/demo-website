@@ -8,17 +8,17 @@ export default class Game {
         }
         this.numPlayers = numPlayers;
         this.players = new Array();
-        this.playerOrder = new Array();
         this.createPlayers(); // add players 
+        this.playerOrder = new Array();
         
+        this.currentPlayer = null
         this.lastPlayer = null;
-        this.currentPlayer = null;
 
-        this.previousCards = null; 
+        // below could also be a hand? but may convolute purpose
+        this.previousCards = new Array(); 
         this.deck = new Deck();
-        // should above be an array of cards? or a hand?
-
     }
+
     // getters
     getNumPlayers() {
         return this.numPlayers;
@@ -28,12 +28,15 @@ export default class Game {
         return this.players;
     }
 
+    getCurrentPlayer() {
+        return this.currentPlayer;
+    }
+
     // create players
     createPlayers() {
         for (let i = 0; i < this.numPlayers; i++) {
             let name = "Player" + (i + 1);
             this.players.push(new Player(name));
-            this.playerOrder.push(this.players[i]);
         }
     }
 
@@ -43,6 +46,15 @@ export default class Game {
         this.deck.shuffleDeck();
 
         // deal cards to the players
+        // cards will automatically be sorted
+        this.dealCards();
+
+        // start with player with the lowest card
+        this.findPlayerLowestCard();
+    }
+
+    // deal 13 cards to each player
+    dealCards() {
         let min = 0;
         let max = 13;
         let numCards = 13;
@@ -57,5 +69,21 @@ export default class Game {
             max = max + numCards;
         }
     }
+
+    // find the player with the lowest card
+    findPlayerLowestCard() {
+        // get the first card of each of the players
+        // the card with the lowest priority is the lowest
+        
+        // start by assuming the first player has the lowest card
+        this.currentPlayer = this.players[0];
+
+        for (let i = 1; i < this.numPlayers; i++) {
+            if (this.players[i].getHand()[0].getPriority() < this.currentPlayer.getHand()[0].getPriority()) {
+                this.currentPlayer = this.players[i];
+            }
+        }
+    }
+    
 }
 

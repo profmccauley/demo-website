@@ -134,3 +134,8 @@ console.log("Player 1's hand:", fourPlayerGame.getPlayers()[0].getHand());
 console.log("Player 2's hand:", fourPlayerGame.getPlayers()[1].getHand());
 console.log("Player 3's hand:", fourPlayerGame.getPlayers()[2].getHand());
 console.log("Player 4's hand:", fourPlayerGame.getPlayers()[3].getHand());
+
+console.log("\n***Test starting player***");
+console.log("The player with the lowest card in four player game is", fourPlayerGame.getCurrentPlayer(), "and the card is", fourPlayerGame.getCurrentPlayer().getHand()[0]);
+console.log("The player with the lowest card in two player game is", twoPlayerGame.getCurrentPlayer(), "and the card is", twoPlayerGame.getCurrentPlayer().getHand()[0]);
+
