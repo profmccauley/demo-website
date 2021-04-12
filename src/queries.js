@@ -4,8 +4,8 @@ $(document).ready(function(){
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
 	var game_code = $("#game_code").val();
-	var password = $("#password").val();
-	$("#test").text("Game code: " + game_code + " Password: " + password);
+	var name = $("#name").val();
+	$("#test").text("Game code: " + game_code + " Name: " + name);
 	//INSERT SERVER CODE HERE
     });
 
