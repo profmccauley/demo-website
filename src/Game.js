@@ -3,15 +3,20 @@ import Player from "./Player.js";
 import pokerRules from "./pokerRules.js";
 
 export default class Game {
-    constructor(numPlayers) {
+    // numPlayers is an int
+    // playerNames is an array with the names of the player
+    constructor(numPlayers, playerNames = false) {
         if (numPlayers < 2 || numPlayers > 4) {
             throw 'Number of players must be between 2 and 4';
         }
-        this.numPlayers = numPlayers;
-        this.players = new Array();
+
         this.rules = new pokerRules(this); // set up bi-directional relationship with the rules
 
-        this.createPlayers(); // add players 
+        this.numPlayers = numPlayers;
+
+        this.players = new Array();
+        this.createPlayers(playerNames); // sets up players
+
         this.playerOrder = new Array();
         
         this.currentPlayer = null;
@@ -40,11 +45,20 @@ export default class Game {
     }
 
     // create players
-    createPlayers() {
+    createPlayers(playerNames) {
+        // will hold current player's name on most recent iteration
+        var name;
+
         for (let i = 0; i < this.numPlayers; i++) {
-            let name = "Player" + (i + 1);
+            if (!playerNames) {
+                name = "Player" + (i + 1);
+            }
+            else {
+                name = playerNames[i];
+            }
             this.players.push(new Player(name, this.rules));
         }
+        
     }
 
     // start game - does initialization

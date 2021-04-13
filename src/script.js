@@ -17,9 +17,9 @@ let cardsForHand = [aceOfHearts, sevenOfSpades, twoOfClubs, aceOfHearts, aceOfHe
 
 handTests();
 playerTests();
-gameTests();
 cardTests();
 deckTests();
+gameTests();
 
 function cardTests() {
     console.log("*********TESTS FOR CARD CLASS*********");
@@ -167,6 +167,14 @@ function gameTests() {
     console.log("\n***Test starting player***");
     console.log("The player with the lowest card in four player game is", fourPlayerGame.getCurrentPlayer(), "and the card is", fourPlayerGame.getCurrentPlayer().getHand()[0]);
     console.log("The player with the lowest card in two player game is", twoPlayerGame.getCurrentPlayer(), "and the card is", twoPlayerGame.getCurrentPlayer().getHand()[0]);
+
+    // create a new game with named players
+    console.log("\n***Test create game: NAMED player***");
+    let playerNames = ['Michela', 'Huiyun', 'Rose'];
+    let namedThreePlayerGame = new Game(playerNames.length, playerNames);
+
+    console.log("Three player game with", namedThreePlayerGame.getNumPlayers(), "players named", namedThreePlayerGame.getPlayers());
+    
 }
 
 

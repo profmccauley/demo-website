@@ -4,8 +4,8 @@ $(document).ready(function(){
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
 	var game_code = $("#game_code").val();
-	var password = $("#password").val();
-	$("#test").text("Game code: " + game_code + " Password: " + password);
+	var name = $("#name").val();
+	$("#test").text("Game code: " + game_code + " Name: " + name);
 	//INSERT SERVER CODE HERE
     });
 
@@ -41,6 +41,19 @@ $(document).ready(function(){
 	//Add user info to database
 	//change page to the login
 	$("#test").text("Email: " + email + " User: " + user + " Password: " + password);
+    });
+
+    //SELECT/UNSELECT CARD
+    $(document).on('click', '.player_card', function(){
+	classes = this.className.split(" ");
+	if(classes.length == 2){
+	    $(this).css("transform", "translateY(-30px)").
+		removeClass("unselected");
+	}
+	else{
+	    $(this).css("transform", "translateY(0px)").
+		addClass("unselected");
+	}
     });
     
 });
