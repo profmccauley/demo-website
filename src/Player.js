@@ -1,11 +1,13 @@
 import Hand from "./Hand.js";
+import Rules from "./pokerRules.js";
 
 
 export default class Player {
-    constructor(name) {
+    constructor(name, rules) {
         this.name = name || "Player";
         this.hand = new Hand();
         this.points = 0;
+        this.rules = rules || null; // remove null later
     }
 
     // getters
@@ -29,7 +31,7 @@ export default class Player {
     // takes an array of cards to be played
     // throws error if the cards are not in the hand
     // passes on thrown error if the cards are not valid
-    playHand(cards) {
+    playCards(cards) {
         // check if the cards are in the hand
         for (let card of cards) {
             if (this.hand.find(card) == -1) {
@@ -40,6 +42,7 @@ export default class Player {
         // check if the cards are valid to play based
         // on previously played cards -->
         // this will be done in the Game class
+        this.rules.isValid(cards);
 
         // removes cards from hand
         for (let card of cards) {
@@ -61,3 +64,14 @@ export default class Player {
         this.hand.sort();
     }
 }
+
+/*
+    GGS server style:
+    Each client is keeping track of game state
+    Each client is being notified of the game state
+
+    Separate class that's a rule's class?
+    -- consider ...
+
+    Rules -- call rules.isValid()
+*/

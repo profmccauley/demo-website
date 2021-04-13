@@ -1,8 +1,9 @@
 import Card from "./Card.js";
 
 export default class Deck {
-    constructor() {
+    constructor(deckType = "classic") {
         this.cards = new Array();  // initialize with no cards
+        this.deckType = deckType;
         this.generateDeck();
     }
 
@@ -40,7 +41,7 @@ export default class Deck {
 
         for (let rank = lowestRank; rank <= highestRank; rank++) {
             for (let suit = lowestSuit; suit <= highestSuit; suit++) {
-                this.cards.push(new Card(rank, suit));
+                this.cards.push(new Card(rank, suit, this.deckType));
             }
         }
     }

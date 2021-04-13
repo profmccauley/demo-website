@@ -13,11 +13,12 @@ export default class Card {
     static ACE = 14;
 
 
-    constructor(rank, suit) {
+    constructor(rank, suit, cardImageFolder = "classic") {
         // consider adding error catching for incorrect rank/suit values?
         this.rank = rank;
         this.suit = suit;
         this.priority = this.generatePriority();
+        this.file = cardImageFolder + "/" + this.getCardString() + ".jpg";
     }
 
     // basic getters
@@ -33,7 +34,33 @@ export default class Card {
         return this.priority;
     }
 
+    getFilePath() {
+        return this.file;
+    }
+
+    getSuitString() {
+        switch(this.suit) {
+            case Card.DIAMONDS: return "D";
+            case Card.CLUBS: return "C";
+            case Card.HEARTS: return "H";
+            case Card.SPADES: return "S";
+            default: return "invalid suit"
+        }
+    }
+
+
+    getRankString() {
+        switch(this.rank) {
+            case Card.ACE: return "A";
+            case Card.JACK: return "J";
+            case Card.QUEEN: return "Q";
+            case Card.KING: return "K";
+            default: return this.rank.toString();
+        }
+    }
+
     // string getters
+    /*
     getSuitString() {
         switch(this.suit) {
             case Card.DIAMONDS: return "diamonds";
@@ -43,7 +70,9 @@ export default class Card {
             default: return "invalid suit"
         }
     }
+    */
 
+    /*
     getRankString() {
         switch(this.rank) {
             case Card.ACE: return "Ace";
@@ -53,9 +82,15 @@ export default class Card {
             default: return this.rank.toString();
         }
     }
-
+    */
+    /*
     getCardString() {
         return this.getRankString() + " of " + this.getSuitString();
+    }
+    */
+
+    getCardString() {
+        return this.getRankString() + this.getSuitString();
     }
 
     // set priority -- can I make this a private method?

@@ -1,5 +1,6 @@
 import Deck from "./Deck.js";
 import Player from "./Player.js";
+import pokerRules from "./pokerRules.js";
 
 export default class Game {
     constructor(numPlayers) {
@@ -8,14 +9,16 @@ export default class Game {
         }
         this.numPlayers = numPlayers;
         this.players = new Array();
+        this.rules = new pokerRules(this); // set up bi-directional relationship with the rules
+
         this.createPlayers(); // add players 
         this.playerOrder = new Array();
         
-        this.currentPlayer = null
+        this.currentPlayer = null;
         this.lastPlayer = null;
 
         // below could also be a hand? but may convolute purpose
-        this.previousCards = new Array(); 
+        this.previousCards = null; 
         this.deck = new Deck();
     }
 
@@ -32,11 +35,15 @@ export default class Game {
         return this.currentPlayer;
     }
 
+    getPreviousCards() {
+        return this.previousCards();
+    }
+
     // create players
     createPlayers() {
         for (let i = 0; i < this.numPlayers; i++) {
             let name = "Player" + (i + 1);
-            this.players.push(new Player(name));
+            this.players.push(new Player(name, this.rules));
         }
     }
 
@@ -83,6 +90,24 @@ export default class Game {
                 this.currentPlayer = this.players[i];
             }
         }
+    }
+
+    // updates the game
+    //    * update the current player to the next 
+    //      player in the list
+    //    * update the last player to the current player (above prev!!)
+    //    * update the previously played cards to the current
+    //      cards just played
+    updateGame(cards) {
+        // update current player to next in list
+        this.lastPlayer = this.currentPlayer;
+
+        // update next player
+        let nextPlayerIndex = (this.playerOrder.indexOf(this.lastPlayer) + 1) % this.numPlayers;
+        this.currentPlayer = this.playerOrder[nextPlayerIndex];
+
+        // update previous cards by copying array 
+        this.previousCards = [...cards];
     }
     
 }
