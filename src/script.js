@@ -174,7 +174,15 @@ function gameTests() {
     let namedThreePlayerGame = new Game(playerNames.length, playerNames);
 
     console.log("Three player game with", namedThreePlayerGame.getNumPlayers(), "players named", namedThreePlayerGame.getPlayers());
-    
+
+    namedThreePlayerGame.startGame();
+    console.log("Michela's's hand:", namedThreePlayerGame.getPlayers()[0].getHand());
+    console.log("Huiyun's hand:", namedThreePlayerGame.getPlayers()[1].getHand());
+    console.log("Rose's hand:", namedThreePlayerGame.getPlayers()[2].getHand());
+
+    let Michela = namedThreePlayerGame.getPlayers()[0];
+
+   //Michela.playCards(Michela.getHand().slice(0, 1));
 }
 
 

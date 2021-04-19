@@ -9,7 +9,7 @@ export default class Card {
 
     static JACK = 11;
     static QUEEN = 12;
-    static KING = 13;
+    static KING = 13; 
     static ACE = 14;
 
 

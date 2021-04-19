@@ -1,6 +1,5 @@
 import Deck from "./Deck.js";
 import Player from "./Player.js";
-import pokerRules from "./pokerRules.js";
 
 export default class Game {
     // numPlayers is an int
@@ -9,8 +8,6 @@ export default class Game {
         if (numPlayers < 2 || numPlayers > 4) {
             throw 'Number of players must be between 2 and 4';
         }
-
-        this.rules = new pokerRules(this); // set up bi-directional relationship with the rules
 
         this.numPlayers = numPlayers;
 
@@ -41,7 +38,7 @@ export default class Game {
     }
 
     getPreviousCards() {
-        return this.previousCards();
+        return this.previousCards;
     }
 
     // create players
@@ -56,7 +53,7 @@ export default class Game {
             else {
                 name = playerNames[i];
             }
-            this.players.push(new Player(name, this.rules));
+            this.players.push(new Player(name));
         }
         
     }
@@ -105,6 +102,7 @@ export default class Game {
             }
         }
     }
+
 
     // updates the game
     //    * update the current player to the next 
