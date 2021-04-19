@@ -35,34 +35,76 @@ export default class PlayerView {
         }
     }
 
+    getCardByFile(fileName){
+	for card in this.myCards{
+	    if(card.getFilePath() == fileName){
+		return card;
+	    }
+	}
+	//card w/ given filename is not in the hand
+	return false;
+    }
+
     displayHand() {
         // MICHELA: call every time you update your cards
+	var html = "";
+	for card in this.myCards{
+	    let tag = '<img src="';
+	    tag += card.getFilePath();
+	    tag += '" class="player_card unselected">';
+	}
+	document.getElementById("cards").innerHTML = html;	    
     }
 
     displayPrevCards() {
         // MICHELA: call when receive new prev cards from the server
+	var html = "";
+	for card in this.prevCards{
+	    let tag = '<img src="';
+	    tag += card.getFilePath();
+	    tag += '" class="player_card unselected">';
+	}
+	document.getElementById("last_played").innerHTML = html;
     }
 
     displayMyTurn() {
         // MICHELA: display wrappers around the screen that allow you to click
         // pass and play buttons
+	document.getElementById("play_hand").style.visibility="visible";
+	document.getElementById("pass").style.visibility="visible";
     }
 
     displayNotMyTurn() {
-        // MICHELA: display wrappers around the screen that do NOT allow you to click
+        // MICHELA: display wrappers around the screen that remove
         // pass and play buttons
+	document.getElementById("play_hand").style.visibility="hidden";
+	document.getElementById("pass").style.visibility="hidden";
     }
 
     playCards() {
         // MICHELA: get the card elements with the class name selected
-        var cards;
+        var htmlCards = document.getElementsByClassName("selected");
+	var cards = [];
 
-        // check if the cards are in the hand
+	for htmlCard in htmlCards{
+	    let src = htmlCard.src;
+	    let card = this.getCardByFile(src);
+	    if (card == false){
+		throw 'At least one card is not in the hand';
+	    }
+	    else{
+		cards.push(card);
+	    }
+	}
+	    
+        /* REMOVING BECAUSE CHECK HAPPENS ABOVE NOW
+	// check if the cards are in the hand
         for (let card of cards) {
             if (this.myCards.find(card) == -1) {
                 throw 'At least one card is not in the hand';
             }
         }
+	*/
 
         // check if the cards are valid to play based
         // returns "valid" if valid, error message if not
@@ -74,6 +116,7 @@ export default class PlayerView {
                 // HUIYUN: do we also need to send the player's name?
         }
         else {
+	    document.getElementById("error_message").innerHTML = validity;
             // MICHELA: display value of validity
         }
     }
