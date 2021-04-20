@@ -22,6 +22,9 @@ export default class Game {
         // below could also be a hand? but may convolute purpose
         this.previousCards = null; 
         this.deck = new Deck();
+
+        this.startGame();
+        this.startPassJSON();
     }
 
     // getters
@@ -71,6 +74,15 @@ export default class Game {
         this.findPlayerLowestCard();
     }
 
+    startPassJSON() {
+        // pass to each player
+        // their cards -- as card objects made to JSON with stringify
+        // if they go first (true/false value)
+        // the current player, this will be the same for all players
+        // the next player, this will be the same for all players
+        
+    }
+
     // deal 13 cards to each player
     dealCards() {
         let min = 0;
@@ -103,7 +115,7 @@ export default class Game {
         }
     }
 
-
+    // called from PlayerView, updates game
     // updates the game
     //    * update the current player to the next 
     //      player in the list
@@ -120,6 +132,11 @@ export default class Game {
 
         // update previous cards by copying array 
         this.previousCards = [...cards];
+
+        // HUIYUN: send these values back
+        // this.prevCards = new Array();
+        // this.currPlayer;
+        // this.nextPlayer;
     }
     
 }

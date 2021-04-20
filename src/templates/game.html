@@ -18,6 +18,12 @@
 
      <!-- jQueries script -->
     <script src="../queries.js"></script>
+    <!--<script src="../Game.js"></script>
+    <script src="../Deck.js"></script>
+    <script src="../Player.js"></script>
+    <script src="../Hand.js"></script>
+    <script src="../Card.js"></script>-->
+    
     
     <style>
       body {
@@ -40,7 +46,7 @@
 	  height: 60%;
       }
 
-      #cards {
+      #hand {
 	  height: 30%;
       }
 
@@ -80,17 +86,19 @@
       <div id="middle">
 	<div class="row align-items-end" style="height: 20%">
 	  <div class="col-md-3">
-	    <p style="font-weight: bold" id="test">PLAYER's turn</p>
+	    <p style="font-weight: bold" id="current_player">PLAYER's turn</p>
 	  </div>
-	  <div class="col-md-6"></div>
+	  <div class="col-md-6">
+	    <p style="color: red" id="error_message"></p>
+	  </div>
 	  <div class="col-md-3">
-	    <p style="font-weight: bold" id="test1">Next Up: PLAYER</p>
+	    <p style="font-weight: bold" id="next_player">Next Up: PLAYER</p>
 	  </div>
 	</div>
 	<div class="row align-items-center" style="height: 70%">
 	  <div class="col">
 	    <div class="row justify-content-center">
-	      <div class="col">
+	      <div class="col" id="last_played">
 		<img src="images/classic/QS.jpg" class="played_card">
 		<!--<img src="images/classic/QS.jpg" class="played_card">
 		<img src="images/classic/QS.jpg" class="played_card">
@@ -116,10 +124,10 @@
 	</div>
       </div>
 
-      <div class="row align-items-end" id="cards">
+      <div class="row align-items-end" id="hand">
 	<div class="col">
 	  <div class="row justify-content-center">
-	    <div class="col" >
+	    <div class="col" id="cards">
 	      <img src="images/classic/QS.jpg" class="player_card unselected">
 	      <img src="images/classic/QS.jpg" class="player_card unselected">
 	      <img src="images/classic/QS.jpg" class="player_card unselected">
