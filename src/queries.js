@@ -3,7 +3,7 @@ $(document).ready(function(){
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
 	var game_code = $("#game_code").val();
-	var name = $("#name").val();
+	var name = $("#player_name").val();
 	$("#test").text("Game code: " + game_code + " Name: " + name);
 	//INSERT SERVER CODE HERE
     });
