@@ -27,7 +27,7 @@ class Network{
 		    this.port = 8080;
 		    //this.address = "sockette.net";
 		    //this.address = "localhost";
-		    this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    this.address = "0.0.0.0";
 		    this.disconnected = false;
 		    this.buf = "";
 		    console.log("Sender created");
