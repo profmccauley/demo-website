@@ -4,12 +4,13 @@ export default class PlayerView {
     constructor(name) {
         this.myName = name;
 
-        this.myCards;   // cards will be sorted by lowest to highest priority
+        this.myCards = new Array();   // cards will be sorted by lowest to highest priority
         this.firstTurn;
-        this.prevCards;
+        this.prevCards = new Array();
         this.currPlayer;
         this.nextPlayer;
-        this.points;
+        
+        this.points = 0;
 
         var playCardButton = document.getElementById("play_hand");
         var passButton = document.getElementById("pass");
@@ -18,9 +19,15 @@ export default class PlayerView {
     }
 
     startGame(playerJSON) {
-        this.prevCards = new Array();
 
         // TODO: parse JSON to fill in instance variables
+        /* for (?? in playerJSON.hand) {
+            var tempCard = new Card();  // this may not work if it overwrites the card each time
+            tempCard.fromJSON(??);
+            this.myCards.push(tempCard);
+        }
+
+        */
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -36,7 +43,7 @@ export default class PlayerView {
     }
 
     getCardByFile(fileName){
-	for card in this.myCards{
+	for (card in this.myCards) {
 	    if(card.getFilePath() == fileName){
 		return card;
 	    }
@@ -48,7 +55,7 @@ export default class PlayerView {
     displayHand() {
         // MICHELA: call every time you update your cards
 	var html = "";
-	for card in this.myCards{
+	for (card in this.myCards) {
 	    let tag = '<img src="';
 	    tag += card.getFilePath();
 	    tag += '" class="player_card unselected">';
@@ -59,7 +66,7 @@ export default class PlayerView {
     displayPrevCards() {
         // MICHELA: call when receive new prev cards from the server
 	var html = "";
-	for card in this.prevCards{
+	for (card in this.prevCards) {
 	    let tag = '<img src="';
 	    tag += card.getFilePath();
 	    tag += '" class="player_card unselected">';
@@ -86,7 +93,7 @@ export default class PlayerView {
         var htmlCards = document.getElementsByClassName("selected");
 	var cards = [];
 
-	for htmlCard in htmlCards{
+	for (htmlCard in htmlCards) {
 	    let src = htmlCard.src;
 	    let card = this.getCardByFile(src);
 	    if (card == false){
@@ -112,11 +119,10 @@ export default class PlayerView {
 
         if (validity == "valid") {
             // removes cards from hand
-            // send info to server --> list of cards just played
-                // HUIYUN: do we also need to send the player's name?
+            // HUIYUN: send info to server --> list of cards just played
         }
         else {
-	    document.getElementById("error_message").innerHTML = validity;
+	        document.getElementById("error_message").innerHTML = validity;
             // MICHELA: display value of validity
         }
     }
