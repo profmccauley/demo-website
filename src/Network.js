@@ -1,32 +1,31 @@
 class Network{ 
-		   is_connected(){
-		    console.log("is_connected: " + js_isconnected());
-		    return js_isconnected() > 0;
-		  }
-		   connect(){
-		    console.log("Attempting to connect...");
-		    js_close();
-		    js_connect();
-		  }
-		   close(){
-		    js_close();
-		  }
-		   send(data){
-		    //TODO
-		    console.log("SEND to server: " + data);
-		    js_send(data);
-		  }
-		}
+	is_connected(){
+		console.log("is_connected: " + js_isconnected());
+		return js_isconnected() > 0;
+	}
+	connect(){
+		console.log("Attempting to connect...");
+		js_close();
+		js_connect();
+	}
+	close(){
+		js_close();
+	}
+	send(data){
+		console.log("SEND to server: " + data);
+		js_send(data);
+	}
+}
 
-		class Sender
-		{
+class Sender
+{
 		  constructor ()
 		  {
 		    this.socket = null;
 		    this.path = "";
-		    this.port = 9877;
+		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    this.address = "localhost";
+		    this.address = "0.0.0.0";
 		    this.disconnected = false;
 		    this.buf = "";
 		    console.log("Sender created");
@@ -118,13 +117,17 @@ class Network{
 		    self.socket.close();
 		    self.socket = null;
 		  }
-		}
+}
 
-		var sender = null;
-		var net = new Network();
+var sender = null;
+var net = new Network();
 
-		var status = null;
-		var users = null;
+var status = null;
+var users = null;
+var number_of_users = null;
+
+var playingOrder = null;
+var hand = null;
 
 		function process(text){
 			//receive message
@@ -157,9 +160,62 @@ class Network{
 		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
 		  	users = message.users;
+		  	number_of_users = message.number_of_users;
 		  	console.log("Current users in this room: " + users);
+		  	console.log("Number of users in this room: " + number_of_users);
+		  	//is_ready: len(self.members) >= self.room_size
+		  	// if(message.is_ready === true){
+		  	// 	//start the game
+		  	// 	start_game(users);
+		  	// }
+
+		  	//temp test
+		  	//net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'player': player_name.value, 'card': [1,2,3]}}));
+		  }
+		  else if(message.TYPE === 'DATA'){
+		  	//Server sends back to all players of the played cards for them to update the UI
+		  	if (message.msg.type === 'MOVE'){
+		  		console.log("Player " + message.msg.player + " played " + message.msg.card);
+		  		//update UI
+		  	}
 		  }
 		}
+
+
+		// let game = new Game(number_of_users, users);
+		// //when start game button clicked in the waiting room
+		// function start_game(){
+		// 	//call Game in game logic
+		// 	//init game
+		// 	game.startGame();
+		// 	// // start with player with the lowest card
+		// 	// let firstPlayer = game.currentPlayer;
+
+		// 	//TODO: get playing order, is it defined by the Game logic?
+		// 	playingOrder = game.playerOrder;
+
+		// 	//player object
+		// 	//init cards for current user
+		// 	for (let player of game.players) {
+		// 		if(player.name === player_name.value){
+		// 			hand = player.getHand();
+		// 		}
+		// 	}
+		// }
+
+		// //when play hands button clicked by a player in the game page
+		// //cards in an array of played hands
+		// function play_hands(cards){
+		// 	//check validity of the current played cards
+		// 	try (game.rules.isValid(cards)){
+		// 		//update current player???
+		// 		game.updateGame(cards);
+		// 		//send it to the server
+		// 		net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'player': player_name.value, 'card': cards}}));
+		// 	} catch(err) {
+		// 		console.log("Error message: " + err);
+		// 	}
+		// }
 
 		////set up JS connection through python function above
 		function js_connect (status)
