@@ -29,7 +29,7 @@ TODO
 * Allow PRIV/CHOOSE/etc. to send to a *group* of users?
 """
 
-BIND_PORT = 9876
+BIND_PORT = 8079
 MAX_CONNECTIONS = 1024
 
 logging.basicConfig()
