@@ -24,7 +24,7 @@ class Network{
 		  {
 		    this.socket = null;
 		    this.path = "";
-		    this.port = 9877;
+		    this.port = 8080;
 		    //this.address = "sockette.net";
 		    this.address = "localhost";
 		    this.disconnected = false;
