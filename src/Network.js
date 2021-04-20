@@ -25,7 +25,7 @@ class Sender
 		    this.path = "";
 		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    this.address = "0.0.0.0";
+		    this.address = "localhost";
 		    this.disconnected = false;
 		    this.buf = "";
 		    console.log("Sender created");
