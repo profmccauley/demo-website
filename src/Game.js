@@ -13,8 +13,6 @@ export default class Game {
 
         this.players = new Array();
         this.createPlayers(playerNames); // sets up players
-
-        this.playerOrder = new Array();
         
         this.currentPlayer = null;
         this.lastPlayer = null;

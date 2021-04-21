@@ -9,7 +9,7 @@ export default class PlayerView {
         this.prevCards = new Array();
         this.currPlayer;
         this.nextPlayer;
-        
+
         this.points = 0;
 
         var playCardButton = document.getElementById("play_hand");
@@ -172,12 +172,12 @@ export default class PlayerView {
                 return 'valid';
             }
             // check if valid with previous cards
-            return this.isNormalMoveValid(cards);
+            return this.isValidPriority(cards);
         }
         else if (cards.length == numPokerCardsPlayed){
             // check that this is a valid poker hand
             let pokerHand = this.isPokerHand();
-            if (!pokerHand) {
+            if (pokerHand == 'false') {
                 return 'these cards do not make a valid poker hand';
             }
             else if (this.prevCards == null) {
@@ -185,7 +185,7 @@ export default class PlayerView {
                 return 'valid';
             }
 
-            this.isPokerMoveValid()
+            return this.isPokerMoveValid(pokerHand);
 
         }
         return 'you must play between 1 and 5 cards';
@@ -193,10 +193,17 @@ export default class PlayerView {
         
     }
 
-    isNormalMoveValid(cards) {
+    isValidPriority(cards, prevCards = null) {
         const prioritySum = (accumulator, card) => accumulator + card.getPriority();
         let currPriority = cards.reduce(prioritySum);
-        let prevPriority = this.prevCards.reduce(prioritySum);
+
+        if (prevCards == null) {
+            let prevPriority = this.prevCards.reduce(prioritySum); 
+        }
+        else {
+            let prevPriority = prevCards.reduce(prioritySum);
+        }
+        
 
         if (currPriority <= prevPriority) {
             return 'Cards must be higher than previously played cards';
@@ -209,6 +216,9 @@ export default class PlayerView {
     isPokerHand(cards) {
         let flushSuit = cards[0].getSuit();
         let prevRank = cards[0].getRank();
+
+        // To Clean: check if they're all the same suit
+        // or if all different suits
 
         // check if STRAIGHT FLUSH / ROYAL FLUSH
         for (let i = 1; i < cards.length; i++) {
@@ -246,13 +256,32 @@ export default class PlayerView {
         let firstCardCount = 1;
         let firstRank = cards[0].getRank();
         let secondCardCount = 0;
-        var secondRank;
+        let secondRank = null;
 
         for (let i = 1; i < cards.length; i++) {
-            if (cards[i].getRank == firstRank) {
+            if (cards[i].getRank() == firstRank) {
+                // card is same as first card
                 firstCardCount++;
             }
-            // ROSE: finish this
+            if (secondRank == null) {
+                // second rank is not set, set it and 
+                // update count
+                secondRank = cards[i].getRank();
+                secondCardCount++;
+            }
+            else if (cards[i].getRank() == secondRank) {
+                // second rank is set and card is same, 
+                // update counts
+                secondCardCount++;
+            }
+            else {
+                // second rank is set, card is not same
+                // thus not a full house
+                break;
+            }
+        }
+        if ((firstCardCount + secondCardCount) == 5) {
+            return "fh";
         }
 
 
@@ -276,7 +305,7 @@ export default class PlayerView {
 
         // check if FLUSH
         for (let i = 1; i < cards.length; i++) {
-            // to be a flsuh, the cards must have the same suit
+            // to be a flush, the cards must have the same suit
             if (!(cards[i].getSuit() == flushSuit)) {
                 break; // not a flush, but could be another poker hand
             }
@@ -286,7 +315,7 @@ export default class PlayerView {
             return 'f';
         }
 
-        return 'these cards do not form a poker hand, see rules for allowed poker hands';
+        return 'false';
     }
     /*
     Poker Hands
@@ -303,7 +332,25 @@ export default class PlayerView {
 */
 
     // check if the current poker hand is greater than the previous poker hand
-    isPokerMoveValid() {
+    isPokerMoveValid(currCards) {
+        // will hold 
+        let prevCards = this.isPokerHand(this.prevCards);
+
+        if (prevCards == 'false') {
+            return 'you attempted to play a poker hand, but the previous cards were not a poker hand';
+        }
+
+        switch (prevCards) {
+            case 'sf':
+                if (currCards == 'sf') {
+                    // check if the cards have a higher priority sum
+                    return this.isValidPriority(currCards, prevCards);
+                }
+                return 'you must play a straight flush with higher cards';
+        }
+        // must either b
+        // same special card run as previous, with higher cards
+        // "higher" special card run
         // ROSE: finish this
         return 'valid'
     }
