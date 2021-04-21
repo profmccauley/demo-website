@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
 	var game_code = $("#game_code").val();
@@ -54,5 +54,7 @@ $(document).ready(function(){
 		addClass("unselected");
 	}
     });
+
+    
     
 });
