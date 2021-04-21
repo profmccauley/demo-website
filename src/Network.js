@@ -1,25 +1,30 @@
-class Network{ 
-		   is_connected(){
-		    console.log("is_connected: " + js_isconnected());
-		    return js_isconnected() > 0;
-		  }
-		   connect(){
-		    console.log("Attempting to connect...");
-		    js_close();
-		    js_connect();
-		  }
-		   close(){
-		    js_close();
-		  }
-		   send(data){
-		    //TODO
-		    console.log("SEND to server: " + data);
-		    js_send(data);
-		  }
-		}
+// import Game from './Game.js';
+// import PlayerView from './PlayerView.js';
 
-		class Sender
-		{
+// var Game = require('./Game.js');
+// var PlayerView = require('./PlayerView.js');
+
+class Network{ 
+	is_connected(){
+		console.log("is_connected: " + js_isconnected());
+		return js_isconnected() > 0;
+	}
+	connect(){
+		console.log("Attempting to connect...");
+		js_close();
+		js_connect();
+	}
+	close(){
+		js_close();
+	}
+	send(data){
+		console.log("SEND to server: " + data);
+		js_send(data);
+	}
+}
+
+class Sender
+{
 		  constructor ()
 		  {
 		    this.socket = null;
@@ -27,7 +32,8 @@ class Network{
 		    this.port = 8080;
 		    //this.address = "sockette.net";
 		    //this.address = "localhost";
-		    this.address = "0.0.0.0";
+		    this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    //this.address = "138.10.92.46";
 		    this.disconnected = false;
 		    this.buf = "";
 		    console.log("Sender created");
@@ -119,13 +125,22 @@ class Network{
 		    self.socket.close();
 		    self.socket = null;
 		  }
-		}
+}
 
-		var sender = null;
-		var net = new Network();
+var sender = null;
+var net = new Network();
 
-		var status = null;
-		var users = null;
+var status = null;
+var users = null;
+var number_of_users = null;
+
+var myCards = new Array();
+var prevCards = new Array();
+var currPlayer = null;
+var nextPlayer = null;
+
+var game = null;
+var playerView = null;
 
 		function process(text){
 			//receive message
@@ -158,9 +173,68 @@ class Network{
 		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
 		  	users = message.users;
+		  	number_of_users = message.number_of_users;
 		  	console.log("Current users in this room: " + users);
+		  	console.log("Number of users in this room: " + number_of_users);
+		  	//is_ready: len(self.members) >= self.room_size
+		  	// if(message.is_ready === true){
+		  	// 	//start the game
+		  	// 	start_game(users);
+		  	// }
+
+		  	//temp test
+		  	//net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': [1,2,3]}}));
+		  }
+		  else if(message.TYPE === 'DATA'){
+		  	//Server sends back to all players of the played cards for them to update the UI
+		  	if (message.msg.type === 'MOVE'){
+		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
+		  		//update UI
+		  	}
 		  }
 		}
+
+
+		// //when start game button clicked in the waiting room
+		// //init game in Game.js, send information to PlayerView.js
+		// function start_game(){
+		// 	//call Game in game logic
+		// 	game = new Game(number_of_users, users);
+		// 	//init Game in PlayerView
+		// 	playerView = new PlayerView(player_name.value);
+
+		// 	//Data: myCards: init cards for current user
+		// 	//player object
+		// 	for (let player of game.getPlayers()) {
+		// 		if(player.name === player_name.value){
+		// 			myCards = player.getHand();
+		// 		}
+		// 	}
+		// 	prevCards = game.getPreviousCards(); 
+		// 	currPlayer = game.getCurrentPlayer();
+		// 	//TODO: playerOrder is not defined
+		// 	let currIndex = game.getPlayers().indexOf(currPlayer) + 1;
+		// 	nextPlayer = game.getPlayers()[currIndex];
+
+		// 	//TODO: do I need to pass points?
+		// 	var dict = {
+		// 		myCards: myCards,
+		// 	    prevCards: prevCards,
+		// 	    currPlayer: currPlayer,
+		// 	    nextPlayer: nextPlayer,	    
+		// 	};
+		// 	playerView.startGame(dict);		
+
+		// }
+
+		// //when play cards button clicked by a player in the game page
+		// //cards is an array of played hands
+		// export default function play_cards(cards){
+		// 	console.log("got cards" + cards);
+		// 	//TODO: is it reasonable to updateGame here?
+		// 	game.updateGame(cards);
+		// 	net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
+		// }
 
 		////set up JS connection through python function above
 		function js_connect (status)

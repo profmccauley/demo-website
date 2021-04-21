@@ -14,6 +14,10 @@ export default class Card {
 
 
     constructor(rank, suit, cardImageFolder = "classic") {
+        // if attempting to create an empty card object, do not update instance variables
+        if (rank === undefined) {
+            return;
+        }
         // consider adding error catching for incorrect rank/suit values?
         this.rank = rank;
         this.suit = suit;
@@ -117,5 +121,13 @@ export default class Card {
         }
         // a must be equal to b
         return 0;
+      }
+
+      // parse JSON to rebuild a card from the server
+      fromJSON(json) {
+          this.rank = json.rank;
+          this.suit = json.suit;
+          this.priority = json.priority;
+          this.file = json.file;
       }
   };

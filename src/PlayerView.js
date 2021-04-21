@@ -1,15 +1,17 @@
 import Card from './Card.js';
+import play_cards from './Network.js';
 
 export default class PlayerView {
     constructor(name) {
         this.myName = name;
 
-        this.myCards;   // cards will be sorted by lowest to highest priority
+        this.myCards = new Array();   // cards will be sorted by lowest to highest priority
         this.firstTurn;
-        this.prevCards;
+        this.prevCards = new Array();
         this.currPlayer;
         this.nextPlayer;
-        this.points;
+
+        this.points = 0;
 
         var playCardButton = document.getElementById("play_hand");
         var passButton = document.getElementById("pass");
@@ -18,9 +20,21 @@ export default class PlayerView {
     }
 
     startGame(playerJSON) {
-        this.prevCards = new Array();
 
         // TODO: parse JSON to fill in instance variables
+        /* for (?? in playerJSON.hand) {
+            var tempCard = new Card();  // this may not work if it overwrites the card each time
+            tempCard.fromJSON(??);
+            this.myCards.push(tempCard);
+        }
+
+        */
+        //HUIYUN
+        this.myCards = playerJSON.myCards;
+        this.prevCards = playerJSON.prevCards;
+        this.currPlayer = playerJSON.currPlayer;
+        this.nextPlayer = playerJSON.nextPlayer;
+
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -35,34 +49,76 @@ export default class PlayerView {
         }
     }
 
+    getCardByFile(fileName){
+	for (card in this.myCards) {
+	    if(card.getFilePath() == fileName){
+		return card;
+	    }
+	}
+	//card w/ given filename is not in the hand
+	return false;
+    }
+
     displayHand() {
         // MICHELA: call every time you update your cards
+	var html = "";
+	for (card in this.myCards) {
+	    let tag = '<img src="';
+	    tag += card.getFilePath();
+	    tag += '" class="player_card unselected">';
+	}
+	document.getElementById("cards").innerHTML = html;	    
     }
 
     displayPrevCards() {
         // MICHELA: call when receive new prev cards from the server
+	var html = "";
+	for (card in this.prevCards) {
+	    let tag = '<img src="';
+	    tag += card.getFilePath();
+	    tag += '" class="player_card unselected">';
+	}
+	document.getElementById("last_played").innerHTML = html;
     }
 
     displayMyTurn() {
         // MICHELA: display wrappers around the screen that allow you to click
         // pass and play buttons
+	document.getElementById("play_hand").style.visibility="visible";
+	document.getElementById("pass").style.visibility="visible";
     }
 
     displayNotMyTurn() {
-        // MICHELA: display wrappers around the screen that do NOT allow you to click
+        // MICHELA: display wrappers around the screen that remove
         // pass and play buttons
+	document.getElementById("play_hand").style.visibility="hidden";
+	document.getElementById("pass").style.visibility="hidden";
     }
 
     playCards() {
         // MICHELA: get the card elements with the class name selected
-        var cards;
+        var htmlCards = document.getElementsByClassName("selected");
+	var cards = [];
 
-        // check if the cards are in the hand
+	for (htmlCard in htmlCards) {
+	    let src = htmlCard.src;
+	    let card = this.getCardByFile(src);
+	    if (card == false){
+		throw 'At least one card is not in the hand';
+	    }
+	    else{
+		cards.push(card);
+	    }
+	}
+	    
+        /* REMOVING BECAUSE CHECK HAPPENS ABOVE NOW
+	// check if the cards are in the hand
         for (let card of cards) {
             if (this.myCards.find(card) == -1) {
                 throw 'At least one card is not in the hand';
             }
         }
+	*/
 
         // check if the cards are valid to play based
         // returns "valid" if valid, error message if not
@@ -70,10 +126,11 @@ export default class PlayerView {
 
         if (validity == "valid") {
             // removes cards from hand
-            // send info to server --> list of cards just played
-                // HUIYUN: do we also need to send the player's name?
+            // HUIYUN: send info to server --> list of cards just played
+            play_cards(cards);
         }
         else {
+	        document.getElementById("error_message").innerHTML = validity;
             // MICHELA: display value of validity
         }
     }
@@ -81,6 +138,9 @@ export default class PlayerView {
     pass() {
         // send info to server --> fact that player did not play cards
             // HUIYUN: do we also need to send the player's name?
+            //can we just check if the cards is empty?
+            //Or do we want another data indicates whether player play or pass?
+            play_cards(cards);
     }
 
     isValid(cards) {
@@ -123,12 +183,12 @@ export default class PlayerView {
                 return 'valid';
             }
             // check if valid with previous cards
-            return this.isNormalMoveValid(cards);
+            return this.isValidPriority(cards);
         }
         else if (cards.length == numPokerCardsPlayed){
             // check that this is a valid poker hand
             let pokerHand = this.isPokerHand();
-            if (!pokerHand) {
+            if (pokerHand == 'false') {
                 return 'these cards do not make a valid poker hand';
             }
             else if (this.prevCards == null) {
@@ -136,7 +196,7 @@ export default class PlayerView {
                 return 'valid';
             }
 
-            this.isPokerMoveValid()
+            return this.isPokerMoveValid(pokerHand);
 
         }
         return 'you must play between 1 and 5 cards';
@@ -144,10 +204,17 @@ export default class PlayerView {
         
     }
 
-    isNormalMoveValid(cards) {
+    isValidPriority(cards, prevCards = null) {
         const prioritySum = (accumulator, card) => accumulator + card.getPriority();
         let currPriority = cards.reduce(prioritySum);
-        let prevPriority = this.prevCards.reduce(prioritySum);
+
+        if (prevCards == null) {
+            let prevPriority = this.prevCards.reduce(prioritySum); 
+        }
+        else {
+            let prevPriority = prevCards.reduce(prioritySum);
+        }
+        
 
         if (currPriority <= prevPriority) {
             return 'Cards must be higher than previously played cards';
@@ -160,6 +227,9 @@ export default class PlayerView {
     isPokerHand(cards) {
         let flushSuit = cards[0].getSuit();
         let prevRank = cards[0].getRank();
+
+        // To Clean: check if they're all the same suit
+        // or if all different suits
 
         // check if STRAIGHT FLUSH / ROYAL FLUSH
         for (let i = 1; i < cards.length; i++) {
@@ -197,13 +267,32 @@ export default class PlayerView {
         let firstCardCount = 1;
         let firstRank = cards[0].getRank();
         let secondCardCount = 0;
-        var secondRank;
+        let secondRank = null;
 
         for (let i = 1; i < cards.length; i++) {
-            if (cards[i].getRank == firstRank) {
+            if (cards[i].getRank() == firstRank) {
+                // card is same as first card
                 firstCardCount++;
             }
-            // ROSE: finish this
+            if (secondRank == null) {
+                // second rank is not set, set it and 
+                // update count
+                secondRank = cards[i].getRank();
+                secondCardCount++;
+            }
+            else if (cards[i].getRank() == secondRank) {
+                // second rank is set and card is same, 
+                // update counts
+                secondCardCount++;
+            }
+            else {
+                // second rank is set, card is not same
+                // thus not a full house
+                break;
+            }
+        }
+        if ((firstCardCount + secondCardCount) == 5) {
+            return "fh";
         }
 
 
@@ -227,7 +316,7 @@ export default class PlayerView {
 
         // check if FLUSH
         for (let i = 1; i < cards.length; i++) {
-            // to be a flsuh, the cards must have the same suit
+            // to be a flush, the cards must have the same suit
             if (!(cards[i].getSuit() == flushSuit)) {
                 break; // not a flush, but could be another poker hand
             }
@@ -237,7 +326,7 @@ export default class PlayerView {
             return 'f';
         }
 
-        return 'these cards do not form a poker hand, see rules for allowed poker hands';
+        return 'false';
     }
     /*
     Poker Hands
@@ -254,7 +343,25 @@ export default class PlayerView {
 */
 
     // check if the current poker hand is greater than the previous poker hand
-    isPokerMoveValid() {
+    isPokerMoveValid(currCards) {
+        // will hold 
+        let prevCards = this.isPokerHand(this.prevCards);
+
+        if (prevCards == 'false') {
+            return 'you attempted to play a poker hand, but the previous cards were not a poker hand';
+        }
+
+        switch (prevCards) {
+            case 'sf':
+                if (currCards == 'sf') {
+                    // check if the cards have a higher priority sum
+                    return this.isValidPriority(currCards, prevCards);
+                }
+                return 'you must play a straight flush with higher cards';
+        }
+        // must either b
+        // same special card run as previous, with higher cards
+        // "higher" special card run
         // ROSE: finish this
         return 'valid'
     }
