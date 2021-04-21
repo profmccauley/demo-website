@@ -1,5 +1,8 @@
-import Game from './Game.js';
-import PlayerView from './PlayerView.js';
+// import Game from './Game.js';
+// import PlayerView from './PlayerView.js';
+
+// var Game = require('./Game.js');
+// var PlayerView = require('./PlayerView.js');
 
 class Network{ 
 	is_connected(){
@@ -138,7 +141,6 @@ var nextPlayer = null;
 
 var game = null;
 var playerView = null;
-start_game();
 
 		function process(text){
 			//receive message
@@ -193,46 +195,46 @@ start_game();
 		}
 
 
-		//when start game button clicked in the waiting room
-		//init game in Game.js, send information to PlayerView.js
-		function start_game(){
-			//call Game in game logic
-			game = new Game(number_of_users, users);
-			//init Game in PlayerView
-			playerView = new PlayerView(player_name.value);
+		// //when start game button clicked in the waiting room
+		// //init game in Game.js, send information to PlayerView.js
+		// function start_game(){
+		// 	//call Game in game logic
+		// 	game = new Game(number_of_users, users);
+		// 	//init Game in PlayerView
+		// 	playerView = new PlayerView(player_name.value);
 
-			//Data: myCards: init cards for current user
-			//player object
-			for (let player of game.getPlayers()) {
-				if(player.name === player_name.value){
-					myCards = player.getHand();
-				}
-			}
-			prevCards = game.getPreviousCards(); 
-			currPlayer = game.getCurrentPlayer();
-			//TODO: playerOrder is not defined
-			let currIndex = game.playerOrder.indexOf(currPlayer) + 1;
-			nextPlayer = game.playerOrder[currIndex];
+		// 	//Data: myCards: init cards for current user
+		// 	//player object
+		// 	for (let player of game.getPlayers()) {
+		// 		if(player.name === player_name.value){
+		// 			myCards = player.getHand();
+		// 		}
+		// 	}
+		// 	prevCards = game.getPreviousCards(); 
+		// 	currPlayer = game.getCurrentPlayer();
+		// 	//TODO: playerOrder is not defined
+		// 	let currIndex = game.getPlayers().indexOf(currPlayer) + 1;
+		// 	nextPlayer = game.getPlayers()[currIndex];
 
-			//TODO: do I need to pass points?
-			var dict = {
-				myCards: myCards,
-			    prevCards: prevCards,
-			    currPlayer: currPlayer,
-			    nextPlayer: nextPlayer,	    
-			};
-			playerView.startGame(dict);		
+		// 	//TODO: do I need to pass points?
+		// 	var dict = {
+		// 		myCards: myCards,
+		// 	    prevCards: prevCards,
+		// 	    currPlayer: currPlayer,
+		// 	    nextPlayer: nextPlayer,	    
+		// 	};
+		// 	playerView.startGame(dict);		
 
-		}
+		// }
 
-		//when play cards button clicked by a player in the game page
-		//cards is an array of played hands
-		export default function play_cards(cards){
-			console.log("got cards" + cards);
-			//TODO: is it reasonable to updateGame here?
-			game.updateGame(cards);
-			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
-		}
+		// //when play cards button clicked by a player in the game page
+		// //cards is an array of played hands
+		// export default function play_cards(cards){
+		// 	console.log("got cards" + cards);
+		// 	//TODO: is it reasonable to updateGame here?
+		// 	game.updateGame(cards);
+		// 	net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
+		// }
 
 		////set up JS connection through python function above
 		function js_connect (status)
