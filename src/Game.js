@@ -125,8 +125,8 @@ export default class Game {
         this.lastPlayer = this.currentPlayer;
 
         // update next player
-        let nextPlayerIndex = (this.playerOrder.indexOf(this.lastPlayer) + 1) % this.numPlayers;
-        this.currentPlayer = this.playerOrder[nextPlayerIndex];
+        let nextPlayerIndex = (this.players.indexOf(this.lastPlayer) + 1) % this.numPlayers;
+        this.currentPlayer = this.players[nextPlayerIndex];
 
         // update previous cards by copying array 
         this.previousCards = [...cards];
