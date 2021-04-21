@@ -1,10 +1,19 @@
+import js_connect from './Network.js';
+
 $(document).ready(function(){
 
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
-	var game_code = $("#game_code").val();
-	var url =  "waiting_room.html?room=" + game_code;
-	$(location).attr('href', url);
+		var connection = js_connect("J");
+
+		if (connection) {
+			var game_code = $("#game_code").val();
+			var url =  "waiting_room.html?room=" + game_code;
+			$(location).attr('href', url);
+		}
+		else {
+			$("#test").text(connection);
+		}
     });
 
     //START GAME (currently from landing page)
