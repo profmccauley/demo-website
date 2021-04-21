@@ -1,4 +1,5 @@
 import Card from './Card.js';
+import play_cards from './Network.js';
 
 export default class PlayerView {
     constructor(name) {
@@ -28,6 +29,12 @@ export default class PlayerView {
         }
 
         */
+        //HUIYUN
+        this.myCards = playerJSON.myCards;
+        this.prevCards = playerJSON.prevCards;
+        this.currPlayer = playerJSON.currPlayer;
+        this.nextPlayer = playerJSON.nextPlayer;
+
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -120,6 +127,7 @@ export default class PlayerView {
         if (validity == "valid") {
             // removes cards from hand
             // HUIYUN: send info to server --> list of cards just played
+            play_cards(cards);
         }
         else {
 	        document.getElementById("error_message").innerHTML = validity;
@@ -130,6 +138,9 @@ export default class PlayerView {
     pass() {
         // send info to server --> fact that player did not play cards
             // HUIYUN: do we also need to send the player's name?
+            //can we just check if the cards is empty?
+            //Or do we want another data indicates whether player play or pass?
+            play_cards(cards);
     }
 
     isValid(cards) {

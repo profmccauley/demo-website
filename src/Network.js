@@ -1,3 +1,6 @@
+import Game from './Game.js';
+import PlayerView from './PlayerView.js';
+
 class Network{ 
 	is_connected(){
 		console.log("is_connected: " + js_isconnected());
@@ -25,7 +28,9 @@ class Sender
 		    this.path = "";
 		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    this.address = "localhost";
+		    //this.address = "localhost";
+		    this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    //this.address = "138.10.92.46";
 		    this.disconnected = false;
 		    this.buf = "";
 		    console.log("Sender created");
@@ -126,8 +131,14 @@ var status = null;
 var users = null;
 var number_of_users = null;
 
-var playingOrder = null;
-var hand = null;
+var myCards = new Array();
+var prevCards = new Array();
+var currPlayer = null;
+var nextPlayer = null;
+
+var game = null;
+var playerView = null;
+start_game();
 
 		function process(text){
 			//receive message
@@ -170,52 +181,58 @@ var hand = null;
 		  	// }
 
 		  	//temp test
-		  	//net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'player': player_name.value, 'card': [1,2,3]}}));
+		  	//net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': [1,2,3]}}));
 		  }
 		  else if(message.TYPE === 'DATA'){
 		  	//Server sends back to all players of the played cards for them to update the UI
 		  	if (message.msg.type === 'MOVE'){
-		  		console.log("Player " + message.msg.player + " played " + message.msg.card);
+		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
 		  		//update UI
 		  	}
 		  }
 		}
 
 
-		// let game = new Game(number_of_users, users);
-		// //when start game button clicked in the waiting room
-		// function start_game(){
-		// 	//call Game in game logic
-		// 	//init game
-		// 	game.startGame();
-		// 	// // start with player with the lowest card
-		// 	// let firstPlayer = game.currentPlayer;
+		//when start game button clicked in the waiting room
+		//init game in Game.js, send information to PlayerView.js
+		function start_game(){
+			//call Game in game logic
+			game = new Game(number_of_users, users);
+			//init Game in PlayerView
+			playerView = new PlayerView(player_name.value);
 
-		// 	//TODO: get playing order, is it defined by the Game logic?
-		// 	playingOrder = game.playerOrder;
+			//Data: myCards: init cards for current user
+			//player object
+			for (let player of game.getPlayers()) {
+				if(player.name === player_name.value){
+					myCards = player.getHand();
+				}
+			}
+			prevCards = game.getPreviousCards(); 
+			currPlayer = game.getCurrentPlayer();
+			//TODO: playerOrder is not defined
+			let currIndex = game.playerOrder.indexOf(currPlayer) + 1;
+			nextPlayer = game.playerOrder[currIndex];
 
-		// 	//player object
-		// 	//init cards for current user
-		// 	for (let player of game.players) {
-		// 		if(player.name === player_name.value){
-		// 			hand = player.getHand();
-		// 		}
-		// 	}
-		// }
+			//TODO: do I need to pass points?
+			var dict = {
+				myCards: myCards,
+			    prevCards: prevCards,
+			    currPlayer: currPlayer,
+			    nextPlayer: nextPlayer,	    
+			};
+			playerView.startGame(dict);		
 
-		// //when play hands button clicked by a player in the game page
-		// //cards in an array of played hands
-		// function play_hands(cards){
-		// 	//check validity of the current played cards
-		// 	try (game.rules.isValid(cards)){
-		// 		//update current player???
-		// 		game.updateGame(cards);
-		// 		//send it to the server
-		// 		net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'player': player_name.value, 'card': cards}}));
-		// 	} catch(err) {
-		// 		console.log("Error message: " + err);
-		// 	}
-		// }
+		}
+
+		//when play cards button clicked by a player in the game page
+		//cards is an array of played hands
+		export default function play_cards(cards){
+			console.log("got cards" + cards);
+			//TODO: is it reasonable to updateGame here?
+			game.updateGame(cards);
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
+		}
 
 		////set up JS connection through python function above
 		function js_connect (status)
