@@ -3,9 +3,16 @@ $(document).ready(function(){
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
 	var game_code = $("#game_code").val();
-	var name = $("#player_name").val();
-	$("#test").text("Game code: " + game_code + " Name: " + name);
+	var url =  "waiting_room.html?room=" + game_code;
+	$(location).attr('href', url);
+    });
+
+    //START GAME (currently from landing page)
+    $("#start_game").click(function(){
 	//INSERT SERVER CODE HERE
+	var game_code = $("#game_code").val();
+	var url =  "waiting_room.html?room=" + game_code + "&host=true";
+	$(location).attr('href', url);
     });
 
     //CLICK LANDING PAGE LOGIN BUTTON

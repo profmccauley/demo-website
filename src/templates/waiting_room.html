@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Mount Holyoke Poker</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+     <!-- jQueries script -->
+    <script src="../queries.js"></script>
+
+    <script>
+      var players = []
+
+      add_player(player_name){
+	  players.push(player_name);
+	  display_players();
+      }
+
+      display_players(){
+	  var html = "";
+	  for (player in players){
+	      html += "<p>" + player + "</p>";
+	  }
+	  document.getElementById("cards").innerHTML = html;
+      }
+
+      
+    </script>
+
+    <style>
+      body {
+	  align-items:center;
+	  text-align: center;
+	  background-image: url('images/felt.png');
+	  background-repeat: no-repeat;
+	  background-attachment: fixed; 
+	  background-size: cover;
+	  height:100vh;
+	  color: #f0f4fa;
+	  text-shadow: 1px 1px #696b6e;
+      }
+
+      body,html {
+	  height: 100%;
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <div class="row align-items-center h-100">
+      <div class="col">
+	<div class="row justify-content-center">
+	  <div class="col">
+	    <h1>Mount Holyoke Poker</h1>
+	    <h2 id="room_name"></h2>
+	    <div id="players">
+	      <p>blah</p>
+	      <p>blah</p>
+	      <p>blah</p>
+	      <p>blah</p>
+	    </div>
+	    <button type="button" class="btn btn-primary" id="start_game">
+	      Start Game
+	    </button>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+  
