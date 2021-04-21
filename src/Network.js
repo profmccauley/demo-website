@@ -142,6 +142,8 @@ var nextPlayer = null;
 var game = null;
 var playerView = null;
 
+var error = null;
+
 		function process(text){
 			//receive message
 		  var message = JSON.parse(text);
@@ -153,13 +155,16 @@ var playerView = null;
 		  else if(message.TYPE === 'ERROR'){
 		  	if(message.ERR === 'BADNAME'){
 		  		console.log("That name isn't allowed. Try another.")
+				  error = "That name isn't allowed. Try another.";
 		  	}
 		  	else if(message.ERR === 'BADGAMECODE'){
 		  		if(status === 'J'){
 		  			console.log("This gamecode doesn't exist. Try another.")
+					  error = "This gamecode doesn't exist. Try another.";
 		  		}
 		  		else{
 		  			console.log("This gamecode is already taken. Try another.")
+					  error = "This gamecode is already taken. Try another.";
 		  		}
 		  	}
 		  	else{
@@ -237,13 +242,20 @@ var playerView = null;
 		// }
 
 		////set up JS connection through python function above
-		function js_connect (status)
+		export default function js_connect (status)
 		{
 		  this.status = status;
 		  console.log("Welcome to Poker Game");
 		  console.log("js_connect: " + sender);
 		  if (sender) sender.close();
 		  sender = new Sender();
+
+		  if (error == null) {
+			  return true;
+		  }
+		  else {
+			  return error;
+		  }
 		}
 		function js_close ()
 		{
