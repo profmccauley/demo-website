@@ -241,8 +241,9 @@ var error = null;
 		// 	net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
 		// }
 
-		////set up JS connection through python function above
-		export default function js_connect (status)
+////set up JS connection through python function above
+//export default function js_connect (status)
+		function js_connect (status)
 		{
 		  this.status = status;
 		  console.log("Welcome to Poker Game");

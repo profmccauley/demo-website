@@ -1,20 +1,20 @@
-import js_connect from './Network.js';
+//import js_connect from './Network.js';
 
 $(document).ready(function(){
 
-    //JOIN GAME FROM LANDING PAGE
+    /*//JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
 		var connection = js_connect("J");
 
 		if (connection) {
 			var game_code = $("#game_code").val();
 			var url =  "waiting_room.html?room=" + game_code;
-			$(location).attr('href', url);
+		    $(location).attr('href', url);
 		}
 		else {
 			$("#test").text(connection);
 		}
-    });
+    });*/
 
     //START GAME (currently from landing page)
     $("#start_game").click(function(){
@@ -69,6 +69,16 @@ $(document).ready(function(){
 	    $(this).css("transform", "translateY(0px)").
 		addClass("unselected");
 	}
+    });
+
+    //START GAME ROOM (GAMEPLAY)
+    $("#play_game").click(function(){
+	var queryString = window.location.search;
+	var urlParams = new URLSearchParams(queryString);
+	var room_name = urlParams.get("room");
+	var card_type = $("select option:selected").text();
+	var url =  "game.html?room=" + room_name;
+	$(location).attr('href', url);
     });
 
     
