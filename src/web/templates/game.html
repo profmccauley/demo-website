@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Mount Holyoke Poker</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+     <!-- jQueries script -->
+    <script src="../queries.js"></script>
+    <!--<script src="../Game.js"></script>
+    <script src="../Deck.js"></script>
+    <script src="../Player.js"></script>
+    <script src="../Hand.js"></script>
+    <script src="../Card.js"></script>-->
+    
+    
+    <style>
+      body {
+	  align-items:center;
+	  text-align: center;
+	  background-image: url('images/felt.png');
+	  background-repeat: no-repeat;
+	  background-attachment: fixed; 
+	  background-size: cover;
+	  height:100vh;
+	  color: #f0f4fa;
+	  text-shadow: 1px 1px #696b6e;
+      }
+
+      body,html {
+	  height: 100%;
+      }
+
+      #middle {
+	  height: 60%;
+      }
+
+      #hand {
+	  height: 30%;
+      }
+
+
+      .fullscreen {
+	  height: 100vh;
+      }
+
+      .player_card {
+	  width: 7.35%;
+	  object-fit: cover;
+      }
+
+      .played_card {
+	  width: 10%;
+	  object-fit: cover;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="fullscreen">
+      <div class="container-fluid" style="height: 10%">
+	<div class="row align-items-end" style="height: 100%">
+	  <div class="col-md-3">
+	    <h3 id="room_name"></h3>
+	    <script>
+	      var queryString = window.location.search;
+	      var urlParams = new URLSearchParams(queryString);
+	      var name = urlParams.get("room");
+	      document.getElementById("room_name").innerHTML = "Game Room: " + name;
+	    </script>
+	  </div>
+	  <div class="col-md-7"></div>
+	  <div class="col-md-2">
+	    <button type="button" class="btn btn-danger" id="leave_game">
+	      Leave Game
+	    </button>
+	  </div>
+	</div>
+      </div>
+
+      <div id="middle">
+	<div class="row align-items-end" style="height: 20%">
+	  <div class="col-md-3">
+	    <p style="font-weight: bold" id="current_player">PLAYER's turn</p>
+	  </div>
+	  <div class="col-md-6">
+	    <p style="color: red" id="error_message"></p>
+	  </div>
+	  <div class="col-md-3">
+	    <p style="font-weight: bold" id="next_player">Next Up: PLAYER</p>
+	  </div>
+	</div>
+	<div class="row align-items-center" style="height: 70%">
+	  <div class="col">
+	    <div class="row justify-content-center">
+	      <div class="col" id="last_played">
+		<img src="images/classic/QS.jpg" class="played_card">
+		<!--<img src="images/classic/QS.jpg" class="played_card">
+		<img src="images/classic/QS.jpg" class="played_card">
+		<img src="images/classic/QS.jpg" class="played_card">
+		<img src="images/classic/QS.jpg" class="played_card">-->
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="row align-items-end" style="height: 5%">
+	  <div class="col">
+	    <div class="row justify-content-center">
+	      <div class="col">
+		<button type="button" class="btn btn-primary" id="play_hand">
+		  Play Hand
+		</button>
+		<button type="button" class="btn btn-primary" id="pass">
+		  Pass  
+		 </button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+
+      <div class="row align-items-end" id="hand">
+	<div class="col">
+	  <div class="row justify-content-center">
+	    <div class="col" id="cards">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	    </div>
+	  </div>
+	</div>
+      </div>
+
+    </div>
+
+   
+		   
+  </body>
+</html>

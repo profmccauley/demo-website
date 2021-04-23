@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mount Holyoke Poker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+     <!-- jQueries script -->
+<!--     <script src="../queries.js" type="module"></script> -->
+     <script src="../queries.js"></script>
+
+    <!-- Network script -->
+    <script type="text/javascript" src="../Network.js"></script>
+    
+
+    <style>
+      body {
+	  align-items:center;
+	  text-align: center;
+	  background-image: url('images/background.jpg');
+	  background-repeat: no-repeat;
+	  background-attachment: fixed; 
+	  background-size: cover;
+	  height:100vh;
+	  color: #f0f4fa;
+	  text-shadow: 1px 1px #696b6e;
+      }
+
+      body,html {
+	  height: 100%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="row align-items-center h-100">
+      <div class="col">
+	<div class="row justify-content-center">
+	  <div class="col">
+	    <h1>Mount Holyoke Poker</h1>
+	  </div>
+	</div><br>
+	<div class="row">
+	  <div class="col"></div>
+	  <div class="col">
+	    <h2>Join Game</h2>
+	    <form method="GET">
+	      <div class="form-group">
+		<input type="text" id="game_code" placeholder="Game Code" class="form-control">
+	      </div>
+	      <div class="form-group">
+		<input type="text" id="player_name" placeholder="Name" class="form-control">
+	      </div>
+	      <div class="form-group">
+		<input type="button" class="btn btn-primary" id="join_game" value="Join Game" onclick="js_connect('J')")>
+	      </div>
+	      <div class="form-group">
+		<input type="button" class="btn btn-primary" id="start_game" value="Start New Game" onclick="js_connect('S')">
+	      </div>
+	    </form>
+	    <p id="test"></p>
+	  </div>
+	  <div class="col">
+	    <h2>Login to Start Game</h2><br>
+	    <button type="button" id="login" class="btn btn-primary">Login</button><br><br>
+	    <button type="button" id="register" class="btn btn-primary">Register</button>
+	  </div>
+	  <div class="col"></div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

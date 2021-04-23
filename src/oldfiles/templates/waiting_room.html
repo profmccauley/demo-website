@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Mount Holyoke Poker</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+     <!-- jQueries script -->
+    <script src="../queries.js" type="module"></script>
+    <script type="module" src="../Network.js">
+
+    <script>
+      var players = []
+
+      function add_player(player_name){
+	  players.push(player_name);
+	  display_players();
+      }
+
+      function display_players(){
+	  var html = "";
+	  for (player in players){
+	      html += "<p>" + player + "</p>";
+	  }
+	  document.getElementById("cards").innerHTML = html;
+      }
+      
+    </script>
+
+    <style>
+      body {
+	  align-items:center;
+	  text-align: center;
+	  background-image: url('images/background.jpg');
+	  background-repeat: no-repeat;
+	  background-attachment: fixed; 
+	  background-size: cover;
+	  height:100vh;
+	  color: #fffdf7;
+	  text-shadow: 1px 1px #696b6e;
+      }
+
+      body,html {
+	  height: 100%;
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <div class="row align-items-center h-100">
+      <div class="col">
+	<div class="row justify-content-center">
+	  <div class="col">
+	    <h1>Mount Holyoke Poker</h1>
+	    <h2 id="room_name"></h2>
+	    <script>
+	      var queryString = window.location.search;
+	      var urlParams = new URLSearchParams(queryString);
+	      var name = urlParams.get("room");
+	      document.getElementById("room_name").innerHTML = "Room: " + name;
+	    </script>
+	    <div id="players">
+	      <p>blah</p>
+	      <p>blah</p>
+	      <p>blah</p>
+	      <p>blah</p>
+	    </div>
+	    <div id="host_specific">
+	      <form method="GET">
+		<div class="form-group">
+		  <label style="font-weight: bold" for="card_types">Select card type for game play:</label>
+		  <select name="card_types" id="card_types">
+		    <option value="classic">Classic</option>
+		    <option value="moho">Mount Holyoke Cards</option>
+		  </select>
+		</div>
+		<div class="form-group">
+		  <input type="button" id="play_game" class="btn btn-primary" value="Start Game">
+		</div>
+	      </form>
+	    </div>
+	    <h3 id="player_specific">Waiting for host to start game...</h3>
+	    
+	    <!-- FOLLOWING SCRIPT HIDES/SHOWS THE HOST-SPECIFIC DIV DEPENDING
+		 ON WHETHER A USER HAS STARTED A GAME AND IS THE HOST OR JUST
+		 JOINED A GAME AS A PLAYER -->
+	    <script>
+	      var queryString = window.location.search;
+	      var urlParams = new URLSearchParams(queryString);
+	      if(urlParams.has('host')){
+		  document.getElementById("host_specific").style.display = "block";
+		  document.getElementById("player_specific").style.display = "none";
+	      }
+	      else{
+		  document.getElementById("host_specific").style.display = "none";
+		  document.getElementById("player_specific").style.display = "block";
+	      }
+	    </script>
+	    
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+  
