@@ -1,27 +1,44 @@
-//import js_connect from './Network.js';
+$.getScript("../Network.js", function() {
+   console.log("Script loaded.");
+});
 
 $(document).ready(function(){
 
-    /*//JOIN GAME FROM LANDING PAGE
+    //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
-		var connection = js_connect("J");
-
-		if (connection) {
-			var game_code = $("#game_code").val();
-			var url =  "waiting_room.html?room=" + game_code;
-		    $(location).attr('href', url);
-		}
-		else {
-			$("#test").text(connection);
-		}
-    });*/
+		async function connection(){
+    		let join = await get_join_status();
+    		console.log("join_success: " + join);
+    		if(join === true){
+    			var game_code = $("#game_code").val();
+    			var url =  "waiting_room.html?room=" + game_code;
+    			$(location).attr('href', url);
+    		}
+    		else{
+    			setTimeout( connection, 500);
+    			$("#test").text("unable to start");
+    		}
+    	}
+    	connection();
+    });
 
     //START GAME (currently from landing page)
     $("#start_game").click(function(){
+    	async function connection(){
+    		let join = await get_join_status();
+    		console.log("start_success: " + join);
+    		if(join === true){
+    			var game_code = $("#game_code").val();
+    			var url =  "waiting_room.html?room=" + game_code + "&host=true";
+    			$(location).attr('href', url);
+    		}
+    		else{
+    			setTimeout( connection, 500);
+    			$("#test").text("unable to start");
+    		}
+    	}
+    	connection();
 	//INSERT SERVER CODE HERE
-	var game_code = $("#game_code").val();
-	var url =  "waiting_room.html?room=" + game_code + "&host=true";
-	$(location).attr('href', url);
     });
 
     //CLICK LANDING PAGE LOGIN BUTTON
