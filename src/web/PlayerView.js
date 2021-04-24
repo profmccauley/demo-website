@@ -344,7 +344,7 @@ export default class PlayerView {
 */
 
     // check if the current poker hand is greater than the previous poker hand
-    isPokerMoveValid(currCards) {
+    isPokerMoveValid(cards, currCards) {
         // will hold 
         let prevCards = this.isPokerHand(this.prevCards);
 
@@ -356,15 +356,54 @@ export default class PlayerView {
             case 'sf':
                 if (currCards == 'sf') {
                     // check if the cards have a higher priority sum
-                    return this.isValidPriority(currCards, prevCards);
+                    return this.isValidPriority(cards, this.prevCards);
                 }
                 return 'you must play a straight flush with higher cards';
+            case '4k':
+                if (currCards == 'sf') {
+                    return 'valid';
+                }
+                if (currCards == '4k') {
+                    // TODO: check if the 4 cards have a higher rank
+                }
+                return 'you must play a four of a kind or a straight flush';
+            case 'fh':
+                if (currCards == 'sf' || currCards == '4k') {
+                    return 'valid';
+                }
+                if (currCards == 'fh') {
+                    // TODO: check that the trio is larger
+                }
+                return 'you must play either: straight flush, four of a kind, or full house with higher three of a kind';
+            case 's':
+                if (currCards == 'sf' || currCards == '4k' || currCards == 'fh') {
+                    return 'valid';
+                }
+                if (currCards == 's') {
+                    // check that the lowest card is higher than the previous lowest card
+                    // TODO: confirm that Lena wouldn't want to do this based on priority?
+                    if (cards[0].getRank() > this.prevCards.getRank()) {
+                        return 'valid';
+                    }
+                    return 'your straight must be higher than the previous straight';
+                }
+                return 'you must play either: straight flush, four of a kind, full house, or a straight with higher cards';
+            case 'f':
+                if (currCards == 'sf' || currCards == '4k' || currCards == 'fh' || currCards == 's') {
+                    return 'valid';
+                }
+                if (currCards == 'f') {
+                    let lastCard = 4;
+                    // check if rank of highest card is larger than previous highest card
+                    if (cards[lastCard].getRank() > this.prevCards[lastCard].getRank()) {
+                        return 'valid';
+                    }
+                    return 'your flush must have a higher card than the previous flush';
+                }
+                return 'you must play either: straight flush, four of a kind, full house, straight, or a flush with higher cards';
+            default:
+                return 'you cannot play poker hands during this run';
         }
-        // must either b
-        // same special card run as previous, with higher cards
-        // "higher" special card run
-        // ROSE: finish this
-        return 'valid'
     }
 
     // sorts cards
