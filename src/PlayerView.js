@@ -34,7 +34,6 @@ export default class PlayerView {
         this.prevCards = playerJSON.prevCards;
         this.currPlayer = playerJSON.currPlayer;
         this.nextPlayer = playerJSON.nextPlayer;
-        this.points = playerJSON.points;
 
 
         // displays the player's cards on the screen
@@ -247,7 +246,7 @@ export default class PlayerView {
 
         // check if FOUR OF A KIND
         let sameCardCount = 1;
-        prevRank = cards[0].getRank();
+        let prevRank = cards[0].getRank();
         for (let i = 1; i < cards.length; i++) {
             if (sameCardCount == 4) {
                 return '4k';
@@ -298,7 +297,7 @@ export default class PlayerView {
 
 
         // check if STRAIGHT
-        prevRank = cards[0].getRank();
+        let prevRank = cards[0].getRank();
 
         for (let i = 1; i < cards.length; i++) {
             // to be a straight, the cards must be in ascending order by rank
