@@ -1,6 +1,8 @@
-import Game from './Game.js';
-import PlayerView from './PlayerView.js';
+// import Game from './Game.js';
+// import PlayerView from './PlayerView.js';
 
+// var Game = require('./Game.js');
+// var PlayerView = require('./PlayerView.js');
 
 class Network{ 
 	is_connected(){
@@ -29,8 +31,8 @@ class Sender
 		    this.path = "";
 		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    this.address = "localhost";
-		    //this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    //this.address = "localhost";
+		    this.address = "cs-vm-06.cs.mtholyoke.edu";
 		    //this.address = "138.10.92.46";
 		    this.disconnected = false;
 		    this.buf = "";
@@ -128,7 +130,7 @@ class Sender
 var sender = null;
 var net = new Network();
 
-var status = "S";
+var status = null;
 var users = null;
 var number_of_users = null;
 
@@ -136,13 +138,11 @@ var myCards = new Array();
 var prevCards = new Array();
 var currPlayer = null;
 var nextPlayer = null;
-var my_point = 0;
 
 var game = null;
 var playerView = null;
 
 var error = null;
-var join_success = false;
 
 		function process(text){
 			//receive message
@@ -177,8 +177,6 @@ var join_success = false;
 		  	net.send(JSON.stringify({ "TYPE":"JOIN_GAME", "size": 4, "status": status, "gamecode" : game_code.value, "allow_spectators": true}));
 		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
-		  	//add_player(player_name.value);
-		  	join_success = true;
 		  	users = message.users;
 		  	number_of_users = message.number_of_users;
 		  	console.log("Current users in this room: " + users);
@@ -187,9 +185,6 @@ var join_success = false;
 		  	// if(message.is_ready === true){
 		  	// 	//start the game
 		  	// 	start_game(users);
-		  	// }
-		  	// if(number_of_users === 2){
-		  	// 	start_game();
 		  	// }
 
 		  	//temp test
@@ -204,68 +199,64 @@ var join_success = false;
 		  }
 		}
 
-		export function get_join_status(){
-			return join_success;
-		}
 
+		// //when start game button clicked in the waiting room
+		// //init game in Game.js, send information to PlayerView.js
+		// function start_game(){
+		// 	//call Game in game logic
+		// 	game = new Game(number_of_users, users);
+		// 	//init Game in PlayerView
+		// 	playerView = new PlayerView(player_name.value);
 
-		//when start game button clicked in the waiting room
-		//init game in Game.js, send information to PlayerView.js
-		function start_game(){
-			//call Game in game logic
-			game = new Game(number_of_users, users);
-			//init Game in PlayerView
-			playerView = new PlayerView(player_name.value);
+		// 	//Data: myCards: init cards for current user
+		// 	//player object
+		// 	for (let player of game.getPlayers()) {
+		// 		if(player.name === player_name.value){
+		// 			myCards = player.getHand();
+		// 		}
+		// 	}
+		// 	prevCards = game.getPreviousCards(); 
+		// 	currPlayer = game.getCurrentPlayer();
+		// 	//TODO: playerOrder is not defined
+		// 	let currIndex = game.getPlayers().indexOf(currPlayer) + 1;
+		// 	nextPlayer = game.getPlayers()[currIndex];
 
-			//Data: myCards: init cards for current user
-			//player object
-			for (let player of game.getPlayers()) {
-				if(player.name === player_name.value){
-					myCards = player.getHand();
-					my_point = player.getPoints();
-				}
-			}
-			prevCards = game.getPreviousCards(); 
-			currPlayer = game.getCurrentPlayer();
-			let currIndex = game.getPlayers().indexOf(currPlayer) + 1;
-			nextPlayer = game.getPlayers()[currIndex];
+		// 	//TODO: do I need to pass points?
+		// 	var dict = {
+		// 		myCards: myCards,
+		// 	    prevCards: prevCards,
+		// 	    currPlayer: currPlayer,
+		// 	    nextPlayer: nextPlayer,	    
+		// 	};
+		// 	playerView.startGame(dict);		
 
-			var dict = {
-				myCards: myCards,
-			    prevCards: prevCards,
-			    currPlayer: currPlayer,
-			    nextPlayer: nextPlayer,	
-			    points: my_point,
-			};
-			//console.log(JSON.stringify(dict));
-			playerView.startGame(dict);		
+		// }
 
-		}
-
-		//when play cards button clicked by a player in the game page
-		//cards is an array of played hands
-		export default function play_cards(cards){
-			console.log("got cards" + cards);
-			//TODO: is it reasonable to updateGame here?
-			game.updateGame(cards);
-			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
-		}
+		// //when play cards button clicked by a player in the game page
+		// //cards is an array of played hands
+		// export default function play_cards(cards){
+		// 	console.log("got cards" + cards);
+		// 	//TODO: is it reasonable to updateGame here?
+		// 	game.updateGame(cards);
+		// 	net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
+		// }
 
 ////set up JS connection through python function above
- 		function js_connect (my_status)
+//export default function js_connect (status)
+		function js_connect (status)
 		{
-		  status = my_status;
+		  this.status = status;
 		  console.log("Welcome to Poker Game");
 		  console.log("js_connect: " + sender);
 		  if (sender) sender.close();
 		  sender = new Sender();
 
-		  // if (error == null) {
-			 //  return true;
-		  // }
-		  // else {
-			 //  return error;
-		  // }
+		  if (error == null) {
+			  return true;
+		  }
+		  else {
+			  return error;
+		  }
 		}
 		function js_close ()
 		{
@@ -288,9 +279,3 @@ var join_success = false;
 		  if (rs == 1) return 2;
 		  return 0;
 		}
-document.getElementById("start_game").addEventListener("click", function(){
-	js_connect("S");
-});
-document.getElementById("join_game").addEventListener("click", function(){js_connect("J")});
-window.get_join_status = get_join_status;
-

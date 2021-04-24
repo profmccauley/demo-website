@@ -1,8 +1,8 @@
 import Card from "./Card.js";
 import Deck from "./Deck.js";
 import Game from "./Game.js";
-import Hand from "./Hand.js";
-import Player from "./Player.js";
+import Hand from "./templates/Hand.js";
+import Player from "./templates/Player.js";
 
 let aceOfHearts = new Card(14, 3); 
 let sevenOfSpades = new Card(7, 4);
