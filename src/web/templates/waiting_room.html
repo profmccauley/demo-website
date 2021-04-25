@@ -17,13 +17,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
      <!-- jQueries script -->
-    <script src="../queries.js"></script>
+    <script src="../queries.js" type="module"></script>
+    <script src="../Waiting.js" type="module"></script>
+    <script src="../Network.js" type="module"></script>
 
-    <script>
+<!--     <script>
       var players = []
 
       function add_player(player_name){
 	  players.push(player_name);
+	  console.log(players);
 	  display_players();
       }
 
@@ -35,7 +38,7 @@
 	  document.getElementById("cards").innerHTML = html;
       }
       
-    </script>
+    </script> -->
 
     <style>
       body {
