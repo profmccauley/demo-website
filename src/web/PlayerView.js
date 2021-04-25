@@ -2,9 +2,9 @@ import Card from './Card.js';
 import play_cards from './Network.js';
 
 export default class PlayerView {
-    constructor(name) {
+    constructor(name, host=false) {
         this.myName = name;
-
+	this.host = host;
         this.myCards = new Array();   // cards will be sorted by lowest to highest priority
         this.firstTurn;
         this.prevCards = new Array();

@@ -247,7 +247,7 @@ var join_success = false;
 			    nextPlayer: nextPlayer,	
 			    points: my_point,
 			};
-			//console.log(JSON.stringify(dict));
+			console.log(JSON.stringify(dict));
 			playerView.startGame(dict);		
 
 			//send to server that the game starts
