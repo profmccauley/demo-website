@@ -1,5 +1,6 @@
 import Game from './Game.js';
 import PlayerView from './PlayerView.js';
+import add_player from './Waiting.js';
 
 
 class Network{ 
@@ -176,8 +177,11 @@ var join_success = false;
 		  	//console.log("Now you can join a game");
 		  	net.send(JSON.stringify({ "TYPE":"JOIN_GAME", "size": 4, "status": status, "gamecode" : game_code.value, "allow_spectators": true}));
 		  }
+		  else if(message.TYPE === 'JOIN'){
+		  	add_player(message.user);
+		  	console.log("add player: " + message.user);
+		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
-		  	//add_player(player_name.value);
 		  	join_success = true;
 		  	users = message.users;
 		  	number_of_users = message.number_of_users;
@@ -199,7 +203,12 @@ var join_success = false;
 		  	//Server sends back to all players of the played cards for them to update the UI
 		  	if (message.msg.type === 'MOVE'){
 		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
-		  		//update UI
+		  		//call update UI
+		  	}
+		  	//Server sends back to all players for them to start the game
+		  	else if(message.msg.type === 'START'){
+		  		console.log("The host " + message.SENDER + " started the game");
+		  		//call players_start()
 		  	}
 		  }
 		}
@@ -212,6 +221,7 @@ var join_success = false;
 		//when start game button clicked in the waiting room
 		//init game in Game.js, send information to PlayerView.js
 		function start_game(){
+			console.log("The game starts!");
 			//call Game in game logic
 			game = new Game(number_of_users, users);
 			//init Game in PlayerView
@@ -239,6 +249,9 @@ var join_success = false;
 			};
 			//console.log(JSON.stringify(dict));
 			playerView.startGame(dict);		
+
+			//send to server that the game starts
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'START'}}));
 
 		}
 
@@ -282,9 +295,7 @@ var join_success = false;
 		  if (rs == 1) return 2;
 		  return 0;
 		}
-document.getElementById("start_game").addEventListener("click", function(){
-	js_connect("S");
-});
+document.getElementById("start_game").addEventListener("click", function(){js_connect("S")});
+document.getElementById("play_game").addEventListener("click", start_game);
 document.getElementById("join_game").addEventListener("click", function(){js_connect("J")});
 window.get_join_status = get_join_status;
-

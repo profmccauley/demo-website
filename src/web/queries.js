@@ -19,7 +19,7 @@ $(document).ready(function(){
     			$("#test").text("unable to start");
     		}
     	}
-    	connection();
+    	//connection();
     });
 
     //START GAME (currently from landing page)
@@ -37,7 +37,7 @@ $(document).ready(function(){
     			$("#test").text("unable to start");
     		}
     	}
-    	connection();
+    	//connection();
 	//INSERT SERVER CODE HERE
     });
 
