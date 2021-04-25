@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mount Holyoke Poker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- jQueries script -->
+    <script src="../queries.js" type="module"></script>
+    <!--      <script src="../queries.js"></script> -->
+    
+    <!-- Network script -->
+    <!--     <script type="text/javascript" src="../Network.js"></script> -->
+    <script type="module" src="../Network.js">
+    </script> 
+    
+    <style>
+      body {
+	  align-items:center;
+	  text-align: center;
+	  background-image: url('images/background.jpg');
+	  background-repeat: no-repeat;
+	  background-attachment: fixed; 
+	  background-size: cover;
+	  height:100vh;
+	  color: #fffdf7;
+	  text-shadow: 1px 1px #696b6e;
+      }
+
+      body,html {
+	  height: 100%;
+      }
+      #middle {
+	  height: 60%;
+      }
+
+      #hand {
+	  height: 30%;
+      }
+      
+      .offscreen {
+	  display: none;
+      }
+
+      .fullscreen {
+	  height: 100vh;
+      }
+
+      .player_card {
+	  width: 7.35%;
+	  object-fit: cover;
+      }
+
+      .played_card {
+	  width: 10%;
+	  object-fit: cover;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div id="homepage" class="row align-items-center h-100">
+      <div class="col">
+	<div class="row justify-content-center">
+	  <div class="col">
+	    <h1>Mount Holyoke Poker</h1>
+	  </div>
+	</div><br>
+	<div class="row">
+	  <div class="col"></div>
+	  <div class="col">
+	    <h2>Join Game</h2>
+	    <form method="GET">
+	      <div class="form-group">
+		<input type="text" id="game_code" placeholder="Game Code" class="form-control">
+	      </div>
+	      <div class="form-group">
+		<input type="text" id="player_name" placeholder="Name" class="form-control">
+	      </div>
+	      <div class="form-group">
+		<input type="button" class="btn btn-primary" id="join_game" value="Join Game">
+	      </div>
+	      <div class="form-group">
+		<input type="button" class="btn btn-primary" id="start_game" value="Start New Game">
+	      </div>
+	    </form>
+	    <p id="test"></p>
+	  </div>
+	  <div class="col">
+	    <h2>Login to Start Game</h2><br>
+	    <button type="button" id="login" class="btn btn-primary">Login</button><br><br>
+	    <button type="button" id="register" class="btn btn-primary">Register</button>
+	  </div>
+	  <div class="col"></div>
+	</div>
+      </div>
+    </div>
+
+    <div id="waiting_room" class="row align-items-center h-100 offscreen">
+      <div class="col">
+	<div class="row justify-content-center">
+	  <div class="col">
+	    <h1>Mount Holyoke Poker</h1>
+	    <h2 id="room_name"></h2>
+	    <script>
+	      var queryString = window.location.search;
+	      var urlParams = new URLSearchParams(queryString);
+	      var name = urlParams.get("room");
+	      document.getElementById("room_name").innerHTML = "Room: " + name;
+	    </script>
+	    <div id="players">
+	      <p>blah</p>
+	      <p>blah</p>
+	      <p>blah</p>
+	      <p>blah</p>
+	    </div>
+	    <div id="host_specific">
+	      <form method="GET">
+		<div class="form-group">
+		  <label style="font-weight: bold" for="card_types">Select card type for game play:</label>
+		  <select name="card_types" id="card_types">
+		    <option value="classic">Classic</option>
+		    <option value="moho">Mount Holyoke Cards</option>
+		  </select>
+		</div>
+		<div class="form-group">
+		  <input type="button" id="play_game" class="btn btn-primary" value="Start Game">
+		</div>
+	      </form>
+	    </div>
+	    <h3 id="player_specific">Waiting for host to start game...</h3>
+	    
+	    <!-- FOLLOWING SCRIPT HIDES/SHOWS THE HOST-SPECIFIC DIV DEPENDING
+		 ON WHETHER A USER HAS STARTED A GAME AND IS THE HOST OR JUST
+		 JOINED A GAME AS A PLAYER -->
+	    <script>
+	      var queryString = window.location.search;
+	      var urlParams = new URLSearchParams(queryString);
+	      if(urlParams.has('host')){
+		  document.getElementById("host_specific").style.display = "block";
+		  document.getElementById("player_specific").style.display = "none";
+	      }
+	      else{
+		  document.getElementById("host_specific").style.display = "none";
+		  document.getElementById("player_specific").style.display = "block";
+	      }
+	    </script>
+	    
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    <div id="game_screen" class="fullscreen offscreen" style="background-image: url('images/felt.png');">
+      <div class="container-fluid" style="height: 10%">
+	<div class="row align-items-end" style="height: 100%">
+	  <div class="col-md-3">
+	    <h3 id="room_name"></h3>
+	    <script>
+	      var queryString = window.location.search;
+	      var urlParams = new URLSearchParams(queryString);
+	      var name = urlParams.get("room");
+	      document.getElementById("room_name").innerHTML = "Game Room: " + name;
+	    </script>
+	  </div>
+	  <div class="col-md-7"></div>
+	  <div class="col-md-2">
+	    <button type="button" class="btn btn-danger" id="leave_game">
+	      Leave Game
+	    </button>
+	  </div>
+	</div>
+      </div>
+
+      <div id="middle">
+	<div class="row align-items-end" style="height: 20%">
+	  <div class="col-md-3">
+	    <p style="font-weight: bold" id="current_player">PLAYER's turn</p>
+	  </div>
+	  <div class="col-md-6">
+	    <p style="color: red" id="error_message"></p>
+	  </div>
+	  <div class="col-md-3">
+	    <p style="font-weight: bold" id="next_player">Next Up: PLAYER</p>
+	  </div>
+	</div>
+	<div class="row align-items-center" style="height: 70%">
+	  <div class="col">
+	    <div class="row justify-content-center">
+	      <div class="col" id="last_played">
+		<img src="images/classic/QS.jpg" class="played_card">
+		<!--<img src="images/classic/QS.jpg" class="played_card">
+		<img src="images/classic/QS.jpg" class="played_card">
+		<img src="images/classic/QS.jpg" class="played_card">
+		<img src="images/classic/QS.jpg" class="played_card">-->
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="row align-items-end" style="height: 5%">
+	  <div class="col">
+	    <div class="row justify-content-center">
+	      <div class="col">
+		<button type="button" class="btn btn-primary" id="play_hand">
+		  Play Hand
+		</button>
+		<button type="button" class="btn btn-primary" id="pass">
+		  Pass  
+		 </button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+
+      <div class="row align-items-end" id="hand">
+	<div class="col">
+	  <div class="row justify-content-center">
+	    <div class="col" id="cards">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	      <img src="images/classic/QS.jpg" class="player_card unselected">
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    
+  </body>
+</html>
