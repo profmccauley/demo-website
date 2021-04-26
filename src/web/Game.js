@@ -4,10 +4,10 @@ import Player from "./Player.js";
 export default class Game {
     // numPlayers is an int
     // playerNames is an array with the names of the player
-    constructor(numPlayers, playerNames = false) {
-        /*if (numPlayers < 2 || numPlayers > 4) {
+    constructor(numPlayers, playerNames = false, deckType = 'classic') {
+        if (numPlayers < 2 || numPlayers > 4) {
             throw 'Number of players must be between 2 and 4';
-        }*/
+        }
 
         this.numPlayers = numPlayers;
 
@@ -19,7 +19,7 @@ export default class Game {
 
         // below could also be a hand? but may convolute purpose
         this.previousCards = null; 
-        this.deck = new Deck();
+        this.deck = new Deck(deckType);
 
         this.startGame();
         this.startPassJSON();
