@@ -9,7 +9,7 @@ $(document).ready(function(){
 		async function connection(){
     		let join = await get_join_status();
     		console.log("join_success: " + join);
-    		if(join === true){
+    		if (join === true){
     			var game_code = $("#game_code").val();
     			var url =  "waiting_room.html?room=" + game_code;
     			$(location).attr('href', url);

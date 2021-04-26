@@ -120,7 +120,7 @@ export default class Game {
     //    * update the last player to the current player (above prev!!)
     //    * update the previously played cards to the current
     //      cards just played
-    updateGame(cards) {
+    updateGame(cards = 'pass') {
         // update current player to next in list
         this.lastPlayer = this.currentPlayer;
 
@@ -129,7 +129,11 @@ export default class Game {
         this.currentPlayer = this.players[nextPlayerIndex];
 
         // update previous cards by copying array 
-        this.previousCards = [...cards];
+        // do not update cards if the player passed
+        if (!(cards === 'pass')) {
+            this.previousCards = [...cards];
+        }
+
 
         // HUIYUN: send these values back
         // this.prevCards = new Array();

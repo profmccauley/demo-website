@@ -29,7 +29,7 @@ export default class PlayerView {
         }
 
         */
-        //HUIYUN
+        // HUIYUN
         this.myCards = playerJSON.myCards;
         this.prevCards = playerJSON.prevCards;
         this.currPlayer = playerJSON.currPlayer;
@@ -111,22 +111,14 @@ export default class PlayerView {
 		cards.push(card);
 	    }
 	}
-	    
-        /* REMOVING BECAUSE CHECK HAPPENS ABOVE NOW
-	// check if the cards are in the hand
-        for (let card of cards) {
-            if (this.myCards.find(card) == -1) {
-                throw 'At least one card is not in the hand';
-            }
-        }
-	*/
 
-        // check if the cards are valid to play based
+        // check if the cards are valid to play based on rules
         // returns "valid" if valid, error message if not
         var validity = this.isValid(cards);
 
         if (validity == "valid") {
-            // removes cards from hand
+            // TODO: removes cards from hand
+            
             // HUIYUN: send info to server --> list of cards just played
             play_cards(cards);
         }
@@ -420,38 +412,3 @@ export default class PlayerView {
           });
     }
 }
-
-
-// what's the flow of a player taking a turn?
-
-// 1.  player chooses cards to play
-// 2.  check that the cards are in Player's hand
-// 3.  check that the cards are valid. this is 100% based
-//     on what was played by the previous player
-//        * one card run
-//              * must have played one card
-//              * card must have higher priority
-//        * two/three/four card run: 
-//              * must have played two same cards
-//              * cards must have higher summed priority
-//        * special card run
-//              * must have five cards
-//              * must be one of the special card thingies
-//              * must be either
-//                  * the same special card thing with higher cards
-//                  * a higher special card thing
-//              * [this one will take the most manual logic]
-// 4a. if cards are not valid, give user useful error 
-// 4b. if cards are valid:
-//        * update the current player to the next 
-//          player in the list
-//        * update the last player to the current player (above prev!!)
-//        * update the previously played cards to the current
-//          cards just played
-//        * reduce the size of the player's hand by cards.length
-
-// separate player view class
-        // here is what each player needs to draw their UI
-        // and the previous cards
-        // and check "is this a valid move that I should submit
-        // to the server"
