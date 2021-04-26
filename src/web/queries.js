@@ -104,14 +104,10 @@ $(document).ready(function(){
 
     //START GAME ROOM (GAMEPLAY)
     $("#play_game").click(function(){
-	var queryString = window.location.search;
-	var urlParams = new URLSearchParams(queryString);
-	var room_name = urlParams.get("room");
-	var card_type = $("select option:selected").text();
-	//var room_name = $("#room_name").text;
+	var room = $("#room_name").text();
 	$("#waiting_room").addClass("offscreen");
 	$("#game_screen").removeClass("offscreen");
-	//$("#room_name_game").text("Game " + room_name);
+	$("#room_name_game").text("Game " + room);
     });
 
     
