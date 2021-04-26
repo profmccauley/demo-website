@@ -1,6 +1,6 @@
-/*$.getScript("../Network.js", function() {
+$.getScript("../Network.js", function() {
    console.log("Script loaded.");
-});*/
+});
 
 $(document).ready(function(){
 
