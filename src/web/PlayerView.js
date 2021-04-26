@@ -52,28 +52,51 @@ export default class PlayerView {
         }
     }
 
+    /**
+     * This method receives updates from the server after a player has played cards.
+     * It will update the stored information, then redisplay the screen
+     * 
+     * @param serverUpdates dictionary containing the new current player, the next player, and the
+     * cards that were just played
+     */
+    updateGame(serverUpdates) {
+        this.prevCards = serverUpdates.prevCards;
+        this.currPlayer = serverUpdates.currPlayer;
+        this.nextPlayer = serverUpdates.nextPlayer;
+
+        this.displayPrevCards();
+        if (this.currPlayer == this.myName) {
+            this.displayMyTurn();
+        }
+        else {
+            this.displayNotMyTurn();
+        }
+
+        // MICHELA: need a way to update the Next Player
+    }
+
     getCardByFile(fileName){
-	for (let card of this.myCards) {
-	    if(card.getFilePath() == fileName){
-		return card;
-	    }
-	}
-	//card w/ given filename is not in the hand
-	return false;
+        for (let card of this.myCards) {
+            if(card.getFilePath() == fileName){
+            return card;
+            }
+        }
+        //card w/ given filename is not in the hand
+        return false;
     }
 
     displayHand() {
-	console.log("made it to displayHand");
-        // MICHELA: call every time you update your cards
-	var html = "";
-	for (let card of this.myCards) {
-	    let tag = '<img src="images/';
-	    tag += card.getFilePath();
-	    tag += '" class="player_card unselected">';
-	    html += tag;
-	}
-	console.log(html);
-	document.getElementById("cards").innerHTML = html;	    
+        console.log("made it to displayHand");
+            // MICHELA: call every time you update your cards
+        var html = "";
+        for (let card of this.myCards) {
+            let tag = '<img src="images/';
+            tag += card.getFilePath();
+            tag += '" class="player_card unselected">';
+            html += tag;
+        }
+        console.log(html);
+        document.getElementById("cards").innerHTML = html;	    
     }
 
     displayPrevCards() {
@@ -90,46 +113,47 @@ export default class PlayerView {
     displayMyTurn() {
         // MICHELA: display wrappers around the screen that allow you to click
         // pass and play buttons
-	document.getElementById("play_hand").style.visibility="visible";
-	document.getElementById("pass").style.visibility="visible";
+        document.getElementById("play_hand").style.visibility="visible";
+        document.getElementById("pass").style.visibility="visible";
     }
 
     displayNotMyTurn() {
         // MICHELA: display wrappers around the screen that remove
         // pass and play buttons
-	document.getElementById("play_hand").style.visibility="hidden";
-	document.getElementById("pass").style.visibility="hidden";
+        document.getElementById("play_hand").style.visibility="hidden";
+        document.getElementById("pass").style.visibility="hidden";
     }
 
     playCards() {
         // MICHELA: get the card elements with the class name selected
         var htmlCards = document.getElementsByClassName("selected");
-	var cards = [];
+        var cards = [];
 
-	for (let htmlCard of htmlCards) {
-	    let src = htmlCard.src;
-	    let card = this.getCardByFile(src);
-	    if (card == false){
-		throw 'At least one card is not in the hand';
+        for (let htmlCard of htmlCards) {
+            let src = htmlCard.src;
+            let card = this.getCardByFile(src);
+            if (card == false){
+                throw 'At least one card is not in the hand';
+            }
+            else {
+                cards.push(card);
+            }
 	    }
-	    else{
-		cards.push(card);
-	    }
-	}
 
         // check if the cards are valid to play based on rules
         // returns "valid" if valid, error message if not
         var validity = this.isValid(cards);
 
         if (validity == "valid") {
-            // TODO: removes cards from hand
-            
-            // HUIYUN: send info to server --> list of cards just played
+            // removes cards from hand & redisplays locally
+            this.removeCardsFromHand(cards);
+
+            // send to server list of cards just played
             play_cards(cards);
         }
         else {
+            // display value of validity on the player's screen
 	        document.getElementById("error_message").innerHTML = validity;
-            // MICHELA: display value of validity
         }
     }
 
@@ -139,6 +163,24 @@ export default class PlayerView {
             //can we just check if the cards is empty?
             //Or do we want another data indicates whether player play or pass?
             play_cards(cards);
+    }
+
+    removeCardsFromHand(playedCards) {
+        tempCards = [...this.myCards];
+
+        // remove the cards
+        for (card of this.myCards) {
+            for (playedCard of this.playedCards) {
+                if (card.getPriority() == playedCard.getPriority()) {
+                    tempCards.remove(tempCards.indexOf(card));
+                }
+            }
+        }
+
+        this.myCards = [...tempCards];
+
+        // update the display
+        this.displayHand();
     }
 
     isValid(cards) {
