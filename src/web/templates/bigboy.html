@@ -19,6 +19,7 @@
     <!-- jQueries script -->
     <script src="../queries.js" type="module"></script>
     <!--      <script src="../queries.js"></script> -->
+
     
     <!-- Network script -->
     <!--     <script type="text/javascript" src="../Network.js"></script> -->
@@ -114,12 +115,12 @@
 	  <div class="col">
 	    <h1>Mount Holyoke Poker</h1>
 	    <h2 id="room_name"></h2>
-	    <script>
+	    <!-- <script>
 	      var queryString = window.location.search;
 	      var urlParams = new URLSearchParams(queryString);
 	      var name = urlParams.get("room");
 	      document.getElementById("room_name").innerHTML = "Room: " + name;
-	    </script>
+	    </script> -->
 	    <div id="players">
 	      <p>blah</p>
 	      <p>blah</p>
@@ -144,7 +145,7 @@
 	    
 	    <!-- FOLLOWING SCRIPT HIDES/SHOWS THE HOST-SPECIFIC DIV DEPENDING
 		 ON WHETHER A USER HAS STARTED A GAME AND IS THE HOST OR JUST
-		 JOINED A GAME AS A PLAYER -->
+		 JOINED A GAME AS A PLAYER 
 	    <script>
 	      var queryString = window.location.search;
 	      var urlParams = new URLSearchParams(queryString);
@@ -156,7 +157,7 @@
 		  document.getElementById("host_specific").style.display = "none";
 		  document.getElementById("player_specific").style.display = "block";
 	      }
-	    </script>
+	    </script> -->
 	    
 	  </div>
 	</div>
@@ -168,12 +169,12 @@
 	<div class="row align-items-end" style="height: 100%">
 	  <div class="col-md-3">
 	    <h3 id="room_name"></h3>
-	    <script>
+	    <!-- <script>
 	      var queryString = window.location.search;
 	      var urlParams = new URLSearchParams(queryString);
 	      var name = urlParams.get("room");
 	      document.getElementById("room_name").innerHTML = "Game Room: " + name;
-	    </script>
+	    </script> -->
 	  </div>
 	  <div class="col-md-7"></div>
 	  <div class="col-md-2">

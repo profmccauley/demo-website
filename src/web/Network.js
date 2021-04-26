@@ -237,8 +237,11 @@ var join_success = false;
 			}
 			prevCards = game.getPreviousCards(); 
 			currPlayer = game.getCurrentPlayer();
-			let currIndex = game.getPlayers().indexOf(currPlayer) + 1;
-			nextPlayer = game.getPlayers()[currIndex];
+			let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+			if(nextIndex >= game.getPlayers().length){
+				nextIndex = 0;
+			}
+			nextPlayer = game.getPlayers()[nextIndex];
 
 			var dict = {
 				myCards: myCards,
@@ -247,7 +250,8 @@ var join_success = false;
 			    nextPlayer: nextPlayer,	
 			    points: my_point,
 			};
-			//console.log(JSON.stringify(dict));
+			console.log(game.getPlayers());
+			console.log(JSON.stringify(dict));
 			playerView.startGame(dict);		
 
 			//send to server that the game starts

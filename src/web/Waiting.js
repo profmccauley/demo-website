@@ -7,11 +7,11 @@ export default function add_player(player_name){
 }
 
 function display_players(){
-	var html = "";
-	for (let player of players){
+    var html = "";
+    for (let player of players){
 		html += "<p>" + player + "</p>";
 	}
-	document.getElementById("cards").innerHTML = html;
+	document.getElementById("players").innerHTML = html;
 }
 
 window.add_player = add_player;

@@ -4,22 +4,31 @@ $.getScript("../Network.js", function() {
 
 $(document).ready(function(){
 
+    //var player_view;
+
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
-		async function connection(){
-    		let join = await get_join_status();
-    		console.log("join_success: " + join);
-    		if (join === true){
-    			var game_code = $("#game_code").val();
-    			var url =  "waiting_room.html?room=" + game_code;
-    			$(location).attr('href', url);
-    		}
-    		else{
-    			setTimeout( connection, 500);
-    			$("#test").text("unable to start");
-    		}
+
+	async function connection(){
+    	    let join = await get_join_status();
+    	    console.log("join_success: " + join);
+    	    if(join === true){
+    		var game_code = $("#game_code").val();
+		var name = $("#player_name").val();
+    		$("#homepage").addClass("offscreen");
+		$("#waiting_room").removeClass("offscreen");
+		$("#host_specific").css('display', 'none');
+		$("#player_specific").css('display', 'block');
+		$("#room_name").text("Room: " + game_code);
+		//player_view = new PlayerView(name);
+		
+    	    }
+    	    else{
+    		setTimeout( connection, 500);
+    		$("#test").text("Unable to join game. Try again.");
+    	    }
     	}
-    	//connection();
+    	connection();
     });
 
     //START GAME (currently from landing page)
@@ -28,16 +37,22 @@ $(document).ready(function(){
     		let join = await get_join_status();
     		console.log("start_success: " + join);
     		if(join === true){
-    			var game_code = $("#game_code").val();
-    			var url =  "waiting_room.html?room=" + game_code + "&host=true";
-    			$(location).attr('href', url);
+    		    var game_code = $("#game_code").val();
+		    var name = $("#player_name").val();
+    		    $("#homepage").addClass("offscreen");
+		    $("#waiting_room").removeClass("offscreen");
+		    $("#host_specific").css('display', 'block');
+		    $("#player_specific").css('display', 'none');
+		    $("#room_name").text("Room: " + game_code);
+		    //player_view = new PlayerView(name, true);
+		    
     		}
     		else{
     			setTimeout( connection, 500);
-    			$("#test").text("unable to start");
+    			$("#test").text("Unable to start this game. Try again with another room name.");
     		}
     	}
-    	//connection();
+    	connection();
 	//INSERT SERVER CODE HERE
     });
 
@@ -77,7 +92,7 @@ $(document).ready(function(){
 
     //SELECT/UNSELECT CARD
     $(document).on('click', '.player_card', function(){
-	classes = this.className.split(" ");
+	var classes = this.className.split(" ");
 	if(classes.length == 2){
 	    $(this).css("transform", "translateY(-30px)").
 		removeClass("unselected");
@@ -94,8 +109,10 @@ $(document).ready(function(){
 	var urlParams = new URLSearchParams(queryString);
 	var room_name = urlParams.get("room");
 	var card_type = $("select option:selected").text();
-	var url =  "game.html?room=" + room_name;
-	$(location).attr('href', url);
+	//var room_name = $("#room_name").text;
+	$("#waiting_room").addClass("offscreen");
+	$("#game_screen").removeClass("offscreen");
+	//$("#room_name_game").text("Game " + room_name);
     });
 
     

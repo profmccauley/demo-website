@@ -2,9 +2,9 @@ import Card from './Card.js';
 import play_cards from './Network.js';
 
 export default class PlayerView {
-    constructor(name) {
+    constructor(name, host=false) {
         this.myName = name;
-
+	    this.host = host;
         this.myCards = new Array();   // cards will be sorted by lowest to highest priority
         this.firstTurn;
         this.prevCards = new Array();
@@ -15,8 +15,8 @@ export default class PlayerView {
 
         var playCardButton = document.getElementById("play_hand");
         var passButton = document.getElementById("pass");
-        playCardButton.addEventListener("click", playCards);
-        passButton.addEventListener("click", pass);
+        playCardButton.addEventListener("click", this.playCards);
+        passButton.addEventListener("click", this.pass);
     }
 
     startGame(playerJSON) {
@@ -36,6 +36,8 @@ export default class PlayerView {
         this.nextPlayer = playerJSON.nextPlayer;
         this.points = playerJSON.points;
 
+	console.log(this.myCards);
+
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -51,7 +53,7 @@ export default class PlayerView {
     }
 
     getCardByFile(fileName){
-	for (card in this.myCards) {
+	for (let card of this.myCards) {
 	    if(card.getFilePath() == fileName){
 		return card;
 	    }
@@ -61,20 +63,23 @@ export default class PlayerView {
     }
 
     displayHand() {
+	console.log("made it to displayHand");
         // MICHELA: call every time you update your cards
 	var html = "";
-	for (card in this.myCards) {
-	    let tag = '<img src="';
+	for (let card of this.myCards) {
+	    let tag = '<img src="images/';
 	    tag += card.getFilePath();
 	    tag += '" class="player_card unselected">';
+	    html += tag;
 	}
+	console.log(html);
 	document.getElementById("cards").innerHTML = html;	    
     }
 
     displayPrevCards() {
         // MICHELA: call when receive new prev cards from the server
 	var html = "";
-	for (card in this.prevCards) {
+	for (let card of this.prevCards) {
 	    let tag = '<img src="';
 	    tag += card.getFilePath();
 	    tag += '" class="player_card unselected">';
@@ -101,7 +106,7 @@ export default class PlayerView {
         var htmlCards = document.getElementsByClassName("selected");
 	var cards = [];
 
-	for (htmlCard in htmlCards) {
+	for (let htmlCard of htmlCards) {
 	    let src = htmlCard.src;
 	    let card = this.getCardByFile(src);
 	    if (card == false){
