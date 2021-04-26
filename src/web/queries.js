@@ -8,6 +8,7 @@ $(document).ready(function(){
 
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
+
 	async function connection(){
     	    let join = await get_join_status();
     	    console.log("join_success: " + join);
