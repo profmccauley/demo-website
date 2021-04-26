@@ -250,7 +250,7 @@ var type = document.getElementById('card_types').value;
 			//call Game in game logic
 			game = new Game(number_of_users, users);
 			//init Game in PlayerView
-			playerView = new PlayerView(player_name.value);
+			playerView = new PlayerView(player_name.value, true);
 
 			//Data: myCards: init cards for current user
 			//player object

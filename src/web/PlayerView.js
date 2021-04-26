@@ -89,15 +89,30 @@ export default class PlayerView {
 
     displayHand() {
             // MICHELA: call every time you update your cards
-        var html = "";
-        for (let card of this.myCards) {
-            let tag = '<img src="images/';
-            tag += card.getFilePath();
-            tag += '" class="player_card unselected">';
-            html += tag;
+
+
+        if(this.host === false){
+            var html = "";
+            for (let i = 0; i < this.myCards.cards.length; i++) {
+                let tag = '<img src="images/';
+                tag += this.myCards.cards[i].file;
+                tag += '" class="player_card unselected">';
+                html += tag;
+            }
+            console.log(html);
+            document.getElementById("cards").innerHTML = html; 
         }
-        console.log(html);
-        document.getElementById("cards").innerHTML = html;	    
+        else{
+            var html = "";
+            for (let card of this.myCards) {
+                let tag = '<img src="images/';
+                tag += card.getFilePath();
+                tag += '" class="player_card unselected">';
+                html += tag;
+            }
+            console.log(html);
+            document.getElementById("cards").innerHTML = html;  
+        }
     }
 
     displayPrevCards() {
@@ -175,7 +190,7 @@ export default class PlayerView {
         tempCards = [...this.myCards];
 
         // remove the cards
-        for (card of this.myCards) {
+        for (let card of this.myCards) {
             for (playedCard of this.playedCards) {
                 if (card.getPriority() == playedCard.getPriority()) {
                     tempCards.remove(tempCards.indexOf(card));
