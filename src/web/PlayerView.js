@@ -36,6 +36,8 @@ export default class PlayerView {
         this.nextPlayer = playerJSON.nextPlayer;
         this.points = playerJSON.points;
 
+	console.log(this.myCards);
+
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -61,13 +63,16 @@ export default class PlayerView {
     }
 
     displayHand() {
+	console.log("made it to displayHand");
         // MICHELA: call every time you update your cards
 	var html = "";
 	for (let card of this.myCards) {
-	    let tag = '<img src="';
+	    let tag = '<img src="images/';
 	    tag += card.getFilePath();
 	    tag += '" class="player_card unselected">';
+	    html += tag;
 	}
+	console.log(html);
 	document.getElementById("cards").innerHTML = html;	    
     }
 
