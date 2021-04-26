@@ -145,6 +145,8 @@ var playerView = null;
 var error = null;
 var join_success = false;
 
+var type = document.getElementById('card_types').value;
+
 		function process(text){
 			//receive message
 		  var message = JSON.parse(text);
@@ -208,7 +210,30 @@ var join_success = false;
 		  	//Server sends back to all players for them to start the game
 		  	else if(message.msg.type === 'START'){
 		  		console.log("The host " + message.SENDER + " started the game");
-		  		//call players_start()
+		  		if (status !== 'S'){
+					//init Game in PlayerView
+					playerView = new PlayerView(player_name.value);
+
+					//Data: myCards: init cards for current user
+					//player object
+					console.log(message.msg.players);
+					for (let player of message.msg.players) {
+						if(player.name === player_name.value){
+							myCards = player.hand;
+							my_point = player.points;
+						}
+					}
+					var dict = {
+						myCards: myCards,
+					    prevCards: message.msg.prevCards,
+					    currPlayer: message.msg.currPlayer,
+					    nextPlayer: message.msg.nextPlayer,	
+					    points: my_point,
+					};
+					console.log(JSON.stringify(dict));
+					playerView.startGame(dict);	
+				}
+
 		  	}
 		  }
 		}
@@ -236,12 +261,12 @@ var join_success = false;
 				}
 			}
 			prevCards = game.getPreviousCards(); 
-			currPlayer = game.getCurrentPlayer();
+			currPlayer = game.getCurrentPlayer().getName();
 			let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
 			if(nextIndex >= game.getPlayers().length){
 				nextIndex = 0;
 			}
-			nextPlayer = game.getPlayers()[nextIndex];
+			nextPlayer = game.getPlayers()[nextIndex].getName();
 
 			var dict = {
 				myCards: myCards,
@@ -250,13 +275,12 @@ var join_success = false;
 			    nextPlayer: nextPlayer,	
 			    points: my_point,
 			};
+			playerView.startGame(dict);	
+
 			console.log(game.getPlayers());
-			console.log(JSON.stringify(dict));
-			playerView.startGame(dict);		
 
 			//send to server that the game starts
-			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'START'}}));
-
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'START', "players": game.getPlayers(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
 		}
 
 		//when play cards button clicked by a player in the game page
