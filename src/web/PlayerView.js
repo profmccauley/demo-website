@@ -50,6 +50,8 @@ export default class PlayerView {
         else {
             this.displayNotMyTurn();
         }
+
+	this.displayPlayers();
     }
 
     /**
@@ -72,7 +74,7 @@ export default class PlayerView {
             this.displayNotMyTurn();
         }
 
-        // MICHELA: need a way to update the Next Player
+	this.displayPlayers();
     }
 
     getCardByFile(fileName){
@@ -86,7 +88,6 @@ export default class PlayerView {
     }
 
     displayHand() {
-        console.log("made it to displayHand");
             // MICHELA: call every time you update your cards
         var html = "";
         for (let card of this.myCards) {
@@ -122,6 +123,11 @@ export default class PlayerView {
         // pass and play buttons
         document.getElementById("play_hand").style.visibility="hidden";
         document.getElementById("pass").style.visibility="hidden";
+    }
+
+    displayPlayers() {
+	document.getElementById("current_player").innerHTML = this.currPlayer + "'s turn";
+	document.getElementById("next_player").innerHTML = "Next up: " + this.nextPlayer;
     }
 
     playCards() {
