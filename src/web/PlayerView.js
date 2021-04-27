@@ -38,6 +38,8 @@ export default class PlayerView {
 
 	console.log(this.myCards);
 
+	// displays the prev cards
+	this.displayPrevCards();
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -118,10 +120,12 @@ export default class PlayerView {
     displayPrevCards() {
         // MICHELA: call when receive new prev cards from the server
 	var html = "";
-	for (let card of this.prevCards) {
-	    let tag = '<img src="';
-	    tag += card.getFilePath();
-	    tag += '" class="player_card unselected">';
+	if(this.prevCards != null){
+	    for (let card of this.prevCards) {
+		let tag = '<img src="';
+		tag += card.getFilePath();
+		tag += '" class="player_card unselected">';
+	    }
 	}
 	document.getElementById("last_played").innerHTML = html;
     }
