@@ -148,8 +148,6 @@ var playerView = null;
 var error = null;
 var join_success = false;
 
-var type = document.getElementById('card_types').value;
-
 var waitingRoom = new WaitingRoom();
 
 		function process(text){
@@ -255,7 +253,9 @@ var waitingRoom = new WaitingRoom();
 		function start_game(){
 			console.log("The game starts!");
 			//call Game in game logic
-			game = new Game(number_of_users, users);
+			var type = document.getElementById('card_types').value;
+			console.log("type: " + type);
+			game = new Game(number_of_users, users, type);
 			//init Game in PlayerView
 			playerView = new PlayerView(player_name.value, true);
 
