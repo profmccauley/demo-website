@@ -1,7 +1,9 @@
 import Game from './Game.js';
 import PlayerView from './PlayerView.js';
-import leave_waiting_room from './Waiting.js';
-import add_player from './Waiting.js';
+// import leave_waiting_room from './Waiting.js';
+// import add_player from './Waiting.js';
+import WaitingRoom from './Waiting.js';
+
 
 
 class Network{ 
@@ -148,6 +150,8 @@ var join_success = false;
 
 var type = document.getElementById('card_types').value;
 
+var waitingRoom = new WaitingRoom();
+
 		function process(text){
 			//receive message
 		  var message = JSON.parse(text);
@@ -181,7 +185,7 @@ var type = document.getElementById('card_types').value;
 		  	net.send(JSON.stringify({ "TYPE":"JOIN_GAME", "size": 4, "status": status, "gamecode" : game_code.value, "allow_spectators": true}));
 		  }
 		  else if(message.TYPE === 'JOIN'){
-		  	add_player(message.user);
+		  	waitingRoom.add_player(message.user);
 		  	console.log("add player: " + message.user);
 		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
@@ -213,7 +217,7 @@ var type = document.getElementById('card_types').value;
 		  		console.log("The host " + message.SENDER + " started the game");
 		
 		  		if (status !== 'S'){
-					leave_waiting_room();
+					waitingRoom.leave_waiting_room();
 					//init Game in PlayerView
 					playerView = new PlayerView(player_name.value);
 
