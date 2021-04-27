@@ -5,6 +5,7 @@ export default class Player {
     constructor(name) {
         this.name = name || "Player";
         this.hand = new Hand();
+        this.numCards = 0;
         this.points = 0;
     }
 
@@ -21,6 +22,10 @@ export default class Player {
         return this.name;
     }
 
+    getNumCards() {
+        return this.numCards;
+    }
+
     getPoints() {
         return this.points;
     }
@@ -32,6 +37,20 @@ export default class Player {
 
     addCard(card) {
         this.hand.addCard(card);
+        this.numCards++;
+    }
+
+    // removes cards from the player's hand
+    removeCards(cards) {
+        for (let card of cards) {
+            this.hand.removeCard(card);
+            this.numCards--;
+        }
+    }
+
+    // add one point for each card remaining in hand
+    updatePoints() {
+        this.points += this.numCards;
     }
 
     // sorts a player's hand

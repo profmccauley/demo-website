@@ -24,7 +24,7 @@ export default class PlayerView {
         // TODO: parse JSON to fill in instance variables
         /* for (?? in playerJSON.hand) {
             var tempCard = new Card();  // this may not work if it overwrites the card each time
-            tempCard.fromJSON(??);
+            tempCard.fromJSON(playerJSON.myCards);
             this.myCards.push(tempCard);
         }
 
@@ -36,7 +36,8 @@ export default class PlayerView {
         this.nextPlayer = playerJSON.nextPlayer;
         this.points = playerJSON.points;
 
-	console.log(this.myCards);
+	    console.log("my cards are", this.myCards);
+        console.log("length of my cards is", this.myCards.length);
 
 	// displays the prev cards
 	this.displayPrevCards();
@@ -54,6 +55,10 @@ export default class PlayerView {
         }
 
 	this.displayPlayers();
+
+    // for testing purposes
+    console.log(this.getCardByFile("classic/3H.jpg"));
+    console.log(this.getCardByFile("classic/3D.jpg"));
     }
 
     /**
@@ -80,9 +85,14 @@ export default class PlayerView {
     }
 
     getCardByFile(fileName){
-        for (let card of this.myCards) {
-            if(card.getFilePath() == fileName){
-            return card;
+        console.log(this.myCards.length);
+        console.log("CARDS ARE ABOVE!!!");
+
+        for (let i = 0; i < this.myCards.length; i++) {
+            console.log("inside the for loop");
+            console.log("THE FILE!!", this.myCards[i].getFilePath());
+            if(this.myCards[i].getFilePath() == fileName){
+                return this.myCards[i];
             }
         }
         //card w/ given filename is not in the hand
@@ -154,9 +164,20 @@ export default class PlayerView {
         var htmlCards = document.getElementsByClassName("selected");
         var cards = [];
 
+        
         for (let htmlCard of htmlCards) {
             let src = htmlCard.src;
-            let card = this.getCardByFile(src);
+            src = src.split("images/"); // strip file to end of URL
+            console.log("CARDS IN THE HTML ARE!!", src[src.length - 1]);    
+            console.log(this.getCardByFile("classic/3D.jpg"));
+            
+            let tempCard = this.getCardByFile(src[src.length - 1]);
+            if (!tempCard) {
+                throw 'Selected card is not in the hand';
+            }
+
+            console.log(tempCard.getFilePath().split("/")[0]);
+            card = new Card(tempCard.getRank(), tempCard.getSuit(), tempCard.getFilePath().split("/")[0]);
             if (card == false){
                 throw 'At least one card is not in the hand';
             }
@@ -167,11 +188,14 @@ export default class PlayerView {
 
         // check if the cards are valid to play based on rules
         // returns "valid" if valid, error message if not
-        var validity = this.isValid(cards);
+        //var validity = this.isValid(cards);
+        console.log("CARDS TO BE PLAYED ARE:", cards);
+        var validity = "valid"; // TEMP!!
 
         if (validity == "valid") {
             // removes cards from hand & redisplays locally
-            this.removeCardsFromHand(cards);
+            //this.removeCardsFromHand(cards); 
+            // TEMP!! removed above line
 
             // send to server list of cards just played
             play_cards(cards);

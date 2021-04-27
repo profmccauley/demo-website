@@ -92,15 +92,31 @@ $(document).ready(function(){
 
     //SELECT/UNSELECT CARD
     $(document).on('click', '.player_card', function(){
-	var classes = this.className.split(" ");
-	if(classes.length == 2){
-	    $(this).css("transform", "translateY(-30px)").
-		removeClass("unselected");
-	}
-	else{
-	    $(this).css("transform", "translateY(0px)").
-		addClass("unselected");
-	}
+		console.log("hello we are in the card selection function");
+		var classes = this.className.split(" ");
+
+		console.log("THE CARD SELECTION CLASSES ARE:", classes.indexOf("unselected"));
+
+		if(classes.indexOf("unselected") != -1){
+			console.log("card is being shifted up");
+			$(this).css("transform", "translateY(-30px)").
+			removeClass("unselected"). 
+			addClass("selected");
+		}
+		else{
+			$(this).css("transform", "translateY(0px)").
+			removeClass("selected").
+			addClass("unselected");
+		}
+
+		/* if(classes.length == 2){
+			$(this).css("transform", "translateY(-30px)").
+			removeClass("unselected"); 
+		}
+		else{
+			$(this).css("transform", "translateY(0px)").
+			addClass("unselected");
+		} */
     });
 
     //START GAME ROOM (GAMEPLAY)

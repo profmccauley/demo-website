@@ -19,10 +19,11 @@ export default class Game {
 
         // below could also be a hand? but may convolute purpose
         this.previousCards = null; 
+        this.deckType = deckType;
         this.deck = new Deck(deckType);
+        
 
         this.startGame();
-        this.startPassJSON();
     }
 
     // getters
@@ -72,15 +73,6 @@ export default class Game {
         this.findPlayerLowestCard();
     }
 
-    startPassJSON() {
-        // pass to each player
-        // their cards -- as card objects made to JSON with stringify
-        // if they go first (true/false value)
-        // the current player, this will be the same for all players
-        // the next player, this will be the same for all players
-        
-    }
-
     // deal 13 cards to each player
     dealCards() {
         let min = 0;
@@ -120,26 +112,52 @@ export default class Game {
     //    * update the last player to the current player (above prev!!)
     //    * update the previously played cards to the current
     //      cards just played
+    // CALL With either list of cards or nothing
     updateGame(cards = 'pass') {
-        // update current player to next in list
-        this.lastPlayer = this.currentPlayer;
-
-        // update next player
-        let nextPlayerIndex = (this.players.indexOf(this.lastPlayer) + 1) % this.numPlayers;
-        this.currentPlayer = this.players[nextPlayerIndex];
-
-        // update previous cards by copying array 
-        // do not update cards if the player passed
+        // changes if player didn't pass
         if (!(cards === 'pass')) {
+            // update previous cards by copying array 
+            // do not update cards if the player passed
             this.previousCards = [...cards];
+
+            // TODO: remove cards from player's hand
+            this.currentPlayer.removeCards(cards);
+
+            if (this.currentPlayer.getNumCards() === 0) {
+                // player won the round. 
+
+                this.newRound();
+                // TODO: are there other actions that need to be 
+                // taken to reset the round?
+            }
+
+            // set the last player to be person who just played
+            // will not change last player if a pass
+            this.lastPlayer = this.currentPlayer;
         }
 
+        // update next player
+        let nextPlayerIndex = (this.players.indexOf(this.currentPlayer) + 1) % this.numPlayers;
+        this.currentPlayer = this.players[nextPlayerIndex];
 
-        // HUIYUN: send these values back
-        // this.prevCards = new Array();
-        // this.currPlayer;
-        // this.nextPlayer;
+        // if the current player is the previous player, clear the previousCards
+        if (this.currentPlayer === this.lastPlayer) {
+            this.previousCards = null;
+        }
     }
     
+    newRound() {
+        // calculate the scores for each player
+        for (player of this.players) {
+            player.updatePoints();
+        }
+
+        // shuffle deck for next round
+        this.deck.shuffleDeck();
+
+        // deal new cards to the players
+        // cards will automatically be sorted
+        this.dealCards();
+    }
 }
 
