@@ -22,15 +22,20 @@ export default class PlayerView {
     startGame(playerJSON) {
 
         // TODO: parse JSON to fill in instance variables
-        /* for (?? in playerJSON.hand) {
-            var tempCard = new Card();  // this may not work if it overwrites the card each time
-            tempCard.fromJSON(playerJSON.myCards);
-            this.myCards.push(tempCard);
-        }
 
-        */
+        if(this.host === false){
+            for (let i = 0; i < playerJSON.myCards.cards.length; i++) {
+                var tempCard = new Card();
+                tempCard.fromJSON(playerJSON.myCards.cards[i]);
+                this.myCards.push(tempCard);
+            }
+            console.log(this.myCards);
+        }
+        else{
+            this.myCards = playerJSON.myCards;
+        }
+        
         // HUIYUN
-        this.myCards = playerJSON.myCards;
         this.prevCards = playerJSON.prevCards;
         this.currPlayer = playerJSON.currPlayer;
         this.nextPlayer = playerJSON.nextPlayer;
@@ -102,19 +107,6 @@ export default class PlayerView {
     displayHand() {
             // MICHELA: call every time you update your cards
 
-
-        if(this.host === false){
-            var html = "";
-            for (let i = 0; i < this.myCards.cards.length; i++) {
-                let tag = '<img src="images/';
-                tag += this.myCards.cards[i].file;
-                tag += '" class="player_card unselected">';
-                html += tag;
-            }
-            console.log(html);
-            document.getElementById("cards").innerHTML = html; 
-        }
-        else{
             var html = "";
             for (let card of this.myCards) {
                 let tag = '<img src="images/';
@@ -124,11 +116,10 @@ export default class PlayerView {
             }
             console.log(html);
             document.getElementById("cards").innerHTML = html;  
-        }
     }
 
     displayPrevCards() {
-        // MICHELA: call when receive new prev cards from the server
+        // MICHELA: call when receive new prev cards from the server   
 	var html = "";
 	if(this.prevCards != null){
 	    for (let card of this.prevCards) {
@@ -211,7 +202,7 @@ export default class PlayerView {
             // HUIYUN: do we also need to send the player's name?
             //can we just check if the cards is empty?
             //Or do we want another data indicates whether player play or pass?
-            play_cards(cards);
+            play_cards();
     }
 
     removeCardsFromHand(playedCards) {
