@@ -1,5 +1,6 @@
 import Game from './Game.js';
 import PlayerView from './PlayerView.js';
+import leave_waiting_room from './Waiting.js';
 import add_player from './Waiting.js';
 
 
@@ -210,7 +211,9 @@ var type = document.getElementById('card_types').value;
 		  	//Server sends back to all players for them to start the game
 		  	else if(message.msg.type === 'START'){
 		  		console.log("The host " + message.SENDER + " started the game");
+		
 		  		if (status !== 'S'){
+					leave_waiting_room();
 					//init Game in PlayerView
 					playerView = new PlayerView(player_name.value);
 
