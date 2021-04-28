@@ -208,13 +208,57 @@ var waitingRoom = new WaitingRoom();
 		  	//Server sends back to all players of the played cards for them to update the UI
 		  	if (message.msg.type === 'MOVE'){
 		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
-		  		//call update UI
+		  		//host update the game
+		  		if(status === 'S'){
+		  			console.log("Host update the game");
+		  			if(message.msg.card === 'pass'){
+						game.updateGame();
+					}
+					else{
+						game.updateGame(message.msg.card);
+					}
+
+					//get updated info from the game
+					prevCards = game.getPreviousCards(); 
+					currPlayer = game.getCurrentPlayer().getName();
+					let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+					if(nextIndex >= game.getPlayers().length){
+						nextIndex = 0;
+					}
+					nextPlayer = game.getPlayers()[nextIndex].getName();
+					//host update PlayerView
+					var dict = {
+					    prevCards: prevCards,
+					    currPlayer: currPlayer,
+					    nextPlayer: nextPlayer,	
+					};
+			  		playerView.updateGame(dict);
+
+					//host tell others to update their playerView
+					net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				}
+
+		  	}
+		 
+		  	else if(message.msg.type === 'PLAYERMOVE'){
+		  		console.log("other players update their screen");
+		  		if(status !== 'S'){
+		  			//host update PlayerView
+					var dict = {
+					    prevCards: message.msg.prevCards,
+					    currPlayer: message.msg.currPlayer,
+					    nextPlayer: message.msg.nextPlayer,	
+					};
+			  		playerView.updateGame(dict);
+		  		}
+
 		  	}
 		  	//Server sends back to all players for them to start the game
 		  	else if(message.msg.type === 'START'){
 		  		console.log("The host " + message.SENDER + " started the game");
 		
 		  		if (status !== 'S'){
+		  			//start game for other players
 					waitingRoom.leave_waiting_room();
 					//init Game in PlayerView
 					playerView = new PlayerView(player_name.value);
@@ -242,6 +286,7 @@ var waitingRoom = new WaitingRoom();
 		  	}
 		  }
 		}
+
 
 		export function get_join_status(){
 			return join_success;
@@ -292,10 +337,8 @@ var waitingRoom = new WaitingRoom();
 
 		//when play cards button clicked by a player in the game page
 		//cards is an array of played hands
-		export default function play_cards(cards){
+		export default function play_cards(cards = 'pass'){
 			console.log("got cards" + cards);
-			//TODO: is it reasonable to updateGame here?
-			game.updateGame(cards);
 			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
 		}
 
