@@ -1,7 +1,5 @@
 import Game from './Game.js';
 import PlayerView from './PlayerView.js';
-// import leave_waiting_room from './Waiting.js';
-// import add_player from './Waiting.js';
 import WaitingRoom from './Waiting.js';
 
 
@@ -46,7 +44,6 @@ class Sender
 		    console.log("Disconnected!", this);
 		    if (this.disconnected == false)
 		    {
-		      //echo("Disconnected.  Press Enter to try reconnecting.");
 		      this.disconnected = true;
 		    }
 		    try
@@ -75,8 +72,6 @@ class Sender
 		      this.socket.close();
 		      return;
 		    }
-
-		    //echo("Connecting to server...");
 
 		    this.socket = new WebSocket("ws://" + this.address + ":" + this.port + "/" + this.path);
 		    this.socket.onclose = this._on_close.bind(this);
@@ -179,7 +174,6 @@ var waitingRoom = new WaitingRoom();
 		  	net.close();
 		  }
 		  else if(message.TYPE === 'WELCOME'){
-		  	//console.log("Now you can join a game");
 		  	net.send(JSON.stringify({ "TYPE":"JOIN_GAME", "size": 4, "status": status, "gamecode" : game_code.value, "allow_spectators": true}));
 		  }
 		  else if(message.TYPE === 'JOIN'){
@@ -192,17 +186,6 @@ var waitingRoom = new WaitingRoom();
 		  	number_of_users = message.number_of_users;
 		  	console.log("Current users in this room: " + users);
 		  	console.log("Number of users in this room: " + number_of_users);
-		  	//is_ready: len(self.members) >= self.room_size
-		  	// if(message.is_ready === true){
-		  	// 	//start the game
-		  	// 	start_game(users);
-		  	// }
-		  	// if(number_of_users === 2){
-		  	// 	start_game();
-		  	// }
-
-		  	//temp test
-		  	//net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': [1,2,3]}}));
 		  }
 		  else if(message.TYPE === 'DATA'){
 		  	//Server sends back to all players of the played cards for them to update the UI
@@ -218,26 +201,32 @@ var waitingRoom = new WaitingRoom();
 						game.updateGame(message.msg.card);
 					}
 
-					//get updated info from the game
-					prevCards = game.getPreviousCards(); 
-					currPlayer = game.getCurrentPlayer().getName();
-					console.log('in network', currPlayer);
-					let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
-					if(nextIndex >= game.getPlayers().length){
-						nextIndex = 0;
+					//check if start new round
+					if(game.startNewRound === true){
+						new_round();
 					}
-					nextPlayer = game.getPlayers()[nextIndex].getName();
-					console.log('in network', nextPlayer);
-					//host update PlayerView
-					var dict = {
-					    prevCards: prevCards,
-					    currPlayer: currPlayer,
-					    nextPlayer: nextPlayer,	
-					};
-			  		playerView.updateGame(dict);
+					else{
+						//get updated info from the game
+						prevCards = game.getPreviousCards(); 
+						currPlayer = game.getCurrentPlayer().getName();
+						console.log('in network', currPlayer);
+						let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+						if(nextIndex >= game.getPlayers().length){
+							nextIndex = 0;
+						}
+						nextPlayer = game.getPlayers()[nextIndex].getName();
+						console.log('in network', nextPlayer);
+						//host update PlayerView
+						var dict = {
+						    prevCards: prevCards,
+						    currPlayer: currPlayer,
+						    nextPlayer: nextPlayer,	
+						};
+				  		playerView.updateGame(dict);
 
-					//host tell others to update their playerView
-					net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		//host tell others to update their playerView
+						net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+					}
 				}
 
 		  	}
@@ -253,7 +242,29 @@ var waitingRoom = new WaitingRoom();
 					};
 			  		playerView.updateGame(dict);
 		  		}
+		  	}
+		  	else if(message.msg.type === 'NEWROUND'){
+		  		console.log("player out of cards! Start new round");
+		  		if(status !== 'S'){
+		  			//player update their playerview to start a new round
+		  			for (let player of message.msg.players) {
+						if(player.name === player_name.value){
+							myCards = player.hand;
+							my_point = player.points;
+						}
+					}
+					var dict = {
+						myCards: myCards,
+					    prevCards: message.msg.prevCards,
+					    currPlayer: message.msg.currPlayer,
+					    nextPlayer: message.msg.nextPlayer,	
+					    points: my_point,
+					};
+					console.log(JSON.stringify(dict));
 
+			  		//TODO: call newRound() in playerView and pass the updated dict
+					//playerView.newRound(dict);
+		  		}
 		  	}
 		  	// Server sends back to all players for them to start the game
 		  	else if(message.msg.type === 'START'){
@@ -301,6 +312,40 @@ var waitingRoom = new WaitingRoom();
 
 		export function get_join_status(){
 			return join_success;
+		}
+
+		//if the new round is started
+		//host update the playerView
+		function new_round(){
+			//Data: myCards: init cards for current user
+			//player object
+			for (let player of game.getPlayers()) {
+				if(player.name === player_name.value){
+					myCards = player.getHand();
+					my_point = player.getPoints();
+				}
+			}
+			prevCards = game.getPreviousCards(); 
+			currPlayer = game.getCurrentPlayer().getName();
+			let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+			if(nextIndex >= game.getPlayers().length){
+				nextIndex = 0;
+			}
+			nextPlayer = game.getPlayers()[nextIndex].getName();
+
+			var dict = {
+				myCards: myCards,
+			    prevCards: prevCards,
+			    currPlayer: currPlayer,
+			    nextPlayer: nextPlayer,	
+			    points: my_point,
+			};
+
+			//TODO: call newRound() in playerView and pass the updated dict
+			//playerView.newRound(dict);
+
+			//send to server that the game starts
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'NEWROUND', "players": game.getPlayers(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
 		}
 
 
@@ -360,7 +405,7 @@ var waitingRoom = new WaitingRoom();
 			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'END'}}));
 		}
 
-////set up JS connection through python function above
+		//set up JS connection through python function above
  		function js_connect (my_status)
 		{
 		  status = my_status;

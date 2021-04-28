@@ -21,6 +21,7 @@ export default class Game {
         this.previousCards = null; 
         this.deckType = deckType;
         this.deck = new Deck(deckType);
+        this.startNewRound = false;
         
 
         this.startGame();
@@ -126,6 +127,7 @@ export default class Game {
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
 
+                this.startNewRound = true;
                 this.newRound();
                 // TODO: are there other actions that need to be 
                 // taken to reset the round?
@@ -154,7 +156,7 @@ export default class Game {
     
     newRound() {
         // calculate the scores for each player
-        for (player of this.players) {
+        for (let player of this.players) {
             player.updatePoints();
         }
 
