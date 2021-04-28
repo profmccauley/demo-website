@@ -109,8 +109,22 @@ $(document).ready(function(){
 	$("#waiting_room").addClass("offscreen");
 	$("#game_screen").removeClass("offscreen");
 	$("#room_name_game").text("Game " + room);
+	$("#leave_game").removeClass("offscreen");
     });
 
+    //HOST ENDS GAME VIA END GAME BUTTON
+    $("#leave_game").click(function(){
+	$("#leave_game").addClass("offscreen");
+	$("#game_screen").addClass("offscreen");
+	$("#game_over").removeClass("offscreen");
+    });
+
+    //SENDING USER BACK TO HOMESCREEN AFTER GAME IS ENDED BY HOST
+    $("#back_to_home").click(function(){
+	$("#game_over").addClass("offscreen");
+	$("#homepage").removeClass("offscreen");
+	$("#test").text("");
+    });
     
     
 });

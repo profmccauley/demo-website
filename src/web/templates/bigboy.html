@@ -178,8 +178,8 @@
 	  </div>
 	  <div class="col-md-7"></div>
 	  <div class="col-md-2">
-	    <button type="button" class="btn btn-danger" id="leave_game">
-	      Leave Game
+	    <button type="button" class="btn btn-danger offscreen" id="leave_game">
+	      End Game
 	    </button>
 	  </div>
 	</div>
@@ -244,6 +244,19 @@
 	      <img src="images/classic/QS.jpg" class="player_card unselected">
 	      <img src="images/classic/QS.jpg" class="player_card unselected">
 	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    <div id="game_over" class="row align-items-center h-100 offscreen">
+      <div class="col">
+	<div class="row justify-content-center">
+	  <div class="col">
+	    <h1>Game ended by host</h1>
+	    <button type="button" class="btn btn-primary" id="back_to_home">
+	      Return to homepage
+	    </button>
 	  </div>
 	</div>
       </div>
