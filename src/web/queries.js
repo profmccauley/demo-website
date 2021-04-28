@@ -141,6 +141,10 @@ $(document).ready(function(){
 	$("#homepage").removeClass("offscreen");
 	$("#test").text("");
     });
+
+    $("#get_rules").click(function(){
+	window.open('rules.html');
+    });
     
     
 });

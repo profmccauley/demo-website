@@ -64,7 +64,7 @@
       }
 
       .played_card {
-	  width: 10%;
+	  width: 25%;
 	  object-fit: cover;
       }
 
@@ -200,13 +200,19 @@
 	<div class="row align-items-center" style="height: 70%">
 	  <div class="col">
 	    <div class="row justify-content-center">
-	      <div class="col" id="last_played">
+	      <div class="col-md-3">
+		<button type="button" class="btn btn-primary" id="get_rules">
+		  See Rules
+		</button>
+	      </div>
+	      <div class="col-md-6" id="last_played">
 		<img src="images/classic/QS.jpg" class="played_card">
 		<!--<img src="images/classic/QS.jpg" class="played_card">
 		<img src="images/classic/QS.jpg" class="played_card">
 		<img src="images/classic/QS.jpg" class="played_card">
 		<img src="images/classic/QS.jpg" class="played_card">-->
 	      </div>
+	      <div class="col-md-3"></div>
 	    </div>
 	  </div>
 	</div>

@@ -174,6 +174,12 @@ export default class PlayerView {
         document.getElementById("next_player").innerHTML = "Next up: " + this.nextPlayer;
     }
 
+    lessThanThreeAlert(player_name) {
+	if(!player_name === this.myName){
+	    alert(player_name + " only has three cards left");
+	}
+    }
+
     playCards() {
         // MICHELA: get the card elements with the class name selected
         var htmlCards = document.getElementsByClassName("selected");
