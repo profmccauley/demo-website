@@ -3,6 +3,7 @@ import play_cards from './Network.js';
 
 export default class PlayerView {
     constructor(name, host=false) {
+        console.log("*******player is constructed******");
         this.myName = name;
 	    this.host = host;
         this.myCards = new Array();   // cards will be sorted by lowest to highest priority
@@ -15,7 +16,7 @@ export default class PlayerView {
 
         var playCardButton = document.getElementById("play_hand");
         var passButton = document.getElementById("pass");
-        playCardButton.addEventListener("click", this.playCards);
+        playCardButton.addEventListener("click", this.playCards.bind(this));
         passButton.addEventListener("click", this.pass);
     }
 
@@ -36,7 +37,7 @@ export default class PlayerView {
         }
         
         // HUIYUN
-        this.prevCards = playerJSON.prevCards;
+        //this.prevCards = playerJSON.prevCards;
         this.currPlayer = playerJSON.currPlayer;
         this.nextPlayer = playerJSON.nextPlayer;
         this.points = playerJSON.points;
@@ -44,8 +45,8 @@ export default class PlayerView {
 	    console.log("my cards are", this.myCards);
         console.log("length of my cards is", this.myCards.length);
 
-	// displays the prev cards
-	this.displayPrevCards();
+        // displays the prev cards
+        this.displayPrevCards();
 
         // displays the player's cards on the screen
         this.displayHand();
@@ -59,11 +60,14 @@ export default class PlayerView {
             this.displayNotMyTurn();
         }
 
-	this.displayPlayers();
+        this.displayPlayers();
 
-    // for testing purposes
-    console.log(this.getCardByFile("classic/3H.jpg"));
-    console.log(this.getCardByFile("classic/3D.jpg"));
+        // for testing purposes
+        //console.log(this.getCardByFile("classic/3H.jpg"));
+        //console.log(this.getCardByFile("classic/3D.jpg"));
+        console.log(this);
+        console.log(this.myName);
+        console.log(this.myCards);
     }
 
     /**
@@ -74,11 +78,27 @@ export default class PlayerView {
      * cards that were just played
      */
     updateGame(serverUpdates) {
-        this.prevCards = serverUpdates.prevCards;
+        console.log('*** server update ***', serverUpdates);
+        if (!(serverUpdates.prevCards === null)) {
+            this.prevCards.length = 0;
+            if (!(serverUpdates.prevCards === 'new run')) {
+
+                for (let i = 0; i < serverUpdates.prevCards.length; i++) {
+                    var tempCard = new Card();
+                    console.log(serverUpdates.prevCards[i]);
+                    tempCard.fromJSON(serverUpdates.prevCards[i]);
+                    console.log('temp card after push', tempCard);
+                    this.prevCards.push(tempCard);
+                }
+            }
+
+            this.displayPrevCards();
+        }
+        
+
         this.currPlayer = serverUpdates.currPlayer;
         this.nextPlayer = serverUpdates.nextPlayer;
-
-        this.displayPrevCards();
+        
         if (this.currPlayer == this.myName) {
             this.displayMyTurn();
         }
@@ -86,7 +106,7 @@ export default class PlayerView {
             this.displayNotMyTurn();
         }
 
-	this.displayPlayers();
+	    this.displayPlayers();
     }
 
     getCardByFile(fileName){
@@ -120,15 +140,19 @@ export default class PlayerView {
 
     displayPrevCards() {
         // MICHELA: call when receive new prev cards from the server   
-	var html = "";
-	if(this.prevCards != null){
-	    for (let card of this.prevCards) {
-		let tag = '<img src="';
-		tag += card.getFilePath();
-		tag += '" class="player_card unselected">';
-	    }
-	}
-	document.getElementById("last_played").innerHTML = html;
+        var html = "";
+        console.log("*** importort stuff", this.prevCards);
+        if(!(this.prevCards.length === 0)){
+            for (let card of this.prevCards) {
+                console.log(card);
+                let tag = '<img src="images/';
+                tag += card.getFilePath();
+                tag += '" class="played_card">';
+                html += tag;
+            }
+        }
+        console.log(html);
+        document.getElementById("last_played").innerHTML = html;
     }
 
     displayMyTurn() {
@@ -146,8 +170,8 @@ export default class PlayerView {
     }
 
     displayPlayers() {
-	document.getElementById("current_player").innerHTML = this.currPlayer + "'s turn";
-	document.getElementById("next_player").innerHTML = "Next up: " + this.nextPlayer;
+        document.getElementById("current_player").innerHTML = this.currPlayer + "'s turn";
+        document.getElementById("next_player").innerHTML = "Next up: " + this.nextPlayer;
     }
 
     playCards() {
@@ -155,7 +179,12 @@ export default class PlayerView {
         var htmlCards = document.getElementsByClassName("selected");
         var cards = [];
 
-        
+        console.log("***** in play cards *****");
+        console.log(this);
+        console.log(this.myName);
+        console.log(this.myCards);
+
+        console.log("AbOvE! Checking if the cards are still card objects");
         for (let htmlCard of htmlCards) {
             let src = htmlCard.src;
             src = src.split("images/"); // strip file to end of URL
@@ -168,7 +197,9 @@ export default class PlayerView {
             }
 
             console.log(tempCard.getFilePath().split("/")[0]);
-            card = new Card(tempCard.getRank(), tempCard.getSuit(), tempCard.getFilePath().split("/")[0]);
+
+            var card = new Card(tempCard.getRank(), tempCard.getSuit(), tempCard.getFilePath().split("/")[0]);
+            
             if (card == false){
                 throw 'At least one card is not in the hand';
             }
@@ -179,13 +210,14 @@ export default class PlayerView {
 
         // check if the cards are valid to play based on rules
         // returns "valid" if valid, error message if not
+        
         //var validity = this.isValid(cards);
+        var validity = 'valid';
         console.log("CARDS TO BE PLAYED ARE:", cards);
-        var validity = "valid"; // TEMP!!
 
         if (validity == "valid") {
             // removes cards from hand & redisplays locally
-            //this.removeCardsFromHand(cards); 
+            this.removeCardsFromHand(cards); 
             // TEMP!! removed above line
 
             // send to server list of cards just played
@@ -206,17 +238,19 @@ export default class PlayerView {
     }
 
     removeCardsFromHand(playedCards) {
-        tempCards = [...this.myCards];
+        var tempCards = [...this.myCards];
 
         // remove the cards
         for (let card of this.myCards) {
-            for (playedCard of this.playedCards) {
+            for (let playedCard of playedCards) {
                 if (card.getPriority() == playedCard.getPriority()) {
-                    tempCards.remove(tempCards.indexOf(card));
+                    console.log(tempCards.indexOf(card));
+                    tempCards.splice(tempCards.indexOf(card), 1);
                 }
             }
         }
 
+        console.log(tempCards);
         this.myCards = [...tempCards];
 
         // update the display

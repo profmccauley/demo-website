@@ -135,14 +135,20 @@ export default class Game {
             // will not change last player if a pass
             this.lastPlayer = this.currentPlayer;
         }
+        else {
+            this.previousCards = null;
+        }
 
         // update next player
-        let nextPlayerIndex = (this.players.indexOf(this.currentPlayer) + 1) % this.numPlayers;
+        var nextPlayerIndex = (this.players.indexOf(this.currentPlayer) + 1) % this.numPlayers;
         this.currentPlayer = this.players[nextPlayerIndex];
+
+        console.log(this.currentPlayer);
+        console.log(nextPlayerIndex);
 
         // if the current player is the previous player, clear the previousCards
         if (this.currentPlayer === this.lastPlayer) {
-            this.previousCards = null;
+            this.previousCards = 'new run';
         }
     }
     

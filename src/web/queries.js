@@ -121,10 +121,10 @@ $(document).ready(function(){
 
     //START GAME ROOM (GAMEPLAY)
     $("#play_game").click(function(){
-	var room = $("#room_name").text();
-	$("#waiting_room").addClass("offscreen");
-	$("#game_screen").removeClass("offscreen");
-	$("#room_name_game").text("Game " + room);
+		var room = $("#room_name").text();
+		$("#waiting_room").addClass("offscreen");
+		$("#game_screen").removeClass("offscreen");
+		$("#room_name_game").text("Game " + room);
     });
 
     

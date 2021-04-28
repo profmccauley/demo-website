@@ -221,11 +221,13 @@ var waitingRoom = new WaitingRoom();
 					//get updated info from the game
 					prevCards = game.getPreviousCards(); 
 					currPlayer = game.getCurrentPlayer().getName();
+					console.log('in network', currPlayer);
 					let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
 					if(nextIndex >= game.getPlayers().length){
 						nextIndex = 0;
 					}
 					nextPlayer = game.getPlayers()[nextIndex].getName();
+					console.log('in network', nextPlayer);
 					//host update PlayerView
 					var dict = {
 					    prevCards: prevCards,
@@ -253,7 +255,7 @@ var waitingRoom = new WaitingRoom();
 		  		}
 
 		  	}
-		  	//Server sends back to all players for them to start the game
+		  	// Server sends back to all players for them to start the game
 		  	else if(message.msg.type === 'START'){
 		  		console.log("The host " + message.SENDER + " started the game");
 		
@@ -261,6 +263,7 @@ var waitingRoom = new WaitingRoom();
 		  			//start game for other players
 					waitingRoom.leave_waiting_room();
 					//init Game in PlayerView
+					console.log("*****in message 'START'", player_name.value);
 					playerView = new PlayerView(player_name.value);
 
 					//Data: myCards: init cards for current user
@@ -297,6 +300,7 @@ var waitingRoom = new WaitingRoom();
 		//init game in Game.js, send information to PlayerView.js
 		function start_game(){
 			console.log("The game starts!");
+			console.log("*****in start_game", player_name.value);
 			//call Game in game logic
 			var type = document.getElementById('card_types').value;
 			console.log("type: " + type);
