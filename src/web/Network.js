@@ -287,6 +287,14 @@ var waitingRoom = new WaitingRoom();
 				}
 
 		  	}
+		  	else if(message.msg.type === 'END'){
+		  		console.log("The host " + message.SENDER + " ends the game");
+		  		if(status !== 'S'){
+		  			document.getElementById("leave_game").classList.add("offscreen");
+					document.getElementById("game_screen").classList.add("offscreen");
+					document.getElementById("game_over").classList.remove("offscreen");
+		  		}
+		  	}
 		  }
 		}
 
@@ -346,6 +354,12 @@ var waitingRoom = new WaitingRoom();
 			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
 		}
 
+		//host click end game button
+		function leave_game(){
+			console.log("The game ends!");
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'END'}}));
+		}
+
 ////set up JS connection through python function above
  		function js_connect (my_status)
 		{
@@ -379,5 +393,6 @@ var waitingRoom = new WaitingRoom();
 		}
 document.getElementById("start_game").addEventListener("click", function(){js_connect("S")});
 document.getElementById("play_game").addEventListener("click", start_game);
+document.getElementById("leave_game").addEventListener("click", leave_game);
 document.getElementById("join_game").addEventListener("click", function(){js_connect("J")});
 window.get_join_status = get_join_status;
