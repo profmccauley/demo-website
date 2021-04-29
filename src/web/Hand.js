@@ -63,6 +63,10 @@ export default class Hand{
           });
     }
 
+    clearCards() {
+        this.cards.length = 0;
+    }
+
     // remove a card from the hand
     removeCard(card) {
         // remove first instance of card from hand

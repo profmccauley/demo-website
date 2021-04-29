@@ -162,10 +162,15 @@ export default class Game {
     }
     
     newRound() {
-        // calculate the scores for each player
+        // set up players for next round
         for (let player of this.players) {
+            // calculate the scores for each player
             player.updatePoints();
+
+            // clear the player's hand for the next round
+            player.clearCards();
         }
+        
 
         // TODO: once Michela has the button stuff set up,
         // check if hit the max number of rounds

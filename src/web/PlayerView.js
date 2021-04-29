@@ -258,6 +258,7 @@ export default class PlayerView {
 
             var card = new Card(tempCard.getRank(), tempCard.getSuit(), tempCard.getFilePath().split("/")[0]);
             
+            // TODO: rose!! this isn't working for participants, but is working for host 
             if (card == false){
                 throw 'At least one card is not in the hand';
             }
