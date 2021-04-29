@@ -268,11 +268,12 @@ var waitingRoom = new WaitingRoom();
 		  		if(status !== 'S'){
 		  			//player update their playerview to start a new round
 		  			for (let player of message.msg.players) {
-						if(player.name === player_name.value){
+						if (player.name === player_name.value){
 							myCards = player.hand;
 							my_point = player.points;
 						}
 					}
+
 					var dict = {
 						myCards: myCards,
 					    prevCards: message.msg.prevCards,
@@ -282,8 +283,8 @@ var waitingRoom = new WaitingRoom();
 					};
 					console.log(JSON.stringify(dict));
 
-			  		//TODO: call newRound() in playerView and pass the updated dict
-					//playerView.newRound(dict);
+			  		//TODO: call updateNewRound() in playerView and pass the updated dict
+					playerView.updateNewRound(dict);
 		  		}
 		  	}
 		  	// Server sends back to all players for them to start the game
@@ -362,9 +363,9 @@ var waitingRoom = new WaitingRoom();
 			};
 
 			//TODO: call newRound() in playerView and pass the updated dict
-			//playerView.newRound(dict);
+			playerView.updateNewRound(dict);
 
-			//send to server that the game starts
+			// send to server that the game starts
 			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'NEWROUND', "players": game.getPlayers(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
 		}
 

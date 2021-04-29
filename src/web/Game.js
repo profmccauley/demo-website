@@ -16,8 +16,7 @@ export default class Game {
         
         this.currentPlayer = null;
         this.lastPlayer = null;
-
-        // below could also be a hand? but may convolute purpose
+        
         this.previousCards = null; 
         this.deckType = deckType;
         this.deck = new Deck(deckType);
@@ -166,12 +165,17 @@ export default class Game {
             player.updatePoints();
         }
 
+        // TODO: once Michela has the button stuff set up,
+        // check if hit the max number of rounds
+
         // shuffle deck for next round
         this.deck.shuffleDeck();
 
         // deal new cards to the players
         // cards will automatically be sorted
         this.dealCards();
+
+        console.log('*********', this.currentPlayer.getNumCards(), '**********');
     }
 }
 
