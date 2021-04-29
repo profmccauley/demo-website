@@ -375,9 +375,35 @@ var waitingRoom = new WaitingRoom();
 			console.log("The game starts!");
 			console.log("*****in start_game", player_name.value);
 			//call Game in game logic
-			var type = document.getElementById('card_types').value;
-			console.log("type: " + type);
-			game = new Game(number_of_users, users, type);
+		    var type = document.getElementById('card_types').value;
+		    console.log("type: " + type);
+		    var play_to = document.querySelector('input[name = "game_length"]:checked').value;
+		    var playRounds = null;
+		    var playPoints = null;
+		    if (play_to === "play3"){
+			playRounds = 3;
+		    }
+		    else if (play_to === "play_input_rounds"){
+			var rounds = document.getElementById("insert_rounds").value;
+			var roundsInt = parseInt(rounds, 10);
+			if (!roundsInt===NaN){
+			    playRounds = roundsInt;
+			}
+			else{
+			    //HUIYIN CALL SHOW ERROR IN WAITING ROOM
+			}
+		    }
+		    else if (play_to === "play_input_points"){
+			var points = document.getElementById("insert_points").value;
+			var pointsInt = parseInt(points, 10);
+			if (!pointsInt===NaN){
+			    playPoints = pointsInt;
+			}
+			else{
+			    //HUIYIN CALL SHOW ERROR IN WAITING ROOM
+			}
+		    }
+		    game = new Game(number_of_users, users, type, playRounds, playPoints);
 			//init Game in PlayerView
 			playerView = new PlayerView(player_name.value, true);
 
