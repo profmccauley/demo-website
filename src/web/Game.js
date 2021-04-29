@@ -22,6 +22,7 @@ export default class Game {
         this.deckType = deckType;
         this.deck = new Deck(deckType);
         this.startNewRound = false;
+        this.lessThanThree = false;
         
 
         this.startGame();
@@ -124,6 +125,8 @@ export default class Game {
             // TODO: remove cards from player's hand
             this.currentPlayer.removeCards(cards);
 
+            this.lessThanThree = false;
+
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
 
@@ -131,6 +134,9 @@ export default class Game {
                 this.newRound();
                 // TODO: are there other actions that need to be 
                 // taken to reset the round?
+            }
+            else if(this.currentPlayer.getNumCards() < 3){
+                this.lessThanThree = true;
             }
 
             // set the last player to be person who just played

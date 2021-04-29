@@ -143,6 +143,8 @@ var playerView = null;
 var error = null;
 var join_success = false;
 
+var alerted = new Array();
+
 var waitingRoom = new WaitingRoom();
 
 		function process(text){
@@ -191,6 +193,7 @@ var waitingRoom = new WaitingRoom();
 		  	//Server sends back to all players of the played cards for them to update the UI
 		  	if (message.msg.type === 'MOVE'){
 		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
+
 		  		//host update the game
 		  		if(status === 'S'){
 		  			console.log("Host update the game");
@@ -206,11 +209,18 @@ var waitingRoom = new WaitingRoom();
 						new_round();
 					}
 					else{
+						//check if less than three cards
+						if(game.lessThanThree === true){
+							if(!alerted.includes(message.SENDER)){
+								alerted.push(message.SENDER);
+								playerView.lessThanThreeAlert(message.SENDER);
+							}
+						}
 						//get updated info from the game
 						prevCards = game.getPreviousCards(); 
 						currPlayer = game.getCurrentPlayer().getName();
 						console.log('in network', currPlayer);
-						let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+						let nextIndex = game.getPlayers().indexOf(game.getCurrentPlayer()) + 1;
 						if(nextIndex >= game.getPlayers().length){
 							nextIndex = 0;
 						}
@@ -225,7 +235,12 @@ var waitingRoom = new WaitingRoom();
 				  		playerView.updateGame(dict);
 
 				  		//host tell others to update their playerView
-						net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		if(game.lessThanThree === true){
+				  			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": true, "alert_player": message.SENDER, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		}
+				  		else{
+				  			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": false, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		}
 					}
 				}
 
@@ -234,6 +249,11 @@ var waitingRoom = new WaitingRoom();
 		  	else if(message.msg.type === 'PLAYERMOVE'){
 		  		console.log("other players update their screen");
 		  		if(status !== 'S'){
+		  			//check if less than three cards
+			  		if(message.msg.alert === true){
+			  			console.log("Alert in Network");
+			  				playerView.lessThanThreeAlert(message.msg.alert_player);
+			  		}
 		  			//host update PlayerView
 					var dict = {
 					    prevCards: message.msg.prevCards,
@@ -327,7 +347,7 @@ var waitingRoom = new WaitingRoom();
 			}
 			prevCards = game.getPreviousCards(); 
 			currPlayer = game.getCurrentPlayer().getName();
-			let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+			let nextIndex = game.getPlayers().indexOf(game.getCurrentPlayer()) + 1;
 			if(nextIndex >= game.getPlayers().length){
 				nextIndex = 0;
 			}
@@ -371,7 +391,7 @@ var waitingRoom = new WaitingRoom();
 			}
 			prevCards = game.getPreviousCards(); 
 			currPlayer = game.getCurrentPlayer().getName();
-			let nextIndex = game.getPlayers().indexOf(currPlayer) + 1;
+			let nextIndex = game.getPlayers().indexOf(game.getCurrentPlayer()) + 1;
 			if(nextIndex >= game.getPlayers().length){
 				nextIndex = 0;
 			}

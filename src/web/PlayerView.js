@@ -175,7 +175,7 @@ export default class PlayerView {
     }
 
     lessThanThreeAlert(player_name) {
-	if(!player_name === this.myName){
+	if(player_name !== this.myName){
 	    alert(player_name + " only has three cards left");
 	}
     }
