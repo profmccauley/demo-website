@@ -140,8 +140,7 @@ var my_point = 0;
 var game = null;
 var playerView = null;
 
-var error = null;
-var join_success = false;
+var join_success = 1;
 
 var alerted = new Array();
 
@@ -158,16 +157,16 @@ var waitingRoom = new WaitingRoom();
 		  else if(message.TYPE === 'ERROR'){
 		  	if(message.ERR === 'BADNAME'){
 		  		console.log("That name isn't allowed. Try another.")
-				  error = "That name isn't allowed. Try another.";
+		  		join_success = 2;
 		  	}
 		  	else if(message.ERR === 'BADGAMECODE'){
 		  		if(status === 'J'){
 		  			console.log("This gamecode doesn't exist. Try another.")
-					  error = "This gamecode doesn't exist. Try another.";
+		  			join_success = 3;
 		  		}
 		  		else{
 		  			console.log("This gamecode is already taken. Try another.")
-					  error = "This gamecode is already taken. Try another.";
+		  			join_success = 4;
 		  		}
 		  	}
 		  	else{
@@ -183,7 +182,7 @@ var waitingRoom = new WaitingRoom();
 		  	console.log("add player: " + message.user);
 		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
-		  	join_success = true;
+		  	join_success = 0;
 		  	users = message.users;
 		  	number_of_users = message.number_of_users;
 		  	console.log("Current users in this room: " + users);
@@ -213,6 +212,7 @@ var waitingRoom = new WaitingRoom();
 						if(game.lessThanThree === true){
 							if(!alerted.includes(message.SENDER)){
 								alerted.push(message.SENDER);
+								console.log("players with less than three cards: " + alerted);
 								playerView.lessThanThreeAlert(message.SENDER);
 							}
 						}
@@ -376,9 +376,35 @@ var waitingRoom = new WaitingRoom();
 			console.log("The game starts!");
 			console.log("*****in start_game", player_name.value);
 			//call Game in game logic
-			var type = document.getElementById('card_types').value;
-			console.log("type: " + type);
-			game = new Game(number_of_users, users, type);
+		    var type = document.getElementById('card_types').value;
+		    console.log("type: " + type);
+		    var play_to = document.querySelector('input[name = "game_length"]:checked').value;
+		    var playRounds = null;
+		    var playPoints = null;
+		    if (play_to === "play3"){
+			playRounds = 3;
+		    }
+		    else if (play_to === "play_input_rounds"){
+			var rounds = document.getElementById("insert_rounds").value;
+			var roundsInt = parseInt(rounds, 10);
+			if (!roundsInt===NaN){
+			    playRounds = roundsInt;
+			}
+			else{
+			    //HUIYIN CALL SHOW ERROR IN WAITING ROOM
+			}
+		    }
+		    else if (play_to === "play_input_points"){
+			var points = document.getElementById("insert_points").value;
+			var pointsInt = parseInt(points, 10);
+			if (!pointsInt===NaN){
+			    playPoints = pointsInt;
+			}
+			else{
+			    //HUIYIN CALL SHOW ERROR IN WAITING ROOM
+			}
+		    }
+		    game = new Game(number_of_users, users, type, playRounds, playPoints);
 			//init Game in PlayerView
 			playerView = new PlayerView(player_name.value, true);
 

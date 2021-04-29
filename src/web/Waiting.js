@@ -26,6 +26,10 @@ export default class WaitingRoom{
 		document.getElementById("room_name_game").innerHTML = "Game " + room;
 	}
 
+    show_error(){
+	document.getElementById("error_message").innerHTML = "Please enter a number";
+    }
+
 	// export default {add_player, leave_waiting_room};
 	// window.add_player = add_player;
 	// window.leave_waiting_room = leave_waiting_room;

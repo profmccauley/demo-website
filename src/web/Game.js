@@ -4,7 +4,7 @@ import Player from "./Player.js";
 export default class Game {
     // numPlayers is an int
     // playerNames is an array with the names of the player
-    constructor(numPlayers, playerNames = false, deckType = 'classic') {
+    constructor(numPlayers, playerNames = false, deckType = 'classic', playRounds = 3, playPoints = null) {
         if (numPlayers < 2 || numPlayers > 4) {
             throw 'Number of players must be between 2 and 4';
         }
@@ -22,6 +22,9 @@ export default class Game {
         this.deck = new Deck(deckType);
         this.startNewRound = false;
         this.lessThanThree = false;
+
+	this.playRounds = playRounds;
+	this.playPoints = playPoints;
         
 
         this.startGame();
@@ -116,6 +119,7 @@ export default class Game {
     // CALL With either list of cards or nothing
     updateGame(cards = 'pass') {
         // changes if player didn't pass
+        this.lessThanThree = false;
         if (!(cards === 'pass')) {
             // update previous cards by copying array 
             // do not update cards if the player passed
@@ -123,8 +127,6 @@ export default class Game {
 
             // TODO: remove cards from player's hand
             this.currentPlayer.removeCards(cards);
-
-            this.lessThanThree = false;
 
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
