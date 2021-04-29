@@ -115,12 +115,6 @@
 	  <div class="col">
 	    <h1>Mount Holyoke Poker</h1>
 	    <h2 id="room_name"></h2>
-	    <!-- <script>
-	      var queryString = window.location.search;
-	      var urlParams = new URLSearchParams(queryString);
-	      var name = urlParams.get("room");
-	      document.getElementById("room_name").innerHTML = "Room: " + name;
-	    </script> -->
 	    <div id="players">
 	      <p>blah</p>
 	      <p>blah</p>
@@ -137,28 +131,30 @@
 		  </select>
 		</div>
 		<div class="form-group">
+		  <p style="font-weight: bold"> Choose how long you wish to play</p>
+		  <p style="color: #CC0000" id="error_message"></p>
+		  <input type="radio" id="play3"
+			 name="game_length" value="play3">
+		  <label for="play3">Play 3 rounds (default)</label>
+		  <br>
+		  <input type="radio" id="play_input_rounds"
+			 name="game_length" value="play_input_rounds">
+		  <label for="play_input_rounds">Play specified number of rounds:
+		    <input type="text" id="insert_rounds" name="insert_rounds">
+		  </label>
+		  <br>
+		  <input type="radio" id="play_input_points"
+			 name="game_length" value="play_input_points">
+		  <label for="play_input_points">Play to specified number of points:
+		    <input type="text" id="insert_points" name="insert_points">
+		  </label>
+	      </div>
+		<div class="form-group">
 		  <input type="button" id="play_game" class="btn btn-primary" value="Start Game">
 		</div>
 	      </form>
 	    </div>
 	    <h3 id="player_specific">Waiting for host to start game...</h3>
-	    
-	    <!-- FOLLOWING SCRIPT HIDES/SHOWS THE HOST-SPECIFIC DIV DEPENDING
-		 ON WHETHER A USER HAS STARTED A GAME AND IS THE HOST OR JUST
-		 JOINED A GAME AS A PLAYER 
-	    <script>
-	      var queryString = window.location.search;
-	      var urlParams = new URLSearchParams(queryString);
-	      if(urlParams.has('host')){
-		  document.getElementById("host_specific").style.display = "block";
-		  document.getElementById("player_specific").style.display = "none";
-	      }
-	      else{
-		  document.getElementById("host_specific").style.display = "none";
-		  document.getElementById("player_specific").style.display = "block";
-	      }
-	    </script> -->
-	    
 	  </div>
 	</div>
       </div>
@@ -169,12 +165,6 @@
 	<div class="row align-items-end" style="height: 100%">
 	  <div class="col-md-3">
 	    <h3 id="room_name_game"></h3>
-	    <!-- <script>
-	      var queryString = window.location.search;
-	      var urlParams = new URLSearchParams(queryString);
-	      var name = urlParams.get("room");
-	      document.getElementById("room_name").innerHTML = "Game Room: " + name;
-	    </script> -->
 	  </div>
 	  <div class="col-md-7"></div>
 	  <div class="col-md-2">
@@ -207,10 +197,6 @@
 	      </div>
 	      <div class="col-md-6" id="last_played">
 		<img src="images/classic/QS.jpg" class="played_card">
-		<!--<img src="images/classic/QS.jpg" class="played_card">
-		<img src="images/classic/QS.jpg" class="played_card">
-		<img src="images/classic/QS.jpg" class="played_card">
-		<img src="images/classic/QS.jpg" class="played_card">-->
 	      </div>
 	      <div class="col-md-3"></div>
 	    </div>
