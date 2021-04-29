@@ -12,21 +12,25 @@ $(document).ready(function(){
 	async function connection(){
     	    let join = await get_join_status();
     	    console.log("join_success: " + join);
-    	    if(join === true){
-    		var game_code = $("#game_code").val();
-		var name = $("#player_name").val();
-    		$("#homepage").addClass("offscreen");
-		$("#waiting_room").removeClass("offscreen");
-		$("#host_specific").css('display', 'none');
-		$("#player_specific").css('display', 'block');
-		$("#room_name").text("Room: " + game_code);
-		//player_view = new PlayerView(name);
+    	    if(join === 0){
+	    		var game_code = $("#game_code").val();
+				var name = $("#player_name").val();
+	    		$("#homepage").addClass("offscreen");
+			$("#waiting_room").removeClass("offscreen");
+			$("#host_specific").css('display', 'none');
+			$("#player_specific").css('display', 'block');
+			$("#room_name").text("Room: " + game_code);
+			//player_view = new PlayerView(name);
 		
     	    }
-    	    else{
-    		setTimeout( connection, 500);
-    		$("#test").text("Unable to join game. Try again.");
-    	    }
+    	    else if (join === 1){
+	    		setTimeout( connection, 500);
+	    		$("#test").text("Trying to join the game");
+    	    } else if(join === 2){
+    	    	$("#test").text("Unable to join this game. Try again with another name.");
+    	    } else if(join === 3){
+    	    	$("#test").text("Unable to join this game. Try again with another game code.");
+    	    } 
     	}
     	connection();
     });
@@ -36,7 +40,7 @@ $(document).ready(function(){
     	async function connection(){
     		let join = await get_join_status();
     		console.log("start_success: " + join);
-    		if(join === true){
+    		if(join === 0){
     		    var game_code = $("#game_code").val();
 		    var name = $("#player_name").val();
     		    $("#homepage").addClass("offscreen");
@@ -47,10 +51,14 @@ $(document).ready(function(){
 		    //player_view = new PlayerView(name, true);
 		    
     		}
-    		else{
-    			setTimeout( connection, 500);
-    			$("#test").text("Unable to start this game. Try again with another room name.");
-    		}
+    		else if (join === 1){
+	    		setTimeout( connection, 500);
+	    		$("#test").text("Trying to start the game");
+    	    } else if(join === 2){
+    	    	$("#test").text("Unable to start this game. Try again with another name.");
+    	    } else if(join === 4){
+    	    	$("#test").text("Unable to start this game. Try again with another game code.");
+    	    }
     	}
     	connection();
 	//INSERT SERVER CODE HERE

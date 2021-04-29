@@ -120,6 +120,7 @@ export default class Game {
     // CALL With either list of cards or nothing
     updateGame(cards = 'pass') {
         // changes if player didn't pass
+        this.lessThanThree = false;
         if (!(cards === 'pass')) {
             // update previous cards by copying array 
             // do not update cards if the player passed
@@ -127,8 +128,6 @@ export default class Game {
 
             // TODO: remove cards from player's hand
             this.currentPlayer.removeCards(cards);
-
-            this.lessThanThree = false;
 
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
