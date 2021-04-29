@@ -31,8 +31,8 @@ class Sender
 		    this.path = "";
 		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    //this.address = "localhost";
-		    this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    this.address = "localhost";
+		    //this.address = "cs-vm-06.cs.mtholyoke.edu";
 		    //this.address = "138.10.92.46";
 		    this.disconnected = false;
 		    this.buf = "";
@@ -140,8 +140,7 @@ var my_point = 0;
 var game = null;
 var playerView = null;
 
-var error = null;
-var join_success = false;
+var join_success = 1;
 
 var alerted = new Array();
 
@@ -158,16 +157,16 @@ var waitingRoom = new WaitingRoom();
 		  else if(message.TYPE === 'ERROR'){
 		  	if(message.ERR === 'BADNAME'){
 		  		console.log("That name isn't allowed. Try another.")
-				  error = "That name isn't allowed. Try another.";
+		  		join_success = 2;
 		  	}
 		  	else if(message.ERR === 'BADGAMECODE'){
 		  		if(status === 'J'){
 		  			console.log("This gamecode doesn't exist. Try another.")
-					  error = "This gamecode doesn't exist. Try another.";
+		  			join_success = 3;
 		  		}
 		  		else{
 		  			console.log("This gamecode is already taken. Try another.")
-					  error = "This gamecode is already taken. Try another.";
+		  			join_success = 4;
 		  		}
 		  	}
 		  	else{
@@ -183,7 +182,7 @@ var waitingRoom = new WaitingRoom();
 		  	console.log("add player: " + message.user);
 		  }
 		  else if(message.TYPE === 'ROOM_STATUS'){
-		  	join_success = true;
+		  	join_success = 0;
 		  	users = message.users;
 		  	number_of_users = message.number_of_users;
 		  	console.log("Current users in this room: " + users);
@@ -213,6 +212,7 @@ var waitingRoom = new WaitingRoom();
 						if(game.lessThanThree === true){
 							if(!alerted.includes(message.SENDER)){
 								alerted.push(message.SENDER);
+								console.log("players with less than three cards: " + alerted);
 								playerView.lessThanThreeAlert(message.SENDER);
 							}
 						}
