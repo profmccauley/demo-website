@@ -340,6 +340,9 @@ var waitingRoom = new WaitingRoom();
 		//if the new round is started
 		//host update the playerView
 		function new_round(){
+			//clear the alerted array
+			alerted = new Array();
+			
 			//Data: myCards: init cards for current user
 			//player object
 			for (let player of game.getPlayers()) {

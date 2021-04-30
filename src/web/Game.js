@@ -131,6 +131,8 @@ export default class Game {
 
             console.log("update game ************************ before new round");
             console.log(this.currentPlayer);
+            console.log(this.currentPlayer.getNumCards());
+            console.log("update game ************************ getNumCards");
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
 
