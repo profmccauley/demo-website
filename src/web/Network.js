@@ -384,13 +384,13 @@ var waitingRoom = new WaitingRoom();
 			//call Game in game logic
 		    var type = document.getElementById('card_types').value;
 		    console.log("type: " + type);
-		    var play_to = document.querySelector('input[name = "game_length"]:checked').value;
-		    var playRounds = null;
-		    var playPoints = null;
-		    if (play_to === "play3"){
-			playRounds = 3;
+		    var play_to = "";
+		    if (!document.querySelector('input[name = "game_length"]:checked') === null){
+			play_to = document.querySelector('input[name = "game_length"]:checked').value;
 		    }
-		    else if (play_to === "play_input_rounds"){
+		    var playRounds = 3; //default state for playing 3 rounds
+		    var playPoints = null;
+		    if (play_to === "play_input_rounds"){
 			var rounds = document.getElementById("insert_rounds").value;
 			var roundsInt = parseInt(rounds, 10);
 			if (!roundsInt===NaN){
@@ -405,6 +405,7 @@ var waitingRoom = new WaitingRoom();
 			var pointsInt = parseInt(points, 10);
 			if (!pointsInt===NaN){
 			    playPoints = pointsInt;
+			    playRounds = null;
 			}
 			else{
 			    waitingRoom.show_error();
