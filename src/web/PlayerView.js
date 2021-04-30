@@ -143,9 +143,10 @@ export default class PlayerView {
         }
         else{
             this.myCards = serverUpdates.myCards;
-	    players = serverUpdates.players;
+	       players = serverUpdates.players;
         }
-	this.displayScore(players);
+
+       this.displayScores(players);
 	 
         
         // get previous cards

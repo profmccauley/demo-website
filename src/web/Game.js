@@ -120,6 +120,7 @@ export default class Game {
     updateGame(cards = 'pass') {
         // changes if player didn't pass
         this.lessThanThree = false;
+        this.startNewRound = false;
         if (!(cards === 'pass')) {
             // update previous cards by copying array 
             // do not update cards if the player passed
@@ -128,6 +129,8 @@ export default class Game {
             // TODO: remove cards from player's hand
             this.currentPlayer.removeCards(cards);
 
+            console.log("update game ************************ before new round");
+            console.log(this.currentPlayer);
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
 

@@ -284,7 +284,7 @@ var waitingRoom = new WaitingRoom();
 					};
 					console.log(JSON.stringify(dict));
 
-			  		//TODO: call updateNewRound() in playerView and pass the updated dict
+			  		//update playerView and pass the updated dict
 					playerView.updateNewRound(dict);
 		  		}
 		  	}
@@ -365,7 +365,7 @@ var waitingRoom = new WaitingRoom();
 			    players: game.getPlayers(),
 			};
 
-			//TODO: call newRound() in playerView and pass the updated dict
+			//update playerView and pass the updated dict
 			playerView.updateNewRound(dict);
 
 			// send to server that the game starts
@@ -394,7 +394,7 @@ var waitingRoom = new WaitingRoom();
 			    playRounds = roundsInt;
 			}
 			else{
-			    //HUIYIN CALL SHOW ERROR IN WAITING ROOM
+			    waitingRoom.show_error();
 			}
 		    }
 		    else if (play_to === "play_input_points"){
@@ -404,7 +404,7 @@ var waitingRoom = new WaitingRoom();
 			    playPoints = pointsInt;
 			}
 			else{
-			    //HUIYIN CALL SHOW ERROR IN WAITING ROOM
+			    waitingRoom.show_error();
 			}
 		    }
 		    game = new Game(number_of_users, users, type, playRounds, playPoints);
@@ -487,6 +487,7 @@ var waitingRoom = new WaitingRoom();
 		  if (rs == 1) return 2;
 		  return 0;
 		}
+
 document.getElementById("start_game").addEventListener("click", function(){js_connect("S")});
 document.getElementById("play_game").addEventListener("click", start_game);
 document.getElementById("leave_game").addEventListener("click", leave_game);
