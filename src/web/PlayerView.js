@@ -1,5 +1,6 @@
 import Card from './Card.js';
 import play_cards from './Network.js';
+import Player from './Player.js';
 
 export default class PlayerView {
     constructor(name, host=false) {
@@ -23,6 +24,10 @@ export default class PlayerView {
     startGame(playerJSON) {
 
         // TODO: parse JSON to fill in instance variables
+	console.log("*****LOOOKKKKK********");
+	console.log(playerJSON);
+
+	var players = [];
 
         if(this.host === false){
             for (let i = 0; i < playerJSON.myCards.cards.length; i++) {
@@ -31,9 +36,15 @@ export default class PlayerView {
                 this.myCards.push(tempCard);
             }
             console.log(this.myCards);
+	    for (let i = 0; i < playerJSON.players.length; i++) {
+                var tempPlayer = new Player();
+                tempPlayer.fromJSON(playerJSON.players[i]);
+                players.push(tempPlayer);
+            }
         }
         else{
             this.myCards = playerJSON.myCards;
+	    players = playerJSON.players;
         }
         
         this.currPlayer = playerJSON.currPlayer;
@@ -48,6 +59,8 @@ export default class PlayerView {
 
         // displays the player's cards on the screen
         this.displayHand();
+
+	this.displayScores(players);
 
         if (this.currPlayer == this.myName) {
             this.firstTurn = true;   // sets special rule for first turn
@@ -106,13 +119,15 @@ export default class PlayerView {
          * @param serverUpdates dictionary containing the new current player, the next player, the
          * cards that were just played, and points
          */
-     updateNewRound(serverUpdates) {
+    updateNewRound(serverUpdates) {
         console.log(serverUpdates);
         // clear current and previous cards
         this.myCards.length = 0;
         this.prevCards.length = 0;
 
-        // get new cards
+	 var players = [];
+	 
+        // get new cards and players (for score updates)
         if(this.host === false){
             for (let i = 0; i < serverUpdates.myCards.cards.length; i++) {
                 var tempCard = new Card();
@@ -120,10 +135,18 @@ export default class PlayerView {
                 this.myCards.push(tempCard);
             }
             console.log(this.myCards);
+	    for (let i = 0; i < serverUpdates.players.length; i++) {
+                var tempPlayer = new Player();
+                tempPlayer.fromJSON(serverUpdates.players[i]);
+                players.push(tempPlayer);
+            }
         }
         else{
             this.myCards = serverUpdates.myCards;
+	    players = serverUpdates.players;
         }
+	this.displayScore(players);
+	 
         
         // get previous cards
         console.log(serverUpdates.prevCards);
@@ -226,6 +249,14 @@ export default class PlayerView {
         document.getElementById("next_player").innerHTML = "Next up: " + this.nextPlayer;
     }
 
+    displayScores(players) {
+	var html = "<p>Scores</p>"
+	for (let player of players){
+	    html += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
+	}
+	document.getElementById("scores").innerHTML = html;
+    }
+
     lessThanThreeAlert(player_name) {
         if(player_name !== this.myName){
             alert(player_name + " only has three cards left");
@@ -236,6 +267,9 @@ export default class PlayerView {
         // MICHELA: get the card elements with the class name selected
         var htmlCards = document.getElementsByClassName("selected");
         var cards = [];
+
+	//clear any potential error messages
+	document.getElementById("error_message_game").innerHTML = "";
 
         console.log("***** in play cards *****");
         console.log(this);
@@ -284,7 +318,7 @@ export default class PlayerView {
         }
         else {
             // display value of validity on the player's screen
-	        document.getElementById("error_message").innerHTML = validity;
+	        document.getElementById("error_message_game").innerHTML = validity;
         }
     }
 

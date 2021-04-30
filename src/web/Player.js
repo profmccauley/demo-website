@@ -61,4 +61,12 @@ export default class Player {
     sortHand() {
         this.hand.sort();
     }
+
+    // parse JSON to rebuild a player from the server
+    fromJSON(json) {
+        this.name = json.name;
+        this.hand = json.hand;
+        this.numCards = json.numCards;
+        this.points = json.points;
+    }
 }

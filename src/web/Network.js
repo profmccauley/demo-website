@@ -280,6 +280,7 @@ var waitingRoom = new WaitingRoom();
 					    currPlayer: message.msg.currPlayer,
 					    nextPlayer: message.msg.nextPlayer,	
 					    points: my_point,
+					    players: message.msg.players,
 					};
 					console.log(JSON.stringify(dict));
 
@@ -313,6 +314,7 @@ var waitingRoom = new WaitingRoom();
 					    currPlayer: message.msg.currPlayer,
 					    nextPlayer: message.msg.nextPlayer,	
 					    points: my_point,
+					    players: message.msg.players,
 					};
 					console.log(JSON.stringify(dict));
 					playerView.startGame(dict);	
@@ -360,6 +362,7 @@ var waitingRoom = new WaitingRoom();
 			    currPlayer: currPlayer,
 			    nextPlayer: nextPlayer,	
 			    points: my_point,
+			    players: game.getPlayers(),
 			};
 
 			//TODO: call newRound() in playerView and pass the updated dict
@@ -430,6 +433,7 @@ var waitingRoom = new WaitingRoom();
 			    currPlayer: currPlayer,
 			    nextPlayer: nextPlayer,	
 			    points: my_point,
+			    players: game.getPlayers(),
 			};
 			playerView.startGame(dict);	
 
