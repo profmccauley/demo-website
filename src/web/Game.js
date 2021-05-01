@@ -174,6 +174,8 @@ export default class Game {
     newRound() {
         // end the game if played to the max number of rounds
         this.currentRound++;
+        console.log("current round in Game newRound: " + this.currentRound);
+        console.log("current round in Game newRound: " + this.playRounds);
         if (this.currentRound === this.playRounds) {
             this.gameOver = true;
         }

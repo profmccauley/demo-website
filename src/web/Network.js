@@ -324,7 +324,7 @@ var waitingRoom = new WaitingRoom();
 				}
 
 		  	}
-		  	else if(message.msg.type === 'END'){
+		  	else if(message.msg.type === 'HOSTEND'){
 		  		console.log("The host " + message.SENDER + " ends the game");
 		  		if(status !== 'S'){
 		  			document.getElementById("leave_game").classList.add("offscreen");
@@ -335,11 +335,11 @@ var waitingRoom = new WaitingRoom();
 
 			else if(message.msg.type === 'END'){
 				console.log("The game is over!!");
-				if(status !== 'S'){
-					document.getElementById("bye_bye").classList.add("offscreen");
+				//if(status !== 'S'){
+					document.getElementById("leave_game").classList.add("offscreen");
 					document.getElementById("game_screen").classList.add("offscreen");
-					document.getElementById("game_over").classList.remove("offscreen");
-				}
+					document.getElementById("bye_bye").classList.remove("offscreen");
+				//}
 			}
 		  }
 		}
@@ -415,18 +415,20 @@ var waitingRoom = new WaitingRoom();
 			//call Game in game logic
 		    var type = document.getElementById('card_types').value;
 		    console.log("type: " + type);
+
+		    //get the number of rounds and points if specified by the host
 		    var play_to = "";
-		    if (!document.querySelector('input[name = "game_length"]:checked') === null){
+		    if (document.querySelector('input[name = "game_length"]:checked') !== null){
 				play_to = document.querySelector('input[name = "game_length"]:checked').value;
 		    }
 		    var playRounds = 3; //default state for playing 3 rounds
 		    var playPoints = null;
-			console.log(play_to);
+			console.log("play_to: " + play_to);
 		    if (play_to === "play_input_rounds"){
 				var rounds = document.getElementById("insert_rounds").value;
 				var roundsInt = parseInt(rounds, 10);
 				console.log(roundsInt, "*****");
-				if (!roundsInt===NaN){
+				if (roundsInt!==NaN){
 					playRounds = roundsInt;
 				}
 				else {
@@ -434,16 +436,18 @@ var waitingRoom = new WaitingRoom();
 				}
 		    }
 		    else if (play_to === "play_input_points"){
-			var points = document.getElementById("insert_points").value;
-			var pointsInt = parseInt(points, 10);
-			if (!pointsInt===NaN){
-			    playPoints = pointsInt;
-			    playRounds = null;
-			}
-			else{
-			    waitingRoom.show_error();
-			}
+				var points = document.getElementById("insert_points").value;
+				var pointsInt = parseInt(points, 10);
+				if (pointsInt!==NaN){
+				    playPoints = pointsInt;
+				    playRounds = null;
+				}
+				else{
+				    waitingRoom.show_error();
+				}
 		    }
+
+		    console.log("send to game: " + playRounds);
 		    game = new Game(number_of_users, users, type, playRounds, playPoints);
 			//init Game in PlayerView
 			playerView = new PlayerView(player_name.value, true);
@@ -490,7 +494,7 @@ var waitingRoom = new WaitingRoom();
 		//host click end game button
 		function leave_game(){
 			console.log("The game ends!");
-			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'END'}}));
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'HOSTEND'}}));
 		}
 
 		//set up JS connection through python function above
