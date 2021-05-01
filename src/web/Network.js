@@ -502,6 +502,7 @@ var waitingRoom = new WaitingRoom();
 		{
 		  status = my_status;
 		  console.log("Welcome to Poker Game");
+		  join_success = 1;
 		  console.log("js_connect: " + sender);
 		  if (sender) sender.close();
 		  sender = new Sender();
