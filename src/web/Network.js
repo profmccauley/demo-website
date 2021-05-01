@@ -202,9 +202,12 @@ var waitingRoom = new WaitingRoom();
 					else{
 						game.updateGame(message.msg.card);
 					}
-
+					// check if game over
+					if (game.isGameOver()) {
+						end_game();
+					}
 					//check if start new round
-					if(game.startNewRound === true){
+					else if(game.startNewRound === true){
 						new_round();
 					}
 					else{
@@ -329,6 +332,15 @@ var waitingRoom = new WaitingRoom();
 					document.getElementById("game_over").classList.remove("offscreen");
 		  		}
 		  	}
+
+			else if(message.msg.type === 'END'){
+				console.log("The game is over!!");
+				if(status !== 'S'){
+					document.getElementById("bye_bye").classList.add("offscreen");
+					document.getElementById("game_screen").classList.add("offscreen");
+					document.getElementById("game_over").classList.remove("offscreen");
+				}
+			}
 		  }
 		}
 
@@ -375,6 +387,25 @@ var waitingRoom = new WaitingRoom();
 			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'NEWROUND', "players": game.getPlayers(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
 		}
 
+		// when the game is over
+		function end_game() {
+			// calculate points
+			//clear the alerted array
+			alerted = new Array();
+
+			for (let player of game.getPlayers()) {
+				if (player.name === player_name.value){
+					my_point = player.getPoints();
+					break;
+				}
+			}
+			
+			playerView.updateEndGame(my_point);
+
+			// call end game page
+			console.log("The game ends!");
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'END'}}));
+		}
 
 		//when start game button clicked in the waiting room
 		//init game in Game.js, send information to PlayerView.js
@@ -386,19 +417,21 @@ var waitingRoom = new WaitingRoom();
 		    console.log("type: " + type);
 		    var play_to = "";
 		    if (!document.querySelector('input[name = "game_length"]:checked') === null){
-			play_to = document.querySelector('input[name = "game_length"]:checked').value;
+				play_to = document.querySelector('input[name = "game_length"]:checked').value;
 		    }
 		    var playRounds = 3; //default state for playing 3 rounds
 		    var playPoints = null;
+			console.log(play_to);
 		    if (play_to === "play_input_rounds"){
-			var rounds = document.getElementById("insert_rounds").value;
-			var roundsInt = parseInt(rounds, 10);
-			if (!roundsInt===NaN){
-			    playRounds = roundsInt;
-			}
-			else{
-			    waitingRoom.show_error();
-			}
+				var rounds = document.getElementById("insert_rounds").value;
+				var roundsInt = parseInt(rounds, 10);
+				console.log(roundsInt, "*****");
+				if (!roundsInt===NaN){
+					playRounds = roundsInt;
+				}
+				else {
+					waitingRoom.show_error();
+				}
 		    }
 		    else if (play_to === "play_input_points"){
 			var points = document.getElementById("insert_points").value;

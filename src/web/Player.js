@@ -50,6 +50,8 @@ export default class Player {
 
     clearCards() {
         this.hand.clearCards();
+
+        this.numCards = 0;
     }
 
     // add one point for each card remaining in hand

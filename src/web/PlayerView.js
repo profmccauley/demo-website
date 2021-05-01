@@ -190,6 +190,14 @@ export default class PlayerView {
         setTimeout(this.displayPrevCards.bind(this), wait);
     }
 
+    // game is ending!!
+    updateEndGame(pointsUpdate) {
+        this.points = pointsUpdate;
+
+        console.log(this.points);
+        //this.displayScores();
+    }
+
     getCardByFile(fileName){
         for (let i = 0; i < this.myCards.length; i++) {
             if(this.myCards[i].getFilePath() == fileName){
@@ -251,11 +259,11 @@ export default class PlayerView {
     }
 
     displayScores(players) {
-	var html = "<p>Scores</p>"
-	for (let player of players){
-	    html += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
-	}
-	document.getElementById("scores").innerHTML = html;
+        var html = "<p>Scores</p>"
+        for (let player of players){
+            html += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
+        }
+        document.getElementById("scores").innerHTML = html;
     }
 
     lessThanThreeAlert(player_name) {
@@ -470,12 +478,15 @@ export default class PlayerView {
         prevRank = cards[0].getRank();
         for (i = 1; i < cards.length; i++) {
             if (sameCardCount == 4) {
+                // 4 cards in a row
                 return '4k';
             }
-            if (cards[i].getRank == prevRank) {
+            else if (cards[i].getRank == prevRank) {
+                // card is set, increase rank
                 sameCardCount++;
             }
             else {
+                // card is not set, set it and update rank
                 sameCardCount = 1;
                 prevRank = cards[i].getRank();
             }
@@ -691,7 +702,7 @@ export default class PlayerView {
                 }
                 if (currCards == 's') {
                     // check that the lowest card is higher than the previous lowest card
-                    if (cards[0].getRank() > this.prevCards.getRank()) {
+                    if (cards[0].getRank() > this.prevCards[0].getRank()) {
                         return 'valid';
                     }
                     return 'your straight must be higher than the previous straight';
