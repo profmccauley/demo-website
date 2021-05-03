@@ -199,8 +199,6 @@ def clean_waiting (gn=None):
     if gn in waiting and not waiting[gn]:
       log.info("Discarding waiting rooms for game %s", gn)
       waiting.pop(gn)
-      for room in waiting[gn]:
-          used_codes.remove(waiting[room].gamecode)
     return
 
   dead = []
@@ -209,8 +207,6 @@ def clean_waiting (gn=None):
       dead.append(gn)
   for gn in dead:
     waiting.pop(gn)
-    for room in waiting[gn]:
-        used_codes.remove(waiting[room].gamecode)
 
 
 def get_all_rooms (gamename):
@@ -340,7 +336,10 @@ class Room (object):
     self.send(Msg("LEAVE", user=connection.name,
                   leader=connection is self.leader), ignore=connection)
     if len(self.members) == 0:
+      waiting[self.gamename].discard(self)
+      used_codes.remove(self.room_code)
       clean_waiting(self.gamename)
+      used_codes.remove(self.room_code)
     elif len(self.members) < self.room_size:
       # There's SOMEONE here, but it's not full
       if self not in waiting[self.gamename]:
