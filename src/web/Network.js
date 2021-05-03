@@ -327,18 +327,33 @@ var waitingRoom = new WaitingRoom();
 		  	else if(message.msg.type === 'HOSTEND'){
 		  	    console.log("The host " + message.SENDER + " ends the game");
 			    console.log(message.msg.players);
-		  		if(status !== 'S'){
-		  		    playerView.endGame(message.msg.players);
-		  		}
+		  		if (status !== 'S'){
+			    	for (let player of message.msg.players) {
+						if (player.name === player_name.value){
+							my_point = player.points;
+							break;
+						}
+					}
+			    }
+			    playerView.updateEndGame(my_point);	  
+			    playerView.endGame(message.msg.players); 
+			    net.close(); 
 		  	}
 
 			else if(message.msg.type === 'END'){
 			    console.log("The game is over!!");
-			    console.log(message.msg.players);
-			    //if(status !== 'S'){
-			    
-			    playerView.endGame(message.msg.players);
-				//}
+			    if (status !== 'S'){
+			    	for (let player of message.msg.players) {
+						if (player.name === player_name.value){
+							my_point = player.points;
+							break;
+						}
+					}
+			    }
+	
+				playerView.updateEndGame(my_point);
+				playerView.endGame(message.msg.players);  
+				net.close();	    
 			}
 		  }
 		}
@@ -400,10 +415,13 @@ var waitingRoom = new WaitingRoom();
 			}
 			
 			playerView.updateEndGame(my_point);
+			playerView.endGame(game.getPlayers());
 
 			// call end game page
 			console.log("The game ends!");
-			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'END'}}));
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'END', "players": game.getPlayers()}}));
+			net.close();
+
 		}
 
 		//when start game button clicked in the waiting room
@@ -493,7 +511,17 @@ var waitingRoom = new WaitingRoom();
 		//host click end game button
 		function leave_game(){
 			console.log("The game ends!");
-			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'HOSTEND'}}));
+			for (let player of game.getPlayers()) {
+				if (player.name === player_name.value){
+					my_point = player.getPoints();
+					break;
+				}
+			}
+			playerView.updateEndGame(my_point);
+			playerView.endGame(game.getPlayers());
+
+			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'HOSTEND', "players": game.getPlayers()}}));
+			net.close();
 		}
 
 		//set up JS connection through python function above

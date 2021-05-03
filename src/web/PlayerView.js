@@ -220,13 +220,13 @@ export default class PlayerView {
 	var winner;
 	var tie;
 	for (let player of players){
-            html += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
-	    if(highestScore == null || player.getPonts() < highestScore){
+        scoresHTML += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
+	    if(highestScore == null || player.getPoints() < highestScore){
 		highestScore = player.getPoints();
 		winner = player.getName();
 		tie = false;
 	    }
-	    else if(player.getPonts() === highestScore){
+	    else if(player.getPoints() === highestScore){
 		if(tie){
 		    winner.push(player.getName());
 		}
@@ -247,17 +247,17 @@ export default class PlayerView {
 	}
 	else{
 	    console.log("ITS A TIE");
-	    html = "TIE! ";
+	    scoresHTML = "TIE! ";
 	    for(let i = 0; i < winner.length; i++){
-		if(!(i === winner.length - 1)){
-		    html += player + " AND ";
-		}
-		else{
-		    html += player + " ";
-		}
+    		if(!(i === winner.length - 1)){
+    		    scoresHTML += winner + " AND ";
+    		}
+    		else{
+    		    scoresHTML += winner + " ";
+    		}
 	    }
-	    html += "WON!";
-	    document.getElementById("winner").innerHTML = html;
+	    scoresHTML += "WON!";
+	    document.getElementById("winner").innerHTML = scoresHTML;
 		
         }
 	console.log("PRINT SCORES");
