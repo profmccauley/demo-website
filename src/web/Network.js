@@ -31,8 +31,8 @@ class Sender
 		    this.path = "";
 		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    //this.address = "localhost";
-		    this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    this.address = "localhost";
+		    //this.address = "cs-vm-06.cs.mtholyoke.edu";
 		    //this.address = "138.10.92.46";
 		    this.disconnected = false;
 		    this.buf = "";
@@ -431,9 +431,9 @@ var waitingRoom = new WaitingRoom();
 		//when start game button clicked in the waiting room
 		//init game in Game.js, send information to PlayerView.js
 		function start_game(){
-			// if(enough_player === false){
-			// 	return;
-			// }
+			if(enough_player === false){
+				return;
+			}
 			console.log("The game starts!");
 			console.log("*****in start_game", player_name.value);
 			//call Game in game logic
