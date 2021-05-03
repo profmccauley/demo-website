@@ -100,9 +100,8 @@
 	    <p id="test"></p>
 	  </div>
 	  <div class="col">
-	    <h2>Login to Start Game</h2><br>
-	    <button type="button" id="login" class="btn btn-primary">Login</button><br><br>
-	    <button type="button" id="register" class="btn btn-primary">Register</button>
+	    <h2>Don't know how to play?</h2><br>
+	    <button type="button" class="btn btn-primary get_rules">Rules</button>
 	  </div>
 	  <div class="col"></div>
 	</div>
@@ -191,7 +190,7 @@
 	  <div class="col">
 	    <div class="row justify-content-center">
 	      <div class="col-md-3">
-		<button type="button" class="btn btn-primary" id="get_rules">
+		<button type="button" class="btn btn-primary get_rules">
 		  See Rules
 		</button>
 	      </div>
@@ -246,7 +245,7 @@
 	<div class="row justify-content-center">
 	  <div class="col">
 	    <h1>Game ended by host</h1>
-	    <button type="button" class="btn btn-primary" id="back_to_home">
+	    <button type="button" class="btn btn-primary back_to_home">
 	      Return to homepage
 	    </button>
 	  </div>
@@ -258,8 +257,10 @@
 		<div class="col">
 	  <div class="row justify-content-center">
 		<div class="col">
-		  <h1>Game finished</h1>
-		  <button type="button" class="btn btn-primary" id="back_to_home">
+		  <h1>Game Over</h1>
+		  <h2 id="winner"></h2>
+		  <p id="score_data"></p>
+		  <button type="button" class="btn btn-primary back_to_home">
 			Return to homepage
 		  </button>
 		</div>

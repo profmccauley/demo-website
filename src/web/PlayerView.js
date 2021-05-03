@@ -198,6 +198,72 @@ export default class PlayerView {
         //this.displayScores();
     }
 
+    endGame(playersInput){
+	console.log("IN END GAME");
+	document.getElementById("leave_game").classList.add("offscreen");
+	document.getElementById("game_screen").classList.add("offscreen");
+	document.getElementById("game_over").classList.remove("offscreen");
+	var players = [];
+	//if(this.host === false){
+	console.log(playersInput);
+	for (let i = 0; i < playersInput.length; i++) {
+            var tempPlayer = new Player();
+            tempPlayer.fromJSON(playersInput[i]);
+            players.push(tempPlayer);
+        }
+       // }
+	//else{
+	  //  players = playersInput;
+//	}
+	var scoresHTML;
+	var highestScore = null;
+	var winner;
+	var tie;
+	for (let player of players){
+            html += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
+	    if(highestScore == null || player.getPonts() < highestScore){
+		highestScore = player.getPoints();
+		winner = player.getName();
+		tie = false;
+	    }
+	    else if(player.getPonts() === highestScore){
+		if(tie){
+		    winner.push(player.getName());
+		}
+		else{
+		    winner = [winner, player.getName()];
+		    tie = true;
+		}
+	    }
+	}
+	if(!tie){
+	    console.log("NOT A TIE");
+	    if(winner === this.myName){
+		document.getElementById("winner").innerHTML = "YOU  WON!";
+	    }
+	    else{
+		document.getElementById("winner").innerHTML = winner + " WON!"
+	    }
+	}
+	else{
+	    console.log("ITS A TIE");
+	    html = "TIE! ";
+	    for(let i = 0; i < winner.length; i++){
+		if(!(i === winner.length - 1)){
+		    html += player + " AND ";
+		}
+		else{
+		    html += player + " ";
+		}
+	    }
+	    html += "WON!";
+	    document.getElementById("winner").innerHTML = html;
+		
+        }
+	console.log("PRINT SCORES");
+        document.getElementById("score_data").innerHTML = scoresHTML;
+    }
+
     getCardByFile(fileName){
         for (let i = 0; i < this.myCards.length; i++) {
             if(this.myCards[i].getFilePath() == fileName){

@@ -144,13 +144,13 @@ $(document).ready(function(){
     });
 
     //SENDING USER BACK TO HOMESCREEN AFTER GAME IS ENDED BY HOST
-    $("#back_to_home").click(function(){
+    $(".back_to_home").click(function(){
 	$("#game_over").addClass("offscreen");
 	$("#homepage").removeClass("offscreen");
 	$("#test").text("");
     });
 
-    $("#get_rules").click(function(){
+    $(".get_rules").click(function(){
 	window.open('rules.html');
     });
     

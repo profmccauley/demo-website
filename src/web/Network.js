@@ -325,20 +325,19 @@ var waitingRoom = new WaitingRoom();
 
 		  	}
 		  	else if(message.msg.type === 'HOSTEND'){
-		  		console.log("The host " + message.SENDER + " ends the game");
+		  	    console.log("The host " + message.SENDER + " ends the game");
+			    console.log(message.msg.players);
 		  		if(status !== 'S'){
-		  			document.getElementById("leave_game").classList.add("offscreen");
-					document.getElementById("game_screen").classList.add("offscreen");
-					document.getElementById("game_over").classList.remove("offscreen");
+		  		    playerView.endGame(message.msg.players);
 		  		}
 		  	}
 
 			else if(message.msg.type === 'END'){
-				console.log("The game is over!!");
-				//if(status !== 'S'){
-					document.getElementById("leave_game").classList.add("offscreen");
-					document.getElementById("game_screen").classList.add("offscreen");
-					document.getElementById("bye_bye").classList.remove("offscreen");
+			    console.log("The game is over!!");
+			    console.log(message.msg.players);
+			    //if(status !== 'S'){
+			    
+			    playerView.endGame(message.msg.players);
 				//}
 			}
 		  }
