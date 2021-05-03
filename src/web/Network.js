@@ -431,9 +431,9 @@ var waitingRoom = new WaitingRoom();
 		//when start game button clicked in the waiting room
 		//init game in Game.js, send information to PlayerView.js
 		function start_game(){
-			if(enough_player === false){
-				return;
-			}
+			// if(enough_player === false){
+			// 	return;
+			// }
 			console.log("The game starts!");
 			console.log("*****in start_game", player_name.value);
 			//call Game in game logic

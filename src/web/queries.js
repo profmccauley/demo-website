@@ -129,16 +129,16 @@ $(document).ready(function(){
 
     //START GAME ROOM (GAMEPLAY)
     $("#play_game").click(function(){
-    	if(enough_player === true){
+    	//if(enough_player === true){
     		var room = $("#room_name").text();
 			$("#waiting_room").addClass("offscreen");
 			$("#game_screen").removeClass("offscreen");
 			$("#room_name_game").text("Game " + room);
 			$("#leave_game").removeClass("offscreen");
-    	}
-    	else{
-    		$("#test").text("Please wait for other players to join the game.");
-    	}
+    	//}
+    	// else{
+    	// 	$("#test").text("Please wait for other players to join the game.");
+    	// }
 
     });
 
