@@ -199,69 +199,73 @@ export default class PlayerView {
     }
 
     endGame(playersInput){
-	console.log("IN END GAME");
-	document.getElementById("leave_game").classList.add("offscreen");
-	document.getElementById("game_screen").classList.add("offscreen");
-	document.getElementById("game_over").classList.remove("offscreen");
-	var players = [];
-	//if(this.host === false){
-	console.log(playersInput);
-	for (let i = 0; i < playersInput.length; i++) {
+        console.log("IN END GAME");
+        document.getElementById("leave_game").classList.add("offscreen");
+        document.getElementById("game_screen").classList.add("offscreen");
+        document.getElementById("bye_bye").classList.remove("offscreen");
+        
+        var players = [];
+        //if(this.host === false){
+        console.log(playersInput);
+        for (let i = 0; i < playersInput.length; i++) {
             var tempPlayer = new Player();
             tempPlayer.fromJSON(playersInput[i]);
             players.push(tempPlayer);
+            }
+        // }
+        //else{
+        //  players = playersInput;
+    //	}
+        var scoresHTML;
+        var highestScore = null;
+        var winner;
+        var tie;
+        for (let player of players){
+            scoresHTML += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
+            if(highestScore == null || player.getPoints() < highestScore){
+                highestScore = player.getPoints();
+                winner = player.getName();
+                tie = false;
+            }
+            else if(player.getPoints() === highestScore){
+                if(tie){
+                    winner.push(player.getName());
+                }
+                else{
+                    winner = [winner, player.getName()];
+                    tie = true;
+                }
+            }
         }
-       // }
-	//else{
-	  //  players = playersInput;
-//	}
-	var scoresHTML;
-	var highestScore = null;
-	var winner;
-	var tie;
-	for (let player of players){
-        scoresHTML += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
-	    if(highestScore == null || player.getPoints() < highestScore){
-		highestScore = player.getPoints();
-		winner = player.getName();
-		tie = false;
-	    }
-	    else if(player.getPoints() === highestScore){
-		if(tie){
-		    winner.push(player.getName());
-		}
-		else{
-		    winner = [winner, player.getName()];
-		    tie = true;
-		}
-	    }
-	}
-	if(!tie){
-	    console.log("NOT A TIE");
-	    if(winner === this.myName){
-		document.getElementById("winner").innerHTML = "YOU  WON!";
-	    }
-	    else{
-		document.getElementById("winner").innerHTML = winner + " WON!"
-	    }
-	}
-	else{
-	    console.log("ITS A TIE");
-	    scoresHTML = "TIE! ";
-	    for(let i = 0; i < winner.length; i++){
-    		if(!(i === winner.length - 1)){
-    		    scoresHTML += winner + " AND ";
-    		}
-    		else{
-    		    scoresHTML += winner + " ";
-    		}
-	    }
-	    scoresHTML += "WON!";
-	    document.getElementById("winner").innerHTML = scoresHTML;
-		
+        if(!tie){
+            console.log("NOT A TIE");
+            console.log(this.myName);
+            console.log(winner);
+            console.log(document.getElementById("winner").innerHTML);
+            if(winner === this.myName){
+                document.getElementById("winner").innerHTML = "YOU  WON!";
+            }
+            else{
+                document.getElementById("winner").innerHTML = winner + " WON!"
+            }
         }
-	console.log("PRINT SCORES");
-        document.getElementById("score_data").innerHTML = scoresHTML;
+        else{
+            console.log("ITS A TIE");
+            scoresHTML = "TIE! ";
+            for(let i = 0; i < winner.length; i++){
+                if(!(i === winner.length - 1)){
+                    scoresHTML += winner + " AND ";
+                }
+                else{
+                    scoresHTML += winner + " ";
+                }
+            }
+            scoresHTML += "WON!";
+            document.getElementById("winner").innerHTML = scoresHTML;
+            
+            }
+        console.log("PRINT SCORES");
+            document.getElementById("score_data").innerHTML = scoresHTML;
     }
 
     getCardByFile(fileName){
