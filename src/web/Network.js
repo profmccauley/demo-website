@@ -141,7 +141,6 @@ var game = null;
 var playerView = null;
 
 var join_success = 1;
-var enough_player = false;
 
 var alerted = new Array();
 
@@ -186,9 +185,6 @@ var waitingRoom = new WaitingRoom();
 		  	join_success = 0;
 		  	users = message.users;
 		  	number_of_users = message.number_of_users;
-		  	if(number_of_users >= 2){
-		  		enough_player = true;
-		  	}
 		  	console.log("Current users in this room: " + users);
 		  	console.log("Number of users in this room: " + number_of_users);
 		  }
@@ -367,6 +363,10 @@ var waitingRoom = new WaitingRoom();
 			return join_success;
 		}
 
+		export function get_player_number(){
+			return number_of_users;
+		}
+
 		//if the new round is started
 		//host update the playerView
 		function new_round(){
@@ -431,7 +431,7 @@ var waitingRoom = new WaitingRoom();
 		//when start game button clicked in the waiting room
 		//init game in Game.js, send information to PlayerView.js
 		function start_game(){
-			if(enough_player === false){
+			if (number_of_users < 2){
 				return;
 			}
 			console.log("The game starts!");
@@ -569,4 +569,4 @@ document.getElementById("play_game").addEventListener("click", start_game);
 document.getElementById("leave_game").addEventListener("click", leave_game);
 document.getElementById("join_game").addEventListener("click", function(){js_connect("J")});
 window.get_join_status = get_join_status;
-window.enough_player = enough_player;
+window.get_player_number = get_player_number;
