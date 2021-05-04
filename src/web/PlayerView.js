@@ -211,15 +211,12 @@ export default class PlayerView {
             var tempPlayer = new Player();
             tempPlayer.fromJSON(playersInput[i]);
             players.push(tempPlayer);
-            }
-        // }
-        //else{
-        //  players = playersInput;
-    //	}
-        var scoresHTML;
+        }
+        var scoresHTML = "";
         var highestScore = null;
         var winner;
         var tie;
+	console.log(players);
         for (let player of players){
             scoresHTML += "<p>" + player.getName() + ": " + player.getPoints() + "</p>";
             if(highestScore == null || player.getPoints() < highestScore){
@@ -251,7 +248,7 @@ export default class PlayerView {
         }
         else{
             console.log("ITS A TIE");
-            scoresHTML = "TIE! ";
+            tieHTML = "TIE! ";
             for(let i = 0; i < winner.length; i++){
                 if(!(i === winner.length - 1)){
                     scoresHTML += winner + " AND ";
@@ -260,12 +257,13 @@ export default class PlayerView {
                     scoresHTML += winner + " ";
                 }
             }
-            scoresHTML += "WON!";
-            document.getElementById("winner").innerHTML = scoresHTML;
+            tieHTML += "WON!";
+            document.getElementById("winner").innerHTML = tieHTML;
             
             }
         console.log("PRINT SCORES");
-            document.getElementById("score_data").innerHTML = scoresHTML;
+	console.log(scoresHTML);
+        document.getElementById("score_data").innerHTML = scoresHTML;
     }
 
     getCardByFile(fileName){
@@ -336,9 +334,9 @@ export default class PlayerView {
         document.getElementById("scores").innerHTML = html;
     }
 
-    lessThanThreeAlert(player_name) {
+    lessThanThreeAlert(player_name, num_cards) {
         if(player_name !== this.myName){
-            alert(player_name + " only has three cards left");
+            alert(player_name + " only has " + num_cards + "  cards left");
         }
     }
 
@@ -405,7 +403,8 @@ export default class PlayerView {
         // send info to server --> fact that player did not play cards
             // HUIYUN: do we also need to send the player's name?
             //can we just check if the cards is empty?
-            //Or do we want another data indicates whether player play or pass?
+        //Or do we want another data indicates whether player play or pass?
+	document.getElementById("error_message_game").innerHTML = "";
             play_cards();
     }
 

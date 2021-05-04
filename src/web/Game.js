@@ -125,6 +125,7 @@ export default class Game {
     updateGame(cards = 'pass') {
         // changes if player didn't pass
         this.lessThanThree = false;
+	this.playerLessThanThree = null;
         this.startNewRound = false;
         if (!(cards === 'pass')) {
             // update previous cards by copying array 
@@ -146,9 +147,8 @@ export default class Game {
                 // TODO: are there other actions that need to be 
                 // taken to reset the round?
             }
-            else if(this.currentPlayer.getNumCards() < 3){
-                this.lessThanThree = true;
-            }
+            else if(this.currentPlayer.getNumCards() <= 3){
+                this.lessThanThree = true;            }
 
             // set the last player to be person who just played
             // will not change last player if a pass

@@ -128,7 +128,7 @@ $(document).ready(function(){
     });
 
     //START GAME ROOM (GAMEPLAY)
-    $(document).on('click', '#play_game', function(){{
+    $(document).on('click', '#play_game', function(){
     	console.log(get_player_number());
     	if(get_player_number() >= 2){
     		var room = $("#room_name").text();

@@ -216,7 +216,7 @@ var waitingRoom = new WaitingRoom();
 							if(!alerted.includes(message.SENDER)){
 								alerted.push(message.SENDER);
 								console.log("players with less than three cards: " + alerted);
-								playerView.lessThanThreeAlert(message.SENDER);
+							    playerView.lessThanThreeAlert(message.SENDER, game.lastPlayer.getNumCards());
 							}
 						}
 						//get updated info from the game
