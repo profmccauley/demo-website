@@ -128,7 +128,7 @@ $(document).ready(function(){
     });
 
     //START GAME ROOM (GAMEPLAY)
-    $("#play_game").click(function(){
+    $(document).on('click', '#play_game', function(){
     	if(enough_player === true){
     		var room = $("#room_name").text();
 			$("#waiting_room").addClass("offscreen");
