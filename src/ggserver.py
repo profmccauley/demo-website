@@ -468,7 +468,7 @@ class Connection (ConnectionBase):
     spectators_ok = msg.get("allow_spectators", False)
 
     gn = self.gamename
-    gc = msg.get('gamecode')
+    gc = msg.get('gamecode').strip()
     status = msg.get('status')
     wait_rooms = waiting[gn]
 
