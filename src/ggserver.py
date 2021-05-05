@@ -662,6 +662,7 @@ def main_loop ():
     for c in list(connections):
       if c.is_expired:
         try:
+          c.send(Msg("ERROR", ERR="TIMEOUT"))
           c.quit("Timed out")
         except Exception:
           pass

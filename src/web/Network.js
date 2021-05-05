@@ -170,6 +170,12 @@ var waitingRoom = new WaitingRoom();
 		  			join_success = 4;
 		  		}
 		  	}
+		  	else if(message.ERR === 'TIMEOUT'){
+		  		console.log("**************TIMEOUT");
+		  		alert("System time out. Please restart!");
+		  // 		$("#waiting_room").addClass("offscreen");
+				// $("#homepage").removeClass("offscreen");
+		  	}
 		  	else{
 		  		console.log("Disconnecting due to an error.")
 		  	}
