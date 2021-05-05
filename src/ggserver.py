@@ -468,14 +468,19 @@ class Connection (ConnectionBase):
     spectators_ok = msg.get("allow_spectators", False)
 
     gn = self.gamename
-    gc = msg.get('gamecode', None)
+    gc = msg.get('gamecode')
     status = msg.get('status')
     wait_rooms = waiting[gn]
 
     #Error handling:
     if status == 'S':
+      #no gc provided
+      if gc == "":
+        print("true")
+        self.send(Msg("ERROR", ERR="BADGAMECODE"))
+        return
       #code already exist
-      if gc in [c.gc for c in connections]:
+      elif gc in [c.gc for c in connections]:
       # for code in used_codes:
       #   if code == gc:
         self.send(Msg("ERROR", ERR="BADGAMECODE"))
