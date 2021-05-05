@@ -84,7 +84,7 @@ def Msg (TYPE, **kw):
 
 class ConnectionBase (object):
   MAX_TIME = 60 * 60 # An hour
-  IDLE_TIME = 5 * 60 # 5 minutes
+  IDLE_TIME = 10 * 60 # 10 minutes
 
   def __init__ (self, sock):
     sock.setblocking(False)
