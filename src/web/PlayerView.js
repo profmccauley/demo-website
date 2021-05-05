@@ -267,7 +267,7 @@ export default class PlayerView {
         }
         else{
             console.log("ITS A TIE");
-            tieHTML = "TIE! ";
+            var tieHTML = "TIE! ";
             for(let i = 0; i < winner.length; i++){
                 if(!(i === winner.length - 1)){
                     scoresHTML += winner + " AND ";
