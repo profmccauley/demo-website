@@ -9,6 +9,7 @@ export default class PlayerView {
 	    this.host = host;
         this.myCards = new Array();   // cards will be sorted by lowest to highest priority
         this.firstTurn;
+        this.canPass = false;
         this.prevCards = new Array();
         this.currPlayer;
         this.nextPlayer;
@@ -83,22 +84,30 @@ export default class PlayerView {
      * cards that were just played
      */
     updateGame(serverUpdates) {
-        console.log('*** server update ***', serverUpdates);
+        // able to pass now that someone has played
+        this.canPass = true;
+
         if (!(serverUpdates.prevCards === null)) {
             this.prevCards.length = 0;
             if (!(serverUpdates.prevCards === 'new run')) {
 
                 for (let i = 0; i < serverUpdates.prevCards.length; i++) {
                     var tempCard = new Card();
-                    console.log(serverUpdates.prevCards[i]);
                     tempCard.fromJSON(serverUpdates.prevCards[i]);
-                    console.log('temp card after push', tempCard);
                     this.prevCards.push(tempCard);
                 }
+            }
+            else {
+                // new run unable to pass
+                console.log(serverUpdates.prevCards);
+                this.canPass = false;
             }
 
             this.displayPrevCards();
         }
+
+        console.log(this.canPass);
+        
         this.currPlayer = serverUpdates.currPlayer;
         this.nextPlayer = serverUpdates.nextPlayer;
         
@@ -110,6 +119,8 @@ export default class PlayerView {
         }
 
 	    this.displayPlayers();
+
+        
     }
 
     /**
@@ -125,7 +136,10 @@ export default class PlayerView {
         this.myCards.length = 0;
         this.prevCards.length = 0;
 
-	 var players = [];
+	    var players = [];
+
+        // not able to pass on the first turn
+        this.canPass = false;
 	 
         // get new cards and players (for score updates)
         if(this.host === false){
@@ -135,10 +149,10 @@ export default class PlayerView {
                 this.myCards.push(tempCard);
             }
             console.log(this.myCards);
-	    for (let i = 0; i < serverUpdates.players.length; i++) {
-                var tempPlayer = new Player();
-                tempPlayer.fromJSON(serverUpdates.players[i]);
-                players.push(tempPlayer);
+            for (let i = 0; i < serverUpdates.players.length; i++) {
+                    var tempPlayer = new Player();
+                    tempPlayer.fromJSON(serverUpdates.players[i]);
+                    players.push(tempPlayer);
             }
         }
         else{
@@ -157,9 +171,6 @@ export default class PlayerView {
             tempCard.fromJSON(serverUpdates.prevCards[i]);
             this.prevCards.push(tempCard);
         }
-
-        console.log(this.myCards);
-        console.log(this.prevCards);
 
         this.currPlayer = serverUpdates.currPlayer;
         this.nextPlayer = serverUpdates.nextPlayer;
@@ -185,8 +196,8 @@ export default class PlayerView {
         // clear previous cards
         this.prevCards.length = 0;
 
-        // wait for 5 seconds, then clear cards from display
-        let wait = 5000;
+        // wait for 3 seconds, then clear cards from display
+        let wait = 3000;
         setTimeout(this.displayPrevCards.bind(this), wait);
     }
 
@@ -349,13 +360,6 @@ export default class PlayerView {
 
 	//clear any potential error messages
 	document.getElementById("error_message_game").innerHTML = "";
-
-        console.log("***** in play cards *****");
-        console.log(this);
-        console.log(this.myName);
-        console.log(this.myCards);
-
-        console.log("AbOvE! Checking if the cards are still card objects");
         for (let htmlCard of htmlCards) {
             let src = htmlCard.src;
             src = src.split("images/"); // strip file to end of URL
@@ -390,7 +394,6 @@ export default class PlayerView {
         if (validity == "valid") {
             // removes cards from hand & redisplays locally
             this.removeCardsFromHand(cards); 
-            // TEMP!! removed above line
 
             // send to server list of cards just played
             play_cards(cards);
@@ -403,10 +406,11 @@ export default class PlayerView {
 
     pass() {
         // send info to server --> fact that player did not play cards
-            // HUIYUN: do we also need to send the player's name?
-            //can we just check if the cards is empty?
-            //Or do we want another data indicates whether player play or pass?
-            play_cards();
+        //if (this.canPass) {
+        play_cards();
+        //}
+        //;else (document.getElementById("error_message_game").innerHTML = "you cannot pass on the first turn");
+        
     }
 
     removeCardsFromHand(playedCards) {
@@ -535,6 +539,10 @@ export default class PlayerView {
             if ((cards[i].getSuit() == flushSuit) && (cards[i].getRank() == (prevRank + 1))) {
                 prevRank = cards[i].getRank();
             }
+            else if (cards[i].getRank() === 2 && prevRank === 14) {
+                // if the card is a 2, it could be valid
+                prevRank = cards[i].getRank();
+            }
             else {
                 break;
             }
@@ -615,6 +623,10 @@ export default class PlayerView {
             // TODO: check if a straight can have cards with the same rank but
             // different priorities?
             if (cards[i].getRank() == (prevRank + 1)) {
+                prevRank = cards[i].getRank();
+            }
+            else if (cards[i].getRank() === 2 && prevRank === 14) {
+                // if the card is a 2, and the previous is an ace, it could be valid
                 prevRank = cards[i].getRank();
             }
             else {

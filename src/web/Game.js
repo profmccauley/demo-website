@@ -126,6 +126,7 @@ export default class Game {
         // changes if player didn't pass
         this.lessThanThree = false;
         this.startNewRound = false;
+
         if (!(cards === 'pass')) {
             // update previous cards by copying array 
             // do not update cards if the player passed
@@ -143,8 +144,8 @@ export default class Game {
 
                 this.startNewRound = true;
                 this.newRound();
-                // TODO: are there other actions that need to be 
-                // taken to reset the round?
+                
+                return;
             }
             else if(this.currentPlayer.getNumCards() < 3){
                 this.lessThanThree = true;
@@ -162,9 +163,6 @@ export default class Game {
         var nextPlayerIndex = (this.players.indexOf(this.currentPlayer) + 1) % this.numPlayers;
         this.currentPlayer = this.players[nextPlayerIndex];
 
-        console.log(this.currentPlayer);
-        console.log(nextPlayerIndex);
-
         // if the current player is the previous player, clear the previousCards
         if (this.currentPlayer === this.lastPlayer) {
             this.previousCards = 'new run';
@@ -174,8 +172,7 @@ export default class Game {
     newRound() {
         // end the game if played to the max number of rounds
         this.currentRound++;
-        console.log("current round in Game newRound: " + this.currentRound);
-        console.log("current round in Game newRound: " + this.playRounds);
+
         if (this.currentRound === this.playRounds) {
             this.gameOver = true;
         }
@@ -190,10 +187,6 @@ export default class Game {
 
             console.log()
         }
-        
-
-        // TODO: once Michela has the button stuff set up,
-        // check if hit the max number of rounds
 
         // shuffle deck for next round
         this.deck.shuffleDeck();
@@ -201,8 +194,6 @@ export default class Game {
         // deal new cards to the players
         // cards will automatically be sorted
         this.dealCards();
-
-        console.log('*********', this.currentPlayer.getNumCards(), '**********');
     }
 }
 
