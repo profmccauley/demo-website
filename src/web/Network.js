@@ -31,8 +31,8 @@ class Sender
 		    this.path = "";
 		    this.port = 8080;
 		    //this.address = "sockette.net";
-		    //this.address = "localhost";
-		    this.address = "cs-vm-06.cs.mtholyoke.edu";
+		    this.address = "localhost";
+		    //this.address = "cs-vm-06.cs.mtholyoke.edu";
 		    //this.address = "138.10.92.46";
 		    this.disconnected = false;
 		    this.buf = "";
@@ -136,6 +136,7 @@ var prevCards = new Array();
 var currPlayer = null;
 var nextPlayer = null;
 var my_point = 0;
+var passedPlayer = null;
 
 var game = null;
 var playerView = null;
@@ -190,13 +191,15 @@ var waitingRoom = new WaitingRoom();
 		  }
 		  else if(message.TYPE === 'DATA'){
 		  	//Server sends back to all players of the played cards for them to update the UI
-		  	if (message.msg.type === 'MOVE'){
+		      if (message.msg.type === 'MOVE'){
 		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
 
 		  		//host update the game
 		  		if(status === 'S'){
-		  			console.log("Host update the game");
-		  			if(message.msg.card === 'pass'){
+		  		    console.log("Host update the game");
+				    passedPlayer = null;
+		  		    if(message.msg.card === 'pass'){
+					passedPlayer = game.getCurrentPlayer().getName();
 						game.updateGame();
 					}
 					else{
@@ -213,11 +216,11 @@ var waitingRoom = new WaitingRoom();
 					else{
 						//check if less than three cards
 						if(game.lessThanThree === true){
-							if(!alerted.includes(message.SENDER)){
-								alerted.push(message.SENDER);
+						    //if(!alerted.includes(message.SENDER)){
+							//	alerted.push(message.SENDER);
 								console.log("players with less than three cards: " + alerted);
 							    playerView.lessThanThreeAlert(message.SENDER, game.lastPlayer.getNumCards());
-							}
+						//	}
 						}
 						//get updated info from the game
 						prevCards = game.getPreviousCards(); 
@@ -235,14 +238,18 @@ var waitingRoom = new WaitingRoom();
 						    currPlayer: currPlayer,
 						    nextPlayer: nextPlayer,	
 						};
+					    if(message.msg.card === 'pass'){
+						console.log("******IN HOST PASS******");
+						dict["passedPlayer"]= passedPlayer;
+					    }
 				  		playerView.updateGame(dict);
 
 				  		//host tell others to update their playerView
 				  		if(game.lessThanThree === true){
-				  			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": true, "alert_player": message.SENDER, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		    net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": true, "alert_player": message.SENDER, "alert_num": game.lastPlayer.getNumCards(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer, "passedPlayer": passedPlayer}}));
 				  		}
 				  		else{
-				  			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": false, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		    net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": false, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer, "passedPlayer": passedPlayer}}));
 				  		}
 					}
 				}
@@ -255,7 +262,7 @@ var waitingRoom = new WaitingRoom();
 		  			//check if less than three cards
 			  		if(message.msg.alert === true){
 			  			console.log("Alert in Network");
-			  				playerView.lessThanThreeAlert(message.msg.alert_player);
+			  		    playerView.lessThanThreeAlert(message.msg.alert_player, message.msg.alert_num);
 			  		}
 		  			//host update PlayerView
 					var dict = {
@@ -263,6 +270,9 @@ var waitingRoom = new WaitingRoom();
 					    currPlayer: message.msg.currPlayer,
 					    nextPlayer: message.msg.nextPlayer,	
 					};
+				    if(!(message.msg.passedPlayer == null)){
+					dict["passedPlayer"]= message.msg.passedPlayer;
+				    }
 			  		playerView.updateGame(dict);
 		  		}
 		  	}

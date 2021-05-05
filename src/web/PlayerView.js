@@ -83,6 +83,7 @@ export default class PlayerView {
      * cards that were just played
      */
     updateGame(serverUpdates) {
+	document.getElementById("game_updates").innerHTML = "";
         console.log('*** server update ***', serverUpdates);
         if (!(serverUpdates.prevCards === null)) {
             this.prevCards.length = 0;
@@ -101,8 +102,13 @@ export default class PlayerView {
         }
         this.currPlayer = serverUpdates.currPlayer;
         this.nextPlayer = serverUpdates.nextPlayer;
-        
-        if (this.currPlayer == this.myName) {
+
+	if("passedPlayer" in serverUpdates && serverUpdates.passedPlayer !== this.myName){
+	    console.log("*******PASSED PLAYER PRESENT********");
+	    document.getElementById("game_updates").innerHTML = serverUpdates.passedPlayer + " PASSED ";
+	}
+
+	if (this.currPlayer == this.myName) {
             this.displayMyTurn();
         }
         else {
@@ -120,6 +126,7 @@ export default class PlayerView {
          * cards that were just played, and points
          */
     updateNewRound(serverUpdates) {
+	document.getElementById("game_updates").innerHTML = "";
         console.log(serverUpdates);
         // clear current and previous cards
         this.myCards.length = 0;
@@ -312,6 +319,10 @@ export default class PlayerView {
         // pass and play buttons
         document.getElementById("play_hand").style.visibility="visible";
         document.getElementById("pass").style.visibility="visible";
+	if(document.getElementById("game_updates").innerHTML !== ""){
+	    document.getElementById("game_updates").innerHTML = document.getElementById("game_updates").innerHTML + "--- ";
+	}
+	document.getElementById("game_updates").innerHTML = document.getElementById("game_updates").innerHTML + "YOUR TURN";
     }
 
     displayNotMyTurn() {
@@ -319,6 +330,7 @@ export default class PlayerView {
         // pass and play buttons
         document.getElementById("play_hand").style.visibility="hidden";
         document.getElementById("pass").style.visibility="hidden";
+	//document.getElementById("game_updates").innerHTML = "";
     }
 
     displayPlayers() {
@@ -336,7 +348,7 @@ export default class PlayerView {
 
     lessThanThreeAlert(player_name, num_cards) {
         if(player_name !== this.myName){
-            alert(player_name + " only has " + num_cards + "  cards left");
+            alert(player_name + " only has " + num_cards + " cards left");
         }
     }
 
@@ -449,7 +461,7 @@ export default class PlayerView {
 
         // check if played the same number of cards as prevPlayer
         if (this.prevCards.length != 0 && cards.length != this.prevCards.length) {
-            return 'you must play the same number of cards as the previous player';
+            return 'You must play the same number of cards as the previous player';
         }
 
         // set max number of cards played in a normal hand -- normal hand can have 1-4 cards
@@ -463,7 +475,7 @@ export default class PlayerView {
 
             for (let i = 1; i < cards.length; i++) {
                 if (cards[i].getRank() != rank) {
-                    return 'all cards in a normal move must have the same rank';
+                    return 'All cards in a normal move must have the same rank';
                 }
             }
             // if there were no previous cards, don't need to compare
@@ -479,7 +491,7 @@ export default class PlayerView {
             console.log(pokerHand, "<<<");
 
             if (pokerHand == 'false') {
-                return 'these cards do not make a valid poker hand';
+                return 'These cards do not make a valid poker hand';
             }
             else if (this.prevCards.length === 0) {
                 // if there were no previous cards, don't need to compare
@@ -488,7 +500,7 @@ export default class PlayerView {
             return this.isPokerMoveValid(cards, pokerHand);
 
         }
-        return 'you must play between 1 and 5 cards';
+        return 'You must play between 1 and 5 cards';
 
         
     }
