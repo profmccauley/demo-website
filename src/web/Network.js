@@ -136,6 +136,7 @@ var prevCards = new Array();
 var currPlayer = null;
 var nextPlayer = null;
 var my_point = 0;
+var passedPlayer = null;
 
 var game = null;
 var playerView = null;
@@ -190,13 +191,15 @@ var waitingRoom = new WaitingRoom();
 		  }
 		  else if(message.TYPE === 'DATA'){
 		  	//Server sends back to all players of the played cards for them to update the UI
-		  	if (message.msg.type === 'MOVE'){
+		      if (message.msg.type === 'MOVE'){
 		  		console.log("Player " + message.SENDER + " played " + message.msg.card);
 
 		  		//host update the game
 		  		if(status === 'S'){
-		  			console.log("Host update the game");
-		  			if(message.msg.card === 'pass'){
+		  		    console.log("Host update the game");
+				    passedPlayer = null;
+		  		    if(message.msg.card === 'pass'){
+					passedPlayer = game.getCurrentPlayer().getName();
 						game.updateGame();
 					}
 					else{
@@ -213,11 +216,11 @@ var waitingRoom = new WaitingRoom();
 					else{
 						//check if less than three cards
 						if(game.lessThanThree === true){
-							if(!alerted.includes(message.SENDER)){
-								alerted.push(message.SENDER);
+						    //if(!alerted.includes(message.SENDER)){
+							//	alerted.push(message.SENDER);
 								console.log("players with less than three cards: " + alerted);
-								playerView.lessThanThreeAlert(message.SENDER);
-							}
+							    playerView.lessThanThreeAlert(message.SENDER, game.lastPlayer.getNumCards());
+						//	}
 						}
 						//get updated info from the game
 						prevCards = game.getPreviousCards(); 
@@ -235,14 +238,18 @@ var waitingRoom = new WaitingRoom();
 						    currPlayer: currPlayer,
 						    nextPlayer: nextPlayer,	
 						};
+					    if(message.msg.card === 'pass'){
+						console.log("******IN HOST PASS******");
+						dict["passedPlayer"]= passedPlayer;
+					    }
 				  		playerView.updateGame(dict);
 
 				  		//host tell others to update their playerView
 				  		if(game.lessThanThree === true){
-				  			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": true, "alert_player": message.SENDER, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		    net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": true, "alert_player": message.SENDER, "alert_num": game.lastPlayer.getNumCards(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer, "passedPlayer": passedPlayer}}));
 				  		}
 				  		else{
-				  			net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": false, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
+				  		    net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'PLAYERMOVE', "alert": false, "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer, "passedPlayer": passedPlayer}}));
 				  		}
 					}
 				}
@@ -255,7 +262,7 @@ var waitingRoom = new WaitingRoom();
 		  			//check if less than three cards
 			  		if(message.msg.alert === true){
 			  			console.log("Alert in Network");
-			  				playerView.lessThanThreeAlert(message.msg.alert_player);
+			  		    playerView.lessThanThreeAlert(message.msg.alert_player, message.msg.alert_num);
 			  		}
 		  			//host update PlayerView
 					var dict = {
@@ -263,6 +270,9 @@ var waitingRoom = new WaitingRoom();
 					    currPlayer: message.msg.currPlayer,
 					    nextPlayer: message.msg.nextPlayer,	
 					};
+				    if(!(message.msg.passedPlayer == null)){
+					dict["passedPlayer"]= message.msg.passedPlayer;
+				    }
 			  		playerView.updateGame(dict);
 		  		}
 		  	}
@@ -363,6 +373,10 @@ var waitingRoom = new WaitingRoom();
 			return join_success;
 		}
 
+		export function get_player_number(){
+			return number_of_users;
+		}
+
 		//if the new round is started
 		//host update the playerView
 		function new_round(){
@@ -427,6 +441,9 @@ var waitingRoom = new WaitingRoom();
 		//when start game button clicked in the waiting room
 		//init game in Game.js, send information to PlayerView.js
 		function start_game(){
+			if (number_of_users < 2){
+				return;
+			}
 			console.log("The game starts!");
 			console.log("*****in start_game", player_name.value);
 			//call Game in game logic
@@ -562,3 +579,4 @@ document.getElementById("play_game").addEventListener("click", start_game);
 document.getElementById("leave_game").addEventListener("click", leave_game);
 document.getElementById("join_game").addEventListener("click", function(){js_connect("J")});
 window.get_join_status = get_join_status;
+window.get_player_number = get_player_number;

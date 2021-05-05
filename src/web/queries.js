@@ -64,40 +64,6 @@ $(document).ready(function(){
 	//INSERT SERVER CODE HERE
     });
 
-    //CLICK LANDING PAGE LOGIN BUTTON
-    $("#login").click(function(){
-	$(location).attr('href', "login.html");
-    });
-
-    //CLICK LANDING PAGE SIGN UP BUTTON
-    $("#register").click(function(){
-	$(location).attr('href', "register.html");
-    });
-
-    //SIGN IN
-    $("#sign_in").click(function(){
-	var identifier = $("#identifier").val();
-	var password = $("#password").val();
-	$("#test").text("Email/Username: " + identifier + " Password: " + password);
-	//Validate login details (from database)
-	//change page to the user home page
-    });
-
-    //SIGN UP
-    $("#sign_up").click(function(){
-	var email = $("#email").val();
-	var user = $("#username").val();
-	var password = $("#password").val();
-	var passwordRetype = $("#password2").val();
-	if(password != passwordRetype){
-	    $("#error").text("Passwords do not match");
-	}
-	//Check that email is not already associated w/ account
-	//Add user info to database
-	//change page to the login
-	$("#test").text("Email: " + email + " User: " + user + " Password: " + password);
-    });
-
     //SELECT/UNSELECT CARD
     $(document).on('click', '.player_card', function(){
 		console.log("hello we are in the card selection function");
@@ -128,12 +94,20 @@ $(document).ready(function(){
     });
 
     //START GAME ROOM (GAMEPLAY)
-    $("#play_game").click(function(){
-	var room = $("#room_name").text();
-	$("#waiting_room").addClass("offscreen");
-	$("#game_screen").removeClass("offscreen");
-	$("#room_name_game").text("Game " + room);
-	$("#leave_game").removeClass("offscreen");
+    $(document).on('click', '#play_game', function(){
+    	console.log(get_player_number());
+    	if(get_player_number() >= 2){
+    		var room = $("#room_name").text();
+			$("#waiting_room").addClass("offscreen");
+			$("#game_screen").removeClass("offscreen");
+			$("#room_name_game").text("Game " + room);
+			$("#leave_game").removeClass("offscreen");
+    	}
+    	else{
+    		console.log("Please wait for other players to join the game.");
+    		$("#test").text("Please wait for other players to join the game.");
+    	}
+
     });
 
     //HOST ENDS GAME VIA END GAME BUTTON
@@ -150,6 +124,7 @@ $(document).ready(function(){
 	$("#test").text("");
     });
 
+    //OPEN RULES PAGE
     $(".get_rules").click(function(){
 	window.open('rules.html');
     });
