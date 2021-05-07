@@ -14,3 +14,13 @@ The server code is installed on the VM under the address "cs-vm-06.cs.mtholyoke.
    2. run the command "python3 ggserver.py --serve-files" inside src directory to start the server
    3. go to the URL "http://localhost:8080/templates/bigboy.html" to open the game
    4. type the gamecode and your name, and click "start new game" to create a game room
+
+# Directory structure
+All our source files are stored in the src folder. Src folder contains two server files ggserver.py and ggwebsocket.py, and the web folder which contains the game logic, frontend, and client-side connection code.
+
+# Functionality
+
+# Known problems
+
+# Changes made from the orignal plan
+
