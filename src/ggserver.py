@@ -14,19 +14,7 @@ from ggwebsocket import WebInterface
 
 
 """
-TODO
-----
-* Ability to change size of room dynamically / "close" the room.
-  Maybe this just means letting the leader flip the ready state?
-* Room names / joining specific rooms.
-* Room browsing.
-* Structure things by gamename.
-* Lots of performance fixes and cleanup.
-* Better logging.
-* Replies include opaque data from client (XID).
-* Random bag / escrow anti-cheat features.
-* Get rid of PRIV, use DATA with 'user' like, e.g., CHOOSE does?
-* Allow PRIV/CHOOSE/etc. to send to a *group* of users?
+This is the generic game server provided by Murphy.
 """
 
 BIND_PORT = 8079
