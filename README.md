@@ -25,16 +25,16 @@ This project is a web application that allows users to play Moho Poker together 
 ### List of current functionality:
    * Users can start a game of poker from the main room. By starting a game, they are considered the "host" of the game
    * Participants can join a game from the main room by entering a game code told to them by the host (via text, voice call, etc)
-   * Hosts and participants are able to set their name before joining. Only one word names are currently allowed
+   * Hosts and participants are able to set their own name before joining. Only one word names are currently allowed
    * Hosts can choose which deck to play with while in the waiting room. This deck will be displayed for all players
    * There are only 2 - 4 players allowed in each game. A host is not able to start a game with less than 2 players, and the game room is capped at 4 (if a fifth person tries to join, they will be blocked from entry)
-   * Hosts can choose how many rounds to play for while in the waiting room
-   * Once enough players have joined, the host is able to start the game. 
+   * While in the waiting room, hosts can choose how many rounds to play to
+   * Once enough players have joined, the host is able to start the game
       * All players are dealt random cards and gameplay begins. Each player seens their own cards on their screen
    * As gameplay moves between players, the UI of each player will be updated with the most recently played cards and whose turn it is
-   * The UI also includes a button to access the rules of the game on a new tab, so players can check the rules at any time
+   * The UI also includes a button to access the rules of the game in a new tab, allowing players to check the rules at any time
    * During gameplay, players are only able to play valid cards based on the rules of Moho Poker (note: detailed rules are written on the Rules page of the website)
-      * If they attempt to play an invalid card, they will be prompted to try again and shown an error message that briefly lists what was wrong.
+      * If they attempt to play an invalid card, they will be prompted to try again and shown an error message that briefly lists what was wrong
    * At the end of a round (when one player gets rid of their cards) scores will be updated and displayed on the screen
    * When the game is complete (based on the number of rounds the host set), all players are directed to a screen that shows the winner and the final scores
 
