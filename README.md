@@ -22,6 +22,7 @@ All our source files are stored in the src folder. Src folder contains two serve
 # Functionality
 
 # Known problems
+Sometimes players don't recognize they're in the same room, and the repeating gamecode from the previous round won't work when there are multiple players join or exit games at the same time. Users may need to restart the server and refresh the web page when these happen. 
 
 # Changes made from the orignal plan
 We made no changes from our original plan. We implemented the essential features of our project as requested by our client and specified in our requirements document. However, we did make changes to our timeline: we did not get to implement some of the lower priority features that we planned for, such as allowing users to create accounts through our website and provide images to build their own Moho poker decks.
