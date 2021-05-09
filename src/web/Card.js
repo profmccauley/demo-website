@@ -1,5 +1,13 @@
 /**
+ * This class represents a card object. 
  * 
+ * Instances of this class have a rank and suit like normal playing cards,
+ * as well as a priority and file extension. The priority is a number from 1 to 52 based
+ * on the rank of cards in Moho Poker. The file extension is used to determine which card
+ * image to display on the front end.
+ * 
+ * Objects of this class can be created with a rank between 2 and 14 and a suit between 1 and 4. 
+ * However, there is currently no error checking that the rank and suit are between these numbers
  */
 export default class Card {
     static DIAMONDS = 1;
@@ -18,10 +26,10 @@ export default class Card {
         if (rank === undefined) {
             return;
         }
-        // consider adding error catching for incorrect rank/suit values?
+
         this.rank = rank;
         this.suit = suit;
-        this.priority = this.generatePriority();
+        this.priority = this.generatePriority(); // generate priority based on card number
         this.file = cardImageFolder + "/" + this.getCardString() + ".jpg";
     }
 
@@ -42,6 +50,7 @@ export default class Card {
         return this.file;
     }
 
+    // string getters, used for file name
     getSuitString() {
         switch(this.suit) {
             case Card.DIAMONDS: return "D";
@@ -51,7 +60,6 @@ export default class Card {
             default: return "invalid suit"
         }
     }
-
 
     getRankString() {
         switch(this.rank) {
@@ -63,41 +71,17 @@ export default class Card {
         }
     }
 
-    // string getters
-    /*
-    getSuitString() {
-        switch(this.suit) {
-            case Card.DIAMONDS: return "diamonds";
-            case Card.CLUBS: return "clubs";
-            case Card.HEARTS: return "hearts";
-            case Card.SPADES: return "spades";
-            default: return "invalid suit"
-        }
-    }
-    */
-
-    /*
-    getRankString() {
-        switch(this.rank) {
-            case Card.ACE: return "Ace";
-            case Card.JACK: return "Jack";
-            case Card.QUEEN: return "Queen";
-            case Card.KING: return "King";
-            default: return this.rank.toString();
-        }
-    }
-    */
-    /*
-    getCardString() {
-        return this.getRankString() + " of " + this.getSuitString();
-    }
-    */
-
     getCardString() {
         return this.getRankString() + this.getSuitString();
     }
 
-    // set priority -- can I make this a private method?
+    /**
+     * Generate the priority for a card based on rules of Moho Poker
+     * priority will be a number from 1 - 52. In Moho Poker, the 
+     * lowest card is the 3 of diamonds and the highest the 2 of spades.
+     * 
+     * returns the priority for this card
+     * */ 
     generatePriority() {
         var twoCardLowestVal = 48;
         var lowestVal = 3;

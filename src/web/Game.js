@@ -133,13 +133,9 @@ export default class Game {
             // do not update cards if the player passed
             this.previousCards = [...cards];
 
-            // TODO: remove cards from player's hand
+            // remove cards from player's hand
             this.currentPlayer.removeCards(cards);
 
-            console.log("update game ************************ before new round");
-            console.log(this.currentPlayer);
-            console.log(this.currentPlayer.getNumCards());
-            console.log("update game ************************ getNumCards");
             if (this.currentPlayer.getNumCards() === 0) {
                 // player won the round. 
 
@@ -184,8 +180,6 @@ export default class Game {
 
             // clear the player's hand for the next round
             player.clearCards();
-
-            console.log()
         }
 
         // shuffle deck for next round

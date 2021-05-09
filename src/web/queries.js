@@ -66,13 +66,9 @@ $(document).ready(function(){
 
     //SELECT/UNSELECT CARD
     $(document).on('click', '.player_card', function(){
-		console.log("hello we are in the card selection function");
 		var classes = this.className.split(" ");
 
-		console.log("THE CARD SELECTION CLASSES ARE:", classes.indexOf("unselected"));
-
 		if(classes.indexOf("unselected") != -1){
-			console.log("card is being shifted up");
 			$(this).css("transform", "translateY(-30px)").
 			removeClass("unselected"). 
 			addClass("selected");
@@ -95,7 +91,6 @@ $(document).ready(function(){
 
     //START GAME ROOM (GAMEPLAY)
     $(document).on('click', '#play_game', function(){
-    	console.log(get_player_number());
     	if(get_player_number() >= 2){
     		var room = $("#room_name").text();
 			$("#waiting_room").addClass("offscreen");
