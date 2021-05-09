@@ -3,9 +3,11 @@ import PlayerView from './PlayerView.js';
 import WaitingRoom from './Waiting.js';
 
 /**
-* This file builds the client side network connection,
-* processes messages sent between the game server and browser,
-* and helps to send informations between game logic and frontend.
+* This file builds the client side network connection 
+* and connects to the game server using websocket.
+* It can process messages sent between the game server and browser,
+* and helps to send informations between game logic and frontend
+* when players join a game, start a game, play cards, and end a game.
 */
 
 //init the network connection
@@ -33,12 +35,12 @@ class Sender{
 	constructor(){
 		this.socket = null;
 		this.path = "";
-		this.port = 8080;
-		//this.address = "sockette.net";
-		this.address = "localhost";
-		//this.address = "cs-vm-06.cs.mtholyoke.edu";
-		//this.address = "138.10.92.46";
-		this.disconnected = false;
+	        this.port = 8080;
+	    
+		//this.address = "localhost";
+		this.address = "cs-vm-06.cs.mtholyoke.edu";
+
+	        this.disconnected = false;
 		this.buf = "";
 		console.log("Sender created");
 		this.connect();
@@ -157,7 +159,6 @@ function process(text){
 		  	}
 		}
 		else if(message.ERR === 'TIMEOUT'){
-		  	console.log("**************TIMEOUT");
 		  	alert("System time out. Please restart!");
 		}
 		else{
@@ -170,14 +171,11 @@ function process(text){
 	}
 	else if(message.TYPE === 'JOIN'){
 		waitingRoom.add_player(message.user);
-		console.log("add player: " + message.user);
 	}
 	else if(message.TYPE === 'ROOM_STATUS'){
 		join_success = 0;
 		users = message.users;
 		number_of_users = message.number_of_users;
-		console.log("Current users in this room: " + users);
-		console.log("Number of users in this room: " + number_of_users);
 	}
 	else if(message.TYPE === 'DATA'){
 		//Server sends back to all players of the played cards for them to update the UI
@@ -186,7 +184,6 @@ function process(text){
 
 		  	//host update the game
 		  	if(status === 'S'){
-		  		console.log("Host update the game");
 				passedPlayer = null;
 		  		if(message.msg.card === 'pass'){
 					passedPlayer = game.getCurrentPlayer().getName();
@@ -211,13 +208,11 @@ function process(text){
 					//get updated info from the game
 					prevCards = game.getPreviousCards(); 
 					currPlayer = game.getCurrentPlayer().getName();
-					console.log('in network', currPlayer);
 					let nextIndex = game.getPlayers().indexOf(game.getCurrentPlayer()) + 1;
 					if(nextIndex >= game.getPlayers().length){
 						nextIndex = 0;
 					}
 					nextPlayer = game.getPlayers()[nextIndex].getName();
-					console.log('in network', nextPlayer);
 					//host update PlayerView
 					var dict = {
 						prevCards: prevCards,
@@ -225,7 +220,6 @@ function process(text){
 						nextPlayer: nextPlayer,	
 					};
 					if(message.msg.card === 'pass'){
-						console.log("******IN HOST PASS******");
 						dict["passedPlayer"]= passedPlayer;
 					    }
 				  		playerView.updateGame(dict);
@@ -247,7 +241,6 @@ function process(text){
 		  	if(status !== 'S'){
 		  		//check if less than three cards
 			  	if(message.msg.alert === true){
-			  		console.log("Alert in Network");
 			  		playerView.lessThanThreeAlert(message.msg.alert_player, message.msg.alert_num);
 			  	}
 		  		//host update PlayerView
@@ -281,7 +274,6 @@ function process(text){
 					points: my_point,
 					players: message.msg.players,
 				};
-				console.log(JSON.stringify(dict));
 
 			  	//update playerView and pass the updated dict
 				playerView.updateNewRound(dict);
@@ -295,12 +287,10 @@ function process(text){
 		  		//start game for other players
 				waitingRoom.leave_waiting_room();
 				//init Game in PlayerView
-				console.log("*****in message 'START'", player_name.value);
 				playerView = new PlayerView(player_name.value);
 
 				//Data: myCards: init cards for current user
 				//player object
-				console.log(message.msg.players);
 				for (let player of message.msg.players) {
 					if(player.name === player_name.value){
 						myCards = player.hand;
@@ -315,7 +305,6 @@ function process(text){
 					points: my_point,
 					players: message.msg.players,
 				};
-				console.log(JSON.stringify(dict));
 				playerView.startGame(dict);	
 			}
 
@@ -414,11 +403,9 @@ function start_game(){
 		return;
 	}
 	console.log("The game starts!");
-	console.log("*****in start_game", player_name.value);
 
 	//get card's type, number of rounds, and number of points from frontend
 	var type = document.getElementById('card_types').value;
-	console.log("type: " + type);
 
 	//get the number of rounds and points if specified by the host
 	var play_to = "";
@@ -427,11 +414,10 @@ function start_game(){
 	}
 	var playRounds = 3; //default state for playing 3 rounds
 	var playPoints = null;
-	console.log("play_to: " + play_to);
 	if (play_to === "play_input_rounds"){
 		var rounds = document.getElementById("insert_rounds").value;
 		var roundsInt = parseInt(rounds, 10);
-		console.log(roundsInt, "*****");
+
 		if (roundsInt!==NaN){
 			playRounds = roundsInt;
 		}
@@ -451,8 +437,6 @@ function start_game(){
 		}
 	}
 
-	console.log("send to game: " + playRounds);
-
 	//init Game in Game
 	game = new Game(number_of_users, users, type, playRounds, playPoints);
 
@@ -463,8 +447,6 @@ function start_game(){
 	var dict = get_game_info();
 	playerView.startGame(dict);	
 
-	console.log(game.getPlayers());
-
 	//send to server that the game starts
 	net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'START', "players": game.getPlayers(), "prevCards": prevCards, "currPlayer": currPlayer, "nextPlayer": nextPlayer}}));
 }
@@ -472,7 +454,6 @@ function start_game(){
 //when play cards button clicked by a player in the game page
 //cards is an array of played hands
 export default function play_cards(cards = 'pass'){
-	console.log("got cards" + cards);
 	net.send(JSON.stringify({ "TYPE":"DATA", "msg": {"type": 'MOVE', 'card': cards}}));
 }
 
