@@ -20,7 +20,7 @@ The server code is installed on the VM under the address "cs-vm-06.cs.mtholyoke.
 All our source files are stored in the src folder. Src folder contains two server files ggserver.py and ggwebsocket.py, and the web folder which contains the game logic, frontend, and client-side connection code. The web folder also contaiins the templates folder which holds the html files and an images folder which contains the images for both card decks in their own folders and the backround images used.
 
 # Functionality
-This project is a web application that allows users to play Moho Poker together with friends. Moho Poker is a new version of poker based on our customer's house rules, and cannot be found anywhere else on the internet. The functionality we have implemented is below.
+This project is a web application that allows users to play Moho Poker together with friends. Moho Poker is a new version of poker based on our customer's house rules, and cannot be found anywhere else on the internet. Our game works in a similar way to popular web games like Kahoot or Scriblio, where one user hosts a game and others join it by entering a game code that the host tells them. Once all the players are in a room together, the host can start the game and all players begin playing Moho Poker. The functionality we have implemented is listed in detail below.
 
 ### List of current functionality:
    * Users can start a game of poker from the main room. By starting a game, they are considered the "host" of the game
