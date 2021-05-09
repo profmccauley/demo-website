@@ -35,8 +35,8 @@ class Sender{
 		this.path = "";
 		this.port = 8080;
 		//this.address = "sockette.net";
-		//this.address = "localhost";
-		this.address = "cs-vm-06.cs.mtholyoke.edu";
+		this.address = "localhost";
+		//this.address = "cs-vm-06.cs.mtholyoke.edu";
 		//this.address = "138.10.92.46";
 		this.disconnected = false;
 		this.buf = "";
