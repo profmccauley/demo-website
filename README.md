@@ -17,7 +17,7 @@ The server code is installed on the VM under the address "cs-vm-06.cs.mtholyoke.
    4. type the gamecode and your name, and click "start new game" to create a game room
 
 # Directory structure
-All our source files are stored in the src folder. Src folder contains two server files ggserver.py and ggwebsocket.py, and the web folder which contains the game logic, frontend, and client-side connection code. The web folder also contaiins the templates folder which holds the html file and an images folder which contains the images for both card decks in their own folders and the backround images used.
+All our source files are stored in the src folder. Src folder contains two server files ggserver.py and ggwebsocket.py, and the web folder which contains the game logic, frontend, and client-side connection code. The web folder also contaiins the templates folder which holds the html files and an images folder which contains the images for both card decks in their own folders and the backround images used.
 
 # Functionality
 
