@@ -1,5 +1,5 @@
 """
-This module starts a webserver and handles websockets
+This module starts a webserver and handles websockets for the generic game server
 """
 
 import posixpath

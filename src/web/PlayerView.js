@@ -72,7 +72,6 @@ export default class PlayerView {
      * It will update the stored information, then redisplay the screen
      * 
      * @param serverUpdates dictionary containing the new current player, the next player, and the
-     * cards that were just played
      */
     updateGame(serverUpdates) {
         // able to pass now that someone has played
@@ -619,7 +618,7 @@ export default class PlayerView {
                     // check if the cards have a higher priority sum
                     return this.isValidPriority(cards, this.prevCards);
                 }
-                return 'you must play a straight flush with higher cards';
+                return 'You must play a straight flush with higher cards';
             case '4k':
                 if (currCards == 'sf') {
                     return 'valid';
@@ -664,7 +663,7 @@ export default class PlayerView {
                     // check if the current cards have a higher priority sum
                     return this.isValidPriority(currQuad, prevQuad);
                 }
-                return 'you must play a four of a kind or a straight flush';
+                return 'You must play a four of a kind or a straight flush';
             case 'fh':
                 if (currCards == 'sf' || currCards == '4k') {
                     return 'valid';
@@ -708,7 +707,7 @@ export default class PlayerView {
                     // check if the current cards have a higher priority sum
                     return this.isValidPriority(currTrio, prevTrio);
                 }
-                return 'you must play either: straight flush, four of a kind, or full house with higher three of a kind';
+                return 'You must play either: straight flush, four of a kind, or full house with higher three of a kind';
             case 's':
                 if (currCards == 'sf' || currCards == '4k' || currCards == 'fh') {
                     return 'valid';
@@ -718,9 +717,9 @@ export default class PlayerView {
                     if (cards[0].getRank() > this.prevCards[0].getRank()) {
                         return 'valid';
                     }
-                    return 'your straight must be higher than the previous straight';
+                    return 'Your straight must be higher than the previous straight';
                 }
-                return 'you must play either: straight flush, four of a kind, full house, or a straight with higher cards';
+                return 'You must play either: straight flush, four of a kind, full house, or a straight with higher cards';
             case 'f':
                 if (currCards == 'sf' || currCards == '4k' || currCards == 'fh' || currCards == 's') {
                     return 'valid';
@@ -732,11 +731,11 @@ export default class PlayerView {
                     if (cards[lastCard].getRank() > this.prevCards[lastCard].getRank()) {
                         return 'valid';
                     }
-                    return 'your flush must have a higher card than the previous flush';
+                    return 'Your flush must have a higher card than the previous flush';
                 }
-                return 'you must play either: straight flush, four of a kind, full house, straight, or a flush with a higher last card';
+                return 'You must play either: straight flush, four of a kind, full house, straight, or a flush with a higher last card';
             default:
-                return 'you cannot play poker hands during this run';
+                return 'You cannot play poker hands during this run';
         }
     }
 
