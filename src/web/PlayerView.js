@@ -272,16 +272,16 @@ export default class PlayerView {
             var tieHTML = "TIE! ";
             for(let i = 0; i < winner.length; i++){
                 if(!(i === winner.length - 1)){
-                    scoresHTML += winner + " AND ";
+                    tieHTML += winner[i] + " AND ";
                 }
                 else{
-                    scoresHTML += winner + " ";
+                    tieHTML += winner[i] + " ";
                 }
             }
             tieHTML += "WON!";
             document.getElementById("winner").innerHTML = tieHTML;
             
-            }
+        }
         document.getElementById("score_data").innerHTML = scoresHTML;
     }
 
