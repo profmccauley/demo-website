@@ -1,10 +1,14 @@
+/**
+   This file holds all the jquery statements for the project.
+   JQUERY statements control joining/starting game rooms, selecting/unselecting cards,
+   starting gameplay from the waiting room, game ending, and opening the rules page
+*/
+
 $.getScript("../Network.js", function() {
    console.log("Script loaded.");
 });
 
 $(document).ready(function(){
-
-    //var player_view;
 
     //JOIN GAME FROM LANDING PAGE
     $("#join_game").click(function(){
@@ -35,11 +39,10 @@ $(document).ready(function(){
     	connection();
     });
 
-    //START GAME (currently from landing page)
+    //START GAME ROOM FROM LANDING PAGE
     $("#start_game").click(function(){
     	async function connection(){
     		let join = await get_join_status();
-    		console.log("start_success: " + join);
     		if(join === 0){
     		    var game_code = $("#game_code").val();
 		    var name = $("#player_name").val();
@@ -48,7 +51,6 @@ $(document).ready(function(){
 		    $("#host_specific").css('display', 'block');
 		    $("#player_specific").css('display', 'none');
 		    $("#room_name").text("Room: " + game_code);
-		    //player_view = new PlayerView(name, true);
 		    
     		}
     		else if (join === 1){
@@ -61,7 +63,6 @@ $(document).ready(function(){
     	    }
     	}
     	connection();
-	//INSERT SERVER CODE HERE
     });
 
     //SELECT/UNSELECT CARD
@@ -78,18 +79,9 @@ $(document).ready(function(){
 			removeClass("selected").
 			addClass("unselected");
 		}
-
-		/* if(classes.length == 2){
-			$(this).css("transform", "translateY(-30px)").
-			removeClass("unselected"); 
-		}
-		else{
-			$(this).css("transform", "translateY(0px)").
-			addClass("unselected");
-		} */
     });
 
-    //START GAME ROOM (GAMEPLAY)
+    //START GAME PLAY
     $(document).on('click', '#play_game', function(){
     	if(get_player_number() >= 2){
     		var room = $("#room_name").text();
