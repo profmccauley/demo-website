@@ -151,7 +151,7 @@ export default class PlayerView {
      * cards that were just played, and points
      */
     updateNewRound(serverUpdates) {
-	    document.getElementById("game_updates").innerHTML = "";
+	document.getElementById("game_updates").innerHTML = "NEW ROUND";
         
         // clear current and previous cards
         this.myCards.length = 0;
@@ -356,7 +356,12 @@ export default class PlayerView {
     // pop up message with the number of players
     lessThanThreeAlert(player_name, num_cards) {
         if(player_name !== this.myName){
-            alert(player_name + " only has " + num_cards + " cards left");
+	    if(num_cards > 1){
+		alert(player_name + " only has " + num_cards + " cards left");
+	    }
+	    else{
+		alert(player_name + " only has " + num_cards + " card left");
+	    }
         }
     }
 
