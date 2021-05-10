@@ -490,7 +490,7 @@ export default class PlayerView {
                 return 'valid';
             }
             // check if valid with previous cards
-            return this.isValidPriority(cards);
+            return this.isValidHighestCard(cards);
         }
         else if (cards.length == numPokerCardsPlayed){
             // check that this is a valid poker hand
@@ -511,9 +511,9 @@ export default class PlayerView {
         
     }
 
-    // checks if the cards to be played have a higher priority
-    // than the previous cards
-    isValidPriority(cards, prevCards = null) {
+    // checks if the cards to be played have a higher highest
+    // card than the previous cards
+    isValidHighestCard(cards, prevCards = null) {
         let currHighest = cards[cards.length - 1].getPriority();
         let prevHighest;
 
@@ -525,6 +525,27 @@ export default class PlayerView {
         }
         
         if (currHighest < prevHighest) {
+            return 'Cards must be higher than previously played cards';
+        }
+
+        return 'valid';
+    }
+
+    // checks if the cards to be played have a higher priority
+    // than the previous cards
+    isValidPriority(cards, prevCards = null) {
+        const prioritySum = (accumulator, card) => accumulator + card.getPriority();
+        let currPriority = cards.reduce(prioritySum, cards[0].getPriority());
+        var prevPriority;
+
+        if (prevCards == null) {
+            prevPriority = this.prevCards.reduce(prioritySum, this.prevCards[0].getPriority()); 
+        }
+        else {
+            prevPriority = prevCards.reduce(prioritySum, prevCards[0].getPriority());
+        }
+        
+        if (currPriority <= prevPriority) {
             return 'Cards must be higher than previously played cards';
         }
 
