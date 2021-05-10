@@ -1,9 +1,17 @@
 import Hand from "./Hand.js";
 
-
+/**
+ * This class represents player objects in Moho Poker.
+ * 
+ * Each player keeps track of their name, their hand (cards) and its
+ * size, and the number of points they have.
+ * 
+ * A player is initialized only with a name, and their cards and points
+ * are added and changed as the game progresses.
+ */
 export default class Player {
     constructor(name) {
-        this.name = name || "Player";
+        this.name = name || "Player"; // default to player if no name passed in
         this.hand = new Hand();
         this.numCards = 0;
         this.points = 0;
@@ -30,11 +38,7 @@ export default class Player {
         return this.points;
     }
 
-    // temporary method to give player a hand -- will eventually move to game
-    makeHand(hand) {
-        this.hand.createHand(hand);
-    }
-
+    // add a card to a player's hand
     addCard(card) {
         this.hand.addCard(card);
         this.numCards++;
@@ -48,6 +52,7 @@ export default class Player {
         }
     }
 
+    // reset player's hand to no cards
     clearCards() {
         this.hand.clearCards();
 
@@ -59,12 +64,12 @@ export default class Player {
         this.points += this.numCards;
     }
 
-    // sorts a player's hand
+    // sort a player's hand
     sortHand() {
         this.hand.sort();
     }
 
-    // parse JSON to rebuild a player from the server
+    // parse JSON to rebuild a player object from the server
     fromJSON(json) {
         this.name = json.name;
         this.hand = json.hand;

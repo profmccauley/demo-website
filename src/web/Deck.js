@@ -1,9 +1,18 @@
 import Card from "./Card.js";
 
+/**
+ * Represents a deck of 52 cards.
+ * 
+ * The deck holds an array of all the cards and a tag for
+ * which deck images will be used. A deck will automatically
+ * generate cards -- they do not need to be passed in.
+ */
 export default class Deck {
     constructor(deckType = "classic") {
         this.cards = new Array();  // initialize with no cards
         this.deckType = deckType;
+
+        // generate deck of 52 standard cards
         this.generateDeck();
     }
 
@@ -24,10 +33,12 @@ export default class Deck {
         return this.cards.length;
     }
 
+    // get a card based on its index
     getCardByIndex(i) {
         return this.cards[i];
     }
 
+    // find index of a given card
     find(card) {
         return this.cards.indexOf(card);
     }
@@ -46,6 +57,7 @@ export default class Deck {
         }
     }
 
+    // shuffle the deck by randomly swapping card
     shuffleDeck() {
         // code taken from: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
         for (let i = this.cards.length - 1; i > 0; i--) {

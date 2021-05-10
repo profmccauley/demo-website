@@ -2,29 +2,58 @@ import Card from './Card.js';
 import play_cards from './Network.js';
 import Player from './Player.js';
 
+/**
+ * This class represents the front end client view and logic. There is
+ * a PlayerView object for each player in the game.
+ * 
+ * The class is responsible for displaying dynamic content on the 
+ * webpage and performing validity checks on cards the player attempts
+ * to play.
+ */
 export default class PlayerView {
+    /**
+     * Constructs a new PlayerView object. Most instance variables
+     * are not initialized until the startGame method is called.
+     * 
+     * @param {String} name the player's name
+     * @param {Boolean} host whether this player is the host (server) or not
+     */
     constructor(name, host=false) {
         this.myName = name;
-	    this.host = host;
-        this.myCards = new Array();   // cards will be sorted by lowest to highest priority
-        this.firstTurn;
+        // boolean, whether player is host
+	    this.host = host; 
+        // array of Card objects
+        this.myCards = new Array();   
+        // boolean, whether this is the first turn (there is special logic for the first turn)
+        this.firstTurn; 
+        // boolean, whether a player is able to pass
         this.canPass = false;
+        // Array of Cards, will hold last played cards
         this.prevCards = new Array();
+        // strings naming current and next players
         this.currPlayer;
         this.nextPlayer;
 
+        // number of points this player has
         this.points = 0;
 
+        // ties buttons to methods in this class
         var playCardButton = document.getElementById("play_hand");
         var passButton = document.getElementById("pass");
         playCardButton.addEventListener("click", this.playCards.bind(this));
         passButton.addEventListener("click", this.pass);
     }
 
+    /**
+     * Starts a game by getting player information (cards, first player, etc)
+     * 
+     * @param {JSON} playerJSON JSON holding player's cards, current player, points,
+     * and next player
+     */
     startGame(playerJSON) {
-
 	    var players = [];
 
+        // parse apart JSON to get player information
         if(this.host === false){
             for (let i = 0; i < playerJSON.myCards.cards.length; i++) {
                 var tempCard = new Card();
@@ -39,7 +68,7 @@ export default class PlayerView {
         }
         else{
             this.myCards = playerJSON.myCards;
-	    players = playerJSON.players;
+	        players = playerJSON.players;
         }
         
         this.currPlayer = playerJSON.currPlayer;
@@ -52,7 +81,7 @@ export default class PlayerView {
         // displays the player's cards on the screen
         this.displayHand();
 
-	this.displayScores(players);
+	    this.displayScores(players);
 
         if (this.currPlayer == this.myName) {
             this.firstTurn = true;   // sets special rule for first turn
@@ -69,7 +98,7 @@ export default class PlayerView {
 
     /**
      * This method receives updates from the server after a player has played cards.
-     * It will update the stored information, then redisplay the screen
+     * It will update the stored information, then redisplay the screen.
      * 
      * @param serverUpdates dictionary containing the new current player, the next player, and the
      */
@@ -81,7 +110,6 @@ export default class PlayerView {
         if (!(serverUpdates.prevCards === null)) {
             this.prevCards.length = 0;
             if (!(serverUpdates.prevCards === 'new run')) {
-
                 for (let i = 0; i < serverUpdates.prevCards.length; i++) {
                     var tempCard = new Card();
                     tempCard.fromJSON(serverUpdates.prevCards[i]);
@@ -96,14 +124,16 @@ export default class PlayerView {
             this.displayPrevCards();
         }
         
+        // update current and next players
         this.currPlayer = serverUpdates.currPlayer;
         this.nextPlayer = serverUpdates.nextPlayer;
 
-	if("passedPlayer" in serverUpdates && serverUpdates.passedPlayer !== this.myName){
-	    document.getElementById("game_updates").innerHTML = serverUpdates.passedPlayer + " PASSED ";
-	}
+        // display that the player passed
+        if("passedPlayer" in serverUpdates && serverUpdates.passedPlayer !== this.myName){
+            document.getElementById("game_updates").innerHTML = serverUpdates.passedPlayer + " PASSED ";
+        }
 
-	if (this.currPlayer == this.myName) {
+        if (this.currPlayer == this.myName) {
             this.displayMyTurn();
         }
         else {
@@ -111,26 +141,25 @@ export default class PlayerView {
         }
 
 	    this.displayPlayers();
-
-        
     }
 
     /**
-         * This method receives updates from the server when a round is over
-         * and a new round will start.
-         * 
-         * @param serverUpdates dictionary containing the new current player, the next player, the
-         * cards that were just played, and points
-         */
+     * This method receives updates from the server when a round is over
+     * and a new round will start.
+     * 
+     * @param serverUpdates dictionary containing the new current player, the next player, the
+     * cards that were just played, and points
+     */
     updateNewRound(serverUpdates) {
-	document.getElementById("game_updates").innerHTML = "";
+	    document.getElementById("game_updates").innerHTML = "";
+        
         // clear current and previous cards
         this.myCards.length = 0;
         this.prevCards.length = 0;
 
 	    var players = [];
 
-        // not able to pass on the first turn
+        // not able to pass on the first turn of a round
         this.canPass = false;
 	 
         // get new cards and players (for score updates)
@@ -165,7 +194,6 @@ export default class PlayerView {
         this.currPlayer = serverUpdates.currPlayer;
         this.nextPlayer = serverUpdates.nextPlayer;
 
-        // TODO: MICHELA -- display points on the screen
         this.points = serverUpdates.points;
 
         // display visuals and buttons on screen
@@ -188,11 +216,16 @@ export default class PlayerView {
         setTimeout(this.displayPrevCards.bind(this), wait);
     }
 
-    // game is ending!!
+    // game is ending!! update points for the end screen
     updateEndGame(pointsUpdate) {
         this.points = pointsUpdate;
     }
 
+    /**
+     * Moves players to dynamically-generated end game screen. The screen
+     * displays the winner(s) of the game and the final scores.
+     * 
+     */
     endGame(playersInput){
         document.getElementById("leave_game").classList.add("offscreen");
         document.getElementById("game_screen").classList.add("offscreen");
@@ -262,9 +295,8 @@ export default class PlayerView {
         return false;
     }
 
+    // displays player's cards on the screen
     displayHand() {
-            // MICHELA: call every time you update your cards
-
             var html = "";
             for (let card of this.myCards) {
                 let tag = '<img src="images/';
@@ -290,30 +322,29 @@ export default class PlayerView {
         document.getElementById("last_played").innerHTML = html;
     }
 
+    // allow this player to click pass and play buttons
     displayMyTurn() {
-        // MICHELA: display wrappers around the screen that allow you to click
-        // pass and play buttons
         document.getElementById("play_hand").style.visibility="visible";
         document.getElementById("pass").style.visibility="visible";
-	if(document.getElementById("game_updates").innerHTML !== ""){
-	    document.getElementById("game_updates").innerHTML = document.getElementById("game_updates").innerHTML + "--- ";
-	}
-	document.getElementById("game_updates").innerHTML = document.getElementById("game_updates").innerHTML + "YOUR TURN";
+        if(document.getElementById("game_updates").innerHTML !== ""){
+            document.getElementById("game_updates").innerHTML = document.getElementById("game_updates").innerHTML + "--- ";
+        }
+        document.getElementById("game_updates").innerHTML = document.getElementById("game_updates").innerHTML + "YOUR TURN";
     }
 
+    // remove pass and play buttons
     displayNotMyTurn() {
-        // MICHELA: display wrappers around the screen that remove
-        // pass and play buttons
         document.getElementById("play_hand").style.visibility="hidden";
         document.getElementById("pass").style.visibility="hidden";
-	//document.getElementById("game_updates").innerHTML = "";
     }
 
+    // display current and next player
     displayPlayers() {
         document.getElementById("current_player").innerHTML = this.currPlayer + "'s turn";
         document.getElementById("next_player").innerHTML = "Next up: " + this.nextPlayer;
     }
 
+    // display the points of each player
     displayScores(players) {
         var html = "<p>Scores</p>"
         for (let player of players){
@@ -322,19 +353,25 @@ export default class PlayerView {
         document.getElementById("scores").innerHTML = html;
     }
 
+    // pop up message with the number of players
     lessThanThreeAlert(player_name, num_cards) {
         if(player_name !== this.myName){
             alert(player_name + " only has " + num_cards + " cards left");
         }
     }
 
+    /**
+     * This method is called when a player attempts to play cards (by clicking the play button).
+     * This method checks if the move is valid: if it is, it sends it over the server. If not,
+     * it provides an error message and prompts the player to try again.
+     */
     playCards() {
-        // MICHELA: get the card elements with the class name selected
+        // get the card elements with the class name selected (cards selected by player to play)
         var htmlCards = document.getElementsByClassName("selected");
         var cards = [];
 
-	//clear any potential error messages
-	document.getElementById("error_message_game").innerHTML = "";
+        // clear any potential error messages
+        document.getElementById("error_message_game").innerHTML = "";
         for (let htmlCard of htmlCards) {
             let src = htmlCard.src;
             src = src.split("images/"); // strip file to end of URL
@@ -344,6 +381,7 @@ export default class PlayerView {
                 throw 'Selected card is not in the hand';
             }
 
+            // build a new card object from the front end card information
             var card = new Card(tempCard.getRank(), tempCard.getSuit(), tempCard.getFilePath().split("/")[0]);
             
             if (card == false){
@@ -356,7 +394,6 @@ export default class PlayerView {
 
         // check if the cards are valid to play based on rules
         // returns "valid" if valid, error message if not
-        
         var validity = this.isValid(cards);
 
         if (validity == "valid") {
@@ -372,16 +409,22 @@ export default class PlayerView {
         }
     }
 
+    /**
+     * Called when a player clicks the pass button: if a pass is
+     * allowed, the information is sent over the server.
+     */
     pass() {
+        // in progress: getting the canPass functionality to work.
         // send info to server --> fact that player did not play cards
         //if (this.canPass) {
         //}
         //;else (document.getElementById("error_message_game").innerHTML = "you cannot pass on the first turn");
 
-	document.getElementById("error_message_game").innerHTML = "";
+	    document.getElementById("error_message_game").innerHTML = "";
             play_cards();
     }
 
+    // removes cards that were just played and updates UI
     removeCardsFromHand(playedCards) {
         var tempCards = [...this.myCards];
 
@@ -400,6 +443,13 @@ export default class PlayerView {
         this.displayHand();
     }
 
+    /**
+     * Checks if a move is valid. Validity is based on previously-played
+     * cards and allowed moves.
+     * 
+     * @param {Array} cards Array of Card objects that player is attempting to play
+     * @returns 'valid' if move is valid, string with error message if not
+     */
     isValid(cards) {
         // sort the cards to make sure they're in ascending order
         cards = cards.sort(); 
@@ -482,6 +532,7 @@ export default class PlayerView {
     }
 
     // checks if the cards being played are a valid poker hand
+    // (flush, straight, straight flush, full house, four of a kind)
     isPokerHand(cards) {
         if (cards.length != 5) {
             return 'false';
@@ -509,8 +560,6 @@ export default class PlayerView {
         }
 
         // check if FOUR OF A KIND
-        // 10 10 10 10 11
-        // 4 10 10 10 10
         var sameCardCount = 1;
         prevRank = cards[0].getRank();
         for (i = 1; i < cards.length; i++) {
@@ -571,8 +620,6 @@ export default class PlayerView {
 
         for (i = 1; i < cards.length; i++) {
             // to be a straight, the cards must be in ascending order by rank
-            // TODO: check if a straight can have cards with the same rank but
-            // different priorities?
             if (cards[i].getRank() == (prevRank + 1)) {
                 prevRank = cards[i].getRank();
             }
@@ -600,12 +647,13 @@ export default class PlayerView {
             return 'f';
         }
 
+        // none of the poker hands are valid
         return 'false';
     }
 
     // check if the current poker hand is greater than the previous poker hand
     isPokerMoveValid(cards, currCards) {
-        // will hold 
+        // will hold what type of poker hand the previous cards are
         let prevCards = this.isPokerHand(this.prevCards);
 
         if (prevCards == 'false') {
@@ -629,7 +677,7 @@ export default class PlayerView {
                     let prevQuad = new Array();
 
                     // find the quad for each
-                    // get the sum of the priority of the quad
+                    // get the priority for each quad
                     for (let i = 1; i < cards.length; i++) {
                         // CURRENT
                         if (currQuad.length === 4) {
@@ -660,7 +708,7 @@ export default class PlayerView {
                         }
                     }
                     
-                    // check if the current cards have a higher priority sum
+                    // check if the current cards have a higher priority
                     return this.isValidPriority(currQuad, prevQuad);
                 }
                 return 'You must play a four of a kind or a straight flush';
@@ -673,7 +721,7 @@ export default class PlayerView {
                     let prevTrio = new Array();
 
                     // find the trio for each
-                    // get the sum of the priority of the trio
+                    // get the priority of the trio
                     for (let i = 1; i < cards.length; i++) {
                         // CURRENT
                         if (currTrio.length === 3) {
@@ -704,7 +752,7 @@ export default class PlayerView {
                         }
                     }
                     
-                    // check if the current cards have a higher priority sum
+                    // check if the current cards have a higher priority
                     return this.isValidPriority(currTrio, prevTrio);
                 }
                 return 'You must play either: straight flush, four of a kind, or full house with higher three of a kind';

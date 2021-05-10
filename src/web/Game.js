@@ -1,6 +1,17 @@
 import Deck from "./Deck.js";
 import Player from "./Player.js";
 
+/**
+ * This class represents the game of Moho Poker, and is responsible
+ * for all of the server side logic.
+ * 
+ * A game object is created with a number of players, a list of their names,
+ * a given deck type (for card images), and the number of rounds or points the
+ * game will be played to.
+ * 
+ * The game class is responsible for updating each player's cards, reseting after
+ * a run or round is over, and ending the game.
+ */
 export default class Game {
     // numPlayers is an int
     // playerNames is an array with the names of the player
@@ -9,25 +20,41 @@ export default class Game {
             throw 'Number of players must be between 2 and 4';
         }
 
+        // the number of players participating
         this.numPlayers = numPlayers;
 
+        // initialize to empty, will hold array of Player objects
         this.players = new Array();
         this.createPlayers(playerNames); // sets up players
         
+        // current player and last player will be
+        // set once the game starts
         this.currentPlayer = null;
+        // last player is last to have played cards (not passed)
         this.lastPlayer = null;
         
+        // most recently played cards, stored in order
+        // to display to all players
         this.previousCards = null; 
+
+        // used to get card image files
         this.deckType = deckType;
         this.deck = new Deck(deckType);
+
+        // keeps track of if a new round needs to be started
         this.startNewRound = false;
+
+        // keeps track of if the most recent player has less than 
+        // three cards left
         this.lessThanThree = false;
 
+        // used to track when the game is over
         this.currentRound = 0;
         this.playRounds = playRounds;
         this.playPoints = playPoints;
         this.gameOver = false;
 
+        // start game by shuffling deck and dealing to players
         this.startGame();
     }
 
@@ -48,6 +75,9 @@ export default class Game {
         return this.previousCards;
     }
 
+    // getter for if the game is over or not
+    // not labelled as a getter for clarity of boolean 
+    // return value
     isGameOver() {
         return this.gameOver;
     }
@@ -99,33 +129,36 @@ export default class Game {
         }
     }
 
-    // find the player with the lowest card
+    /**
+     * Find the player with the lowest card. Sets
+     * this player to be the current player at the start
+     * of the game.
+     */
     findPlayerLowestCard() {
-        // get the first card of each of the players
-        // the card with the lowest priority is the lowest
-        
         // start by assuming the first player has the lowest card
         this.currentPlayer = this.players[0];
 
+        // since cards are sorted, the first card in each player's hand
+        // will be their lowest card
+
         for (let i = 1; i < this.numPlayers; i++) {
             if (this.players[i].getHand()[0].getPriority() < this.currentPlayer.getHand()[0].getPriority()) {
-                this.currentPlayer = this.players[i];
+                this.currentPlayer = this.players[i]; // change current player if new lowest card
             }
         }
     }
 
-    // called from PlayerView, updates game
-    // updates the game
-    //    * update the current player to the next 
-    //      player in the list
-    //    * update the last player to the current player (above prev!!)
-    //    * update the previously played cards to the current
-    //      cards just played
-    // CALL With either list of cards or nothing
+    /**
+     * Updates the game after a player takes a turn. Changes the current
+     * player, and if not a pass, also updated the previous cards and
+     * the last person to play.
+     * 
+     * @param {Array} cards array of cards, or 'pass' if no cards played
+     * @returns 
+     */
     updateGame(cards = 'pass') {
-        // changes if player didn't pass
         this.lessThanThree = false;
-	this.playerLessThanThree = null;
+	    this.playerLessThanThree = null;
         this.startNewRound = false;
 
         if (!(cards === 'pass')) {
@@ -136,16 +169,17 @@ export default class Game {
             // remove cards from player's hand
             this.currentPlayer.removeCards(cards);
 
+            // if no cards left, player won the round 
             if (this.currentPlayer.getNumCards() === 0) {
-                // player won the round. 
-
+                // start a new round
                 this.startNewRound = true;
                 this.newRound();
                 
                 return;
             }
             else if(this.currentPlayer.getNumCards() <= 3){
-                this.lessThanThree = true;            }
+                this.lessThanThree = true;            
+            }
 
             // set the last player to be person who just played
             // will not change last player if a pass
@@ -160,18 +194,21 @@ export default class Game {
         this.currentPlayer = this.players[nextPlayerIndex];
 
         // if the current player is the previous player, clear the previousCards
+        // the run is over since all other players passed
         if (this.currentPlayer === this.lastPlayer) {
             this.previousCards = 'new run';
         }
     }
     
+    /**
+     * Resets the game for a new round. If the end game
+     * threshold has been hit, ends the game for all players.
+     * 
+     * Deals new cards to all players and calculates point
+     */
     newRound() {
-        // end the game if played to the max number of rounds
+        // increase the number of the round
         this.currentRound++;
-
-        if (this.currentRound === this.playRounds) {
-            this.gameOver = true;
-        }
 
         // set up players for next round
         for (let player of this.players) {
@@ -180,6 +217,21 @@ export default class Game {
 
             // clear the player's hand for the next round
             player.clearCards();
+        }
+
+        // check if END GAME
+        // if playing to points, check that no player has hit the max point count
+        if (this.playPoints != null) {
+            for (let i = 0; i < this.players.length; i++) {
+                // if any players score is above the max, the game is over
+                if (this.players[i].getPoints() > this.playPoints) {
+                    this.gameOver = true;
+                }
+            }
+        }
+        else if (this.currentRound === this.playRounds) {
+            // not playing to number of points, check if hit round count
+            this.gameOver = true;
         }
 
         // shuffle deck for next round
