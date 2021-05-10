@@ -37,8 +37,8 @@ class Sender{
 		this.path = "";
 	    this.port = 8080;
 	    
-		this.address = "localhost";
-		//this.address = "cs-vm-06.cs.mtholyoke.edu";
+		//this.address = "localhost";
+		this.address = "cs-vm-06.cs.mtholyoke.edu";
 
 	        this.disconnected = false;
 		this.buf = "";
