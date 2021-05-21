@@ -35,10 +35,10 @@ class Sender{
 	constructor(){
 		this.socket = null;
 		this.path = "";
-	    this.port = 8080;
+	    this.port = 9879;
 	    
 		//this.address = "localhost";
-		this.address = "cs-vm-06.cs.mtholyoke.edu";
+		this.address = "sockette.net";
 
 	        this.disconnected = false;
 		this.buf = "";
