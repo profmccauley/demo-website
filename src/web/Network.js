@@ -35,7 +35,7 @@ class Sender{
 	constructor(){
 		this.socket = null;
 		this.path = "";
-	    this.port = 9879;
+	    this.port = 9881;
 	    
 		//this.address = "localhost";
 		this.address = "sockette.net";
@@ -71,7 +71,7 @@ class Sender{
 		    return;
 		}
 
-		this.socket = new WebSocket("ws://" + this.address + ":" + this.port + "/" + this.path);
+		this.socket = new WebSocket("wss://" + this.address + ":" + this.port + "/" + this.path);
 		this.socket.onclose = this._on_close.bind(this);
 		this.socket.onerror = this._on_close.bind(this);
 
